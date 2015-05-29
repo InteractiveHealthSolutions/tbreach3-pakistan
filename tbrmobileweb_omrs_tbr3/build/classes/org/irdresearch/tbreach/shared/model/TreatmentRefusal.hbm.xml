@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 21, 2010 3:45:59 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+    <class name="org.irdresearch.tbreach.shared.model.TreatmentRefusal" table="TreatmentRefusal" catalog="xpertsms">
+        <id name="patientId" type="string">
+            <column name="PatientID" length="12" />
+            <generator class="assigned" />
+        </id>
+        <property name="elementRefused" type="string">
+            <column name="ElementRefused" length="50" />
+        </property>
+        <property name="monthOfSputum" type="java.lang.Integer">
+            <column name="MonthOfSputum" />
+        </property>
+        <property name="reason" type="string">
+            <column name="Reason" />
+        </property>
+        <property name="caseClosedOnDate" type="timestamp">
+            <column name="CaseClosedOnDate" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

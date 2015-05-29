@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 21, 2010 3:45:59 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+    <class name="org.irdresearch.tbreach.shared.model.Feedback" table="Feedback" catalog="xpertsms">
+        <id name="feedbackId" type="java.lang.Long">
+            <column name="FeedbackID" />
+            <generator class="identity" />
+        </id>
+        <property name="userName" type="string">
+            <column name="UserName" length="50" not-null="true" />
+        </property>
+        <property name="feedbackType" type="string">
+            <column name="FeedbackType" length="20" not-null="true" />
+        </property>
+        <property name="detail" type="string">
+            <column name="Detail" length="16777215" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

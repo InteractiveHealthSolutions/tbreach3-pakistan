@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 1, 2011 4:10:50 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+ <class catalog="xpertsms"
+  name="org.irdresearch.tbreach.shared.model.Patient" table="Patient">
+  <id name="patientId" type="string">
+   <column length="14" name="PatientID"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="screenerId" type="string">
+   <column length="12" name="ScreenerID"/>
+  </property>
+  <property generated="never" lazy="false" name="providerId" type="string">
+   <column length="12" name="ProviderID"/>
+  </property>
+  <property generated="never" lazy="false" name="externalMrno" type="string">
+   <column length="11" name="ExternalMRNo">
+    <comment>Case/File/Patient No. used outside treatment center (District level etc.)</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="weight" type="java.lang.Float">
+   <column name="Weight" precision="12" scale="0"/>
+  </property>
+  <property generated="never" lazy="false" name="height" type="java.lang.Float">
+   <column name="Height" precision="12" scale="0"/>
+  </property>
+  <property generated="never" lazy="false" name="bloodGroup" type="string">
+   <column length="5" name="BloodGroup"/>
+  </property>
+  <property generated="never" lazy="false" name="dateRegistered" type="timestamp">
+   <column length="19" name="DateRegistered"/>
+  </property>
+  <property generated="never" lazy="false" name="treatmentSupporter" type="string">
+   <column length="12" name="TreatmentSupporter"/>
+  </property>
+  <property generated="never" lazy="false" name="treatmentCenter" type="string">
+   <column length="10" name="TreatmentCenter"/>
+  </property>
+  <property generated="never" lazy="false" name="diseaseSuspected" type="java.lang.Boolean">
+   <column name="DiseaseSuspected"/>
+  </property>
+  <property generated="never" lazy="false" name="diseaseConfirmed" type="java.lang.Boolean">
+   <column name="DiseaseConfirmed"/>
+  </property>
+  <property generated="never" lazy="false" name="diseaseCategory" type="string">
+   <column length="10" name="DiseaseCategory"/>
+  </property>
+  <property generated="never" lazy="false" name="diseaseSite" type="string">
+   <column length="50" name="DiseaseSite"/>
+  </property>
+  <property generated="never" lazy="false" name="severity" type="string">
+   <column length="10" name="Severity"/>
+  </property>
+  <property generated="never" lazy="false" name="medicationForm" type="string">
+   <column length="10" name="MedicationForm"/>
+  </property>
+  <property name="regimenType" type="string">
+   <column length="10" name="RegimenType"/>
+  </property>
+  <property generated="never" lazy="false" name="RDose" type="java.lang.Float">
+   <column name="R_Dose" precision="12" scale="0"/>
+  </property>
+  <property generated="never" lazy="false" name="HDose" type="java.lang.Float">
+   <column name="H_Dose" precision="12" scale="0"/>
+  </property>
+  <property generated="never" lazy="false" name="ZDose" type="java.lang.Float">
+   <column name="Z_Dose" precision="12" scale="0"/>
+  </property>
+  <property generated="never" lazy="false" name="EDose" type="java.lang.Float">
+   <column name="E_Dose" precision="12" scale="0"/>
+  </property>
+  <property generated="never" lazy="false" name="regimen" type="string">
+   <column length="10" name="Regimen"/>
+  </property>
+  <property generated="never" lazy="false" name="doseCombination" type="java.lang.Float">
+   <column name="DoseCombination" precision="12" scale="0"/>
+  </property>
+  <property generated="never" lazy="false" name="otherDoseDescription" type="string">
+   <column name="OtherDoseDescription"/>
+  </property>
+  <property generated="never" lazy="false" name="treatmentPhase" type="string">
+   <column length="10" name="TreatmentPhase"/>
+  </property>
+  <property generated="never" lazy="false" name="patientStatus" type="string">
+   <column length="10" name="PatientStatus"/>
+  </property>
+  <property generated="never" lazy="false" name="patientType" type="string">
+   <column length="50" name="PatientType"/>
+  </property>
+  <property generated="never" lazy="false" name="diseaseHistory" type="string">
+   <column length="50" name="DiseaseHistory"/>
+  </property>
+  <property generated="never" lazy="false" name="treatedPreviously" type="java.lang.Boolean">
+   <column name="TreatedPreviously"/>
+  </property>
+  <property generated="never" lazy="false"
+   name="completedPreviousTreatment" type="java.lang.Boolean">
+   <column name="CompletedPreviousTreatment"/>
+  </property>
+  <property generated="never" lazy="false" name="fullDescription" type="string">
+   <column length="65535" name="FullDescription"/>
+  </property>
+ </class>
+</hibernate-mapping>

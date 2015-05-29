@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 21, 2010 3:45:59 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+    <class name="org.irdresearch.tbreach.shared.model.Person" table="Person" catalog="xpertsms">
+        <id name="pid" type="string">
+            <column name="PID" length="14" />
+            <generator class="assigned" />
+        </id>
+        <property name="salutation" type="string">
+            <column name="Salutation" length="5" />
+        </property>
+        <property name="firstName" type="string">
+            <column name="FirstName" length="20" not-null="true" />
+        </property>
+        <property name="middleName" type="string">
+            <column name="MiddleName" length="20" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="LastName" length="20" />
+        </property>
+        <property name="surName" type="string">
+            <column name="SurName" length="20" />
+        </property>
+        <property name="guardianName" type="string">
+            <column name="GuardianName" length="20" />
+        </property>
+        <property name="gender" type="char">
+            <column name="Gender" length="1" not-null="true" />
+        </property>
+        <property name="dob" type="date">
+            <column name="DOB" length="10" />
+        </property>
+        <property name="maritalStatus" type="string">
+            <column name="MaritalStatus" length="20" />
+        </property>
+        <property name="domicile" type="string">
+            <column name="Domicile" length="20" />
+        </property>
+        <property name="nic" type="string">
+            <column name="NIC" length="20" />
+        </property>
+        <property name="nicownerName" type="string">
+            <column name="NICOwnerName" length="50" />
+        </property>
+        <property name="religion" type="string">
+            <column name="Religion" length="20" />
+        </property>
+        <property name="caste" type="string">
+            <column name="Caste" length="20" />
+        </property>
+        <property name="roleInSystem" type="string">
+            <column name="RoleInSystem" length="10">
+                <comment>Defines the Role of Person in the system e.g. Patient, Doctor, etc.</comment>
+            </column>
+        </property>
+        <property name="alive" type="java.lang.Boolean">
+            <column name="Alive" />
+        </property>
+        <property name="picture" type="binary">
+            <column name="Picture" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 21, 2010 3:45:59 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+    <class name="org.irdresearch.tbreach.shared.model.Gp" table="GP" catalog="xpetsms">
+        <id name="gpid" type="string">
+            <column name="GPID" length="12" />
+            <generator class="assigned" />
+        </id>
+        <property name="qualification1" type="string">
+            <column name="Qualification1" length="100" />
+        </property>
+        <property name="qualification2" type="string">
+            <column name="Qualification2" length="100" />
+        </property>
+        <property name="qualification3" type="string">
+            <column name="Qualification3" length="100" />
+        </property>
+        <property name="speciality1" type="string">
+            <column name="Speciality1" length="100" />
+        </property>
+        <property name="speciality2" type="string">
+            <column name="Speciality2" length="100" />
+        </property>
+        <property name="speciality3" type="string">
+            <column name="Speciality3" length="100" />
+        </property>
+        <property name="workplaceId1" type="string">
+            <column name="WorkplaceID1" length="10" />
+        </property>
+        <property name="scheduleId1" type="string">
+            <column name="ScheduleID1" length="10" />
+        </property>
+        <property name="workplaceId2" type="string">
+            <column name="WorkplaceID2" length="10" />
+        </property>
+        <property name="scheduleId2" type="string">
+            <column name="ScheduleID2" length="10" />
+        </property>
+        <property name="workplaceId3" type="string">
+            <column name="WorkplaceID3" length="10" />
+        </property>
+        <property name="scheduleId3" type="string">
+            <column name="ScheduleID3" length="10" />
+        </property>
+    </class>
+</hibernate-mapping>

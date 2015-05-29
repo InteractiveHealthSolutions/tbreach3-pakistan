@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 6, 2011 10:24:45 AM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+ <class catalog="xpertsms"
+  name="org.irdresearch.tbreach.shared.model.ContactSputumResults" table="ContactSputumResults">
+  <id name="sputumTestId" type="int">
+   <column name="SputumTestID"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="irs" type="int">
+   <column name="IRS" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="patientId" type="string">
+   <column length="12" name="PatientID" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="laboratoryId" type="string">
+   <column length="10" name="LaboratoryID"/>
+  </property>
+  <property generated="never" lazy="false" name="month" type="int">
+   <column name="Month" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="dateSubmitted" type="timestamp">
+   <column length="19" name="DateSubmitted"/>
+  </property>
+  <property generated="never" lazy="false" name="dateTested" type="timestamp">
+   <column length="19" name="DateTested"/>
+  </property>
+  <property generated="never" lazy="false" name="testedBy" type="string">
+   <column length="12" name="TestedBy"/>
+  </property>
+  <property generated="never" lazy="false" name="isTestPending" type="boolean">
+   <column length="1" name="IsTestPending"/>
+  </property>
+  <property generated="never" lazy="false" name="smearResult" type="string">
+   <column length="10" name="SmearResult"/>
+  </property>
+  <property generated="never" lazy="false" name="remarks" type="string">
+   <column name="Remarks"/>
+  </property>
+  <property generated="never" lazy="false" name="otherRemarks" type="string">
+   <column name="OtherRemarks"/>
+  </property>
+ </class>
+</hibernate-mapping>

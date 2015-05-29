@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 21, 2010 3:45:59 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+ <class catalog="xpertsms"
+  name="org.irdresearch.tbreach.shared.model.Encounter" table="Encounter">
+  <composite-id class="org.irdresearch.tbreach.shared.model.EncounterId"
+   mapped="false" name="id" unsaved-value="undefined">
+   <key-property name="encounterId" type="int">
+    <column name="EncounterID"/>
+   </key-property>
+   <key-property name="pid1" type="string">
+    <column length="14" name="PID1"/>
+   </key-property>
+   <key-property name="pid2" type="string">
+    <column length="14" name="PID2"/>
+   </key-property>
+  </composite-id>
+  <property generated="never" lazy="false" name="encounterType" type="string">
+   <column length="10" name="EncounterType" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="locationId" type="string">
+   <column length="10" name="LocationID"/>
+  </property>
+  <property generated="never" lazy="false" name="dateEncounterStart" type="timestamp">
+   <column length="19" name="DateEncounterStart" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="dateEncounterEnd" type="timestamp">
+   <column length="19" name="DateEncounterEnd" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="dateEncounterEntered" type="timestamp">
+   <column length="19" name="DateEncounterEntered" not-null="false"/>
+  </property>
+  <property generated="never" lazy="false" name="details" type="string">
+   <column name="Details"/>
+  </property>
+ </class>
+</hibernate-mapping>

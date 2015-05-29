@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 21, 2010 3:45:59 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+    <class name="org.irdresearch.tbreach.shared.model.LogUserLogin" table="Log_UserLogin" catalog="xpertsms">
+        <id name="loginNo" type="java.lang.Long">
+            <column name="LoginNo" />
+            <generator class="identity" />
+        </id>
+        <property name="userId" type="string">
+            <column name="UserID" length="12" not-null="true" />
+        </property>
+        <property name="loginTime" type="timestamp">
+            <column name="LoginTime" length="19" />
+        </property>
+        <property name="logoutTime" type="timestamp">
+            <column name="LogoutTime" length="19" />
+        </property>
+        <property name="remarks" type="string">
+            <column name="Remarks" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 29, 2012 9:08:23 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="org.irdresearch.tbreach.shared.model.NonSuspect" table="NonSuspect" catalog="xpertsms">
+        <id name="nonSuspectId" type="java.lang.Integer">
+            <column name="NonSuspectID" />
+            <generator class="identity" />
+        </id>
+        <property name="patientId" type="string">
+            <column name="PatientID" length="12" />
+        </property>
+        <property name="gpid" type="string">
+            <column name="GPID" length="12" />
+        </property>
+        <property name="chwid" type="string">
+            <column name="CHWID" length="12" />
+        </property>
+        <property name="dateEntered" type="timestamp">
+            <column name="DateEntered" length="19" />
+        </property>
+        <property name="firstName" type="string">
+            <column name="FirstName" length="50" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="LastName" length="50" />
+        </property>
+        <property name="age" type="java.lang.Integer">
+            <column name="Age" />
+        </property>
+        <property name="gender" type="java.lang.Character">
+            <column name="Gender" length="1" />
+        </property>
+        <property name="diabetesHistory" type="string">
+            <column name="DiabetesHistory" length="50" />
+        </property>
+        <property name="diabetesFamilyHistory" type="string">
+            <column name="DiabetesFamilyHistory" length="50" />
+        </property>
+        <property name="lungDiseaseHistory" type="string">
+            <column name="LungDiseaseHistory" length="50" />
+        </property>
+        <property name="lungDiseaseFamilyHistory" type="string">
+            <column name="LungDiseaseFamilyHistory" length="50" />
+        </property>
+        <property name="currentlySmoking" type="string">
+            <column name="CurrentlySmoking" length="50" />
+        </property>
+        <property name="smokingHistory" type="string">
+            <column name="SmokingHistory" length="50" />
+        </property>
+        <property name="usedNarcotics" type="string">
+            <column name="UsedNarcotics" length="50" />
+        </property>
+    </class>
+</hibernate-mapping>

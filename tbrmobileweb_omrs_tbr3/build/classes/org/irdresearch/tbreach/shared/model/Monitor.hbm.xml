@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 21, 2010 3:45:59 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+    <class name="org.irdresearch.tbreach.shared.model.Monitor" table="Monitor" catalog="xpertsms">
+        <id name="monitorId" type="string">
+            <column name="MonitorID" length="12" />
+            <generator class="assigned" />
+        </id>
+        <property name="supervisorId" type="string">
+            <column name="SupervisorID" length="12" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

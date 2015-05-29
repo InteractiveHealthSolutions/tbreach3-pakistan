@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 21, 2010 3:45:59 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+    <class name="org.irdresearch.tbreach.shared.model.MessageSettings" table="MessageSettings" catalog="xpertsms">
+        <id name="settingsId" type="java.lang.Integer">
+   			<column name="SettingsID"/>
+  		 	<generator class="identity"/>
+  		</id>
+        <property generated="never" lazy="false" name="patientText" type="string">
+            <column name="PatientText" length="256" />
+        </property>
+        <property generated="never" lazy="false" name="providerText" type="string">
+            <column name="ProviderText" length="256" />
+        </property>
+        <property generated="never" lazy="false" name="programText" type="string">
+            <column name="ProgramText" length="256" />
+        </property>
+        <property generated="never" lazy="false" name="otherText" type="string">
+            <column name="OtherText" length="256" />
+        </property>
+        <property generated="never" lazy="false" name="sendToPatient" type="java.lang.Boolean">
+            <column name="SendToPatient" />
+        </property>
+        <property generated="never" lazy="false" name="sendToProvider" type="java.lang.Boolean">
+            <column name="SendToProvider" />
+        </property>
+        <property generated="never" lazy="false" name="sendToProgram" type="java.lang.Boolean">
+            <column name="SendToProgram" />
+        </property>
+        <property generated="never" lazy="false" name="sendToOther" type="java.lang.Boolean">
+            <column name="SendToOther" />
+        </property>
+         <property generated="never" lazy="false" name="programNumber" type="string">
+            <column name="ProgramNumber" length="15" />
+        </property>
+         <property generated="never" lazy="false" name="otherNumber" type="string">
+            <column name="OtherNumber" length="15" />
+        </property>
+    </class>
+</hibernate-mapping>

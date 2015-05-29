@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 30, 2010 3:31:23 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+ <class catalog="xpertsms"
+  name="org.irdresearch.tbreach.shared.model.PatientDOTS" table="PatientDOTS">
+  <id name="mrNo" type="string">
+   <column length="12" name="MRNo" not-null="true" sql-type="VARCHAR"/>
+  </id>
+  <property generated="never" lazy="false" name="dotsNo" type="string">
+   <column length="11" name="DOTSNo"/>
+  </property>
+ </class>
+</hibernate-mapping>
