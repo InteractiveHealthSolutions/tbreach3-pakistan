@@ -1,0 +1,2 @@
+serviceClass: com.ihsinformatics.tbr3fieldmonitoring.client.ServerService
+path: AD35B025F9BD25C72BCCC3AE4DFA3DB5.gwt.rpc

@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 19, 2012 3:38:13 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+    <class name="com.ihsinformatics.tbr3fieldmonitoring.shared.model.SputumTest" table="sputum_test" catalog="tbr3_monitoring">
+        <composite-id name="id" class="com.ihsinformatics.tbr3fieldmonitoring.shared.model.SputumTestId">
+            <key-property name="patientId" type="string">
+                <column name="patient_id" length="12" />
+            </key-property>
+            <key-property name="sampleNo" type="int">
+                <column name="sample_no" />
+            </key-property>
+        </composite-id>
+        <property name="sampleCode" type="string">
+            <column name="sample_code" length="10" />
+        </property>
+        <property name="collectedBy" type="string">
+            <column name="collected_by" length="12" />
+        </property>
+        <property name="dateCollected" type="timestamp">
+            <column name="date_collected" length="19" />
+        </property>
+        <property name="month" type="java.lang.Integer">
+            <column name="month" />
+        </property>
+        <property name="registeredBy" type="string">
+            <column name="registered_by" length="12" />
+        </property>
+        <property name="dateRegistered" type="timestamp">
+            <column name="date_registered" length="19" />
+        </property>
+        <property name="sputumQuality" type="string">
+            <column name="sputum_quality" length="10" />
+        </property>
+        <property name="smearTestedBy" type="string">
+            <column name="smear_tested_by" length="12" />
+        </property>
+        <property name="dateSmearTested" type="timestamp">
+            <column name="date_smear_tested" length="19" />
+        </property>
+        <property name="smearResult" type="string">
+            <column name="smear_result" length="10" />
+        </property>
+        <property name="smearRemarks" type="string">
+            <column name="smear_remarks" />
+        </property>
+        <property name="gxpTestedBy" type="string">
+            <column name="gxp_tested_by" length="12" />
+        </property>
+        <property name="dateGxpTested" type="timestamp">
+            <column name="date_gxp_tested" length="19" />
+        </property>
+        <property name="gxpResult" type="string">
+            <column name="gxp_result" length="10" />
+        </property>
+        <property name="rifResistance" type="string">
+            <column name="rif_resistance" length="10" />
+        </property>
+        <property name="gxpRemarks" type="string">
+            <column name="gxp_remarks" />
+        </property>
+    </class>
+</hibernate-mapping>

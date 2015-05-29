@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 12, 2012 4:08:49 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.ihsinformatics.tbr3fieldmonitoring.shared.model.LogLogin" table="log_login" catalog="tbr3_monitoring">
+        <id name="loginNo" type="java.lang.Integer">
+            <column name="login_no" />
+            <generator class="identity" />
+        </id>
+        <property name="userName" type="string">
+            <column name="user_name" length="50" not-null="true" />
+        </property>
+        <property name="dateLogin" type="timestamp">
+            <column name="date_login" length="19" />
+        </property>
+        <property name="dateLogout" type="timestamp">
+            <column name="date_logout" length="19" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+    </class>
+</hibernate-mapping>
