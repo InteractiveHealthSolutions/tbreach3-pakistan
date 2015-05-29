@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="taking_medication">Are you currently taking Diabetes Medication</string>
+    <string name="diabetes_medicine">Specify Medicine</string>
+    <string name="diabetes_medicine_hint">Enter Drug name(s)</string>
+    <string name="physical_activity">Do you Daily spend at least 30 minutes being Physically Active?</string>
+    <string name="vegetable_usage">How often do you eat Vegetables, Fruit or Berries?</string>
+    <string name="last_meal">How many Hours since you last ate/drank anything other than Water?</string>
+    <string name="paid_for_test">Did the patient/suspect pay for Test?</string>
+    <string name="lab_test_code">Blood Sugar Test Code</string>
+    <string name="lab_test_code_hint">Enter 12 character Test code</string>
+    <string name="diabetes_result">Blood Sugar</string>
+
+    <string-array name="daily_frequency">
+        <item>Daily</item>
+        <item>Not Daily</item>
+        <item>Refuse</item>
+    </string-array>
+    
+    <string-array name="last_meal_duration">
+        <item>Within Past 8 Hours</item>
+        <item>8 Hours or More</item>
+        <item>Unknown</item>
+        <item>Refuse</item>
+    </string-array>
+
+</resources>

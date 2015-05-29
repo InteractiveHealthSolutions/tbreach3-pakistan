@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delivery_location">Delivery Location</string>
+    <string name="collector">Drugs Collected by Whom?</string>
+    <string name="other_collector">Other Drugs Collector</string>
+    <string name="other_collector_hint">Enter Relationship with Patient</string>
+    <string name="drug_for_days">Days worth of Drugs delivered</string>
+    <string name="drug_for_days_hint">Enter a value between 1 and 99</string>
+    <string name="missed_medication">Were there any missed days of Medication?</string>
+    <string name="days_missed_medication">For how many days was the Medication missed?</string>
+    <string name="days_missed_medication_hint">Enter a value between 1 and 99</string>
+    <string name="next_dispersal_date">Next Dispersal Date</string>
+    
+    <string-array name="delivery_locations">
+        <item>Screening Centre</item>
+        <item>Clinic</item>
+        <item>Home</item>
+    </string-array>
+    
+    <string-array name="collectors">
+        <item>Self</item>
+        <item>Spouse</item>
+        <item>Parent</item>
+        <item>Sibling</item>
+        <item>Other Drug Collector</item>
+    </string-array>
+</resources>

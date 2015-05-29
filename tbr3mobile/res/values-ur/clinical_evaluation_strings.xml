@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="tb">ٹی بی</string>
+	<string name="diabetes">ذیابیطس</string>
+	<string name="tb_history">ٹی بی کی تفصیلات</string>
+	
+	<string name="cough">کھانسی؟</string>
+	<string name="haemoptysis">کھانسی کے ساتھ خون آنا؟</string>
+	<string name="fever">بخار؟</string>
+	<string name="night_sweats">رات کو پسینہ آنا؟</string>
+	<string name="fatigue">تھکاوٹ؟</string>
+	<string name="breathing_shortness2">سانس لینے میں دقت؟</string>
+	<string name="appetite_loss">بھوک کی کمی؟</string>
+	
+	<string name="diabetes_history">ذیابیطس کی تفصیلات</string>
+	<string name="thirst_or_urination">پیاس یا پیشاب کی زیادتی؟</string>
+	<string name="diabetes_fatigue">تھکاوٹ؟</string>
+	<string name="numbness">ہاتھوں اور پیروں کا سن ہوجانا؟</string>
+	<string name="blurry_vision">بینائی میں دھندلاہٹ؟</string>
+	<string name="delayed_healing">زخم بھرنے میں تاخیر؟</string>
+			
+	<string name="diabetes_exam">ذیابیطس کیلئے معائنہ</string>
+	<string name="refused_examination">مریض نے معائنے سے انکار کر دیا</string>
+	<string name="left_foot">بائیں پاؤں کا معائنہ</string>
+	<string name="right_foot">دائیں پاؤں کا معائنہ</string>
+	<string name="left_ankle">بائیں ٹخنے کا معائنہ</string>
+	<string name="right_ankle">دائیں ٹخنے کا معائنہ</string>
+	<string name="left_foot_palpable">Left Dorsalis pedis (Foot)</string>
+	<string name="right_foot_palpable">Right Dorsalis pedis (Foot)</string>
+	<string name="monofilament">Monofilament</string>
+	<string name="glucose_monitoring">Glucose Monitoring</string>
+	<string name="comments">Comments</string>
+	
+	<string-array name="all_options">
+        <item>No</item>
+        <item>Yes</item>
+        <item>Unknown</item>
+        <item>Refuse</item>
+    </string-array>
+
+	<string-array name="palpable_options">
+        <item>Palpable</item>
+	    <item>Not Palpable</item>
+	</string-array>
+	
+	<string-array name="foot_exam_options">
+        <item>Normal</item>
+        <item>Scratches</item>
+        <item>Swelling</item>
+        <item>Wound</item>
+        <item>Callous</item>
+        <item>Infection</item>
+        <item>Ulcer</item>
+        <item>Amputated</item>
+	</string-array>
+	
+	<string-array name="glucose_options">
+        <item>Controlled</item>
+	    <item>Uncontrolled</item>
+	    <item>Unknown</item>
+	</string-array>
+	
+</resources>
