@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -37,6 +38,7 @@ public final class DataWarehouseMain {
 
 	private static final Logger log = Logger.getLogger("DataWarehouse");
 	public static final String directoryPath = "c:\\Users\\Owais\\git\\tbreach3-pakistan\\tbr3datawarehouse\\";
+	public static final String dataPath = "e:\\Data\\";
 	public static final String filePath = directoryPath + new Date().getTime()
 			+ ".sql";
 	public static final String propertiesFilePath = directoryPath
@@ -95,6 +97,7 @@ public final class DataWarehouseMain {
 		if (dw.hasSwitch(args, "u")) {
 			dw.updateWarehosue();
 		}
+		System.exit(0);
 	}
 
 	/**
@@ -218,8 +221,74 @@ public final class DataWarehouseMain {
 		// Create OpenMRS DB schema into DW
 		FileUtil fileUtil = new FileUtil();
 		String[] queries = fileUtil.getLines("openmrs_schema.sql");
+		// Recreate tables
 		for (String query : queries) {
-			dwDb.runCommand(CommandType.CREATE, query);
+			if (query.toUpperCase().startsWith("DROP")) {
+				dwDb.runCommand(CommandType.DROP, query);
+			} else {
+				dwDb.runCommand(CommandType.CREATE, query);
+			}
+		}
+		log.info("Importing data from source into raw files");
+		// Fetch file from source and generate CSVs
+		String[] sourceTables = {"active_list_type", "cohort", "cohort_member",
+				"concept", "concept_answer", "concept_class",
+				"concept_complex", "concept_datatype", "concept_description",
+				"concept_map_type", "concept_name", "concept_name_bkp",
+				"concept_name_tag", "concept_name_tag_map", "concept_numeric",
+				"concept_proposal", "concept_proposal_tag_map",
+				"concept_reference_map", "concept_reference_source",
+				"concept_reference_term", "concept_reference_term_map",
+				"concept_set", "concept_set_derived",
+				"concept_state_conversion", "concept_stop_word",
+				"concept_word", "drug", "drug_ingredient", "drug_order",
+				"encounter", "encounter_provider", "encounter_role",
+				"encounter_type", "field", "field_answer", "field_type",
+				"form", "form_field", "form_resource", "global_property",
+				"location", "location_attribute", "location_attribute_type",
+				"location_tag", "location_tag_map", "note",
+				"notification_alert", "notification_alert_recipient",
+				"notification_template", "obs", "order_type", "orders",
+				"patient", "patient_identifier", "patient_identifier_type",
+				"patient_program", "patient_state", "person", "person_address",
+				"person_attribute", "person_attribute_type",
+				"person_merge_log", "person_name", "privilege", "program",
+				"program_workflow", "program_workflow_state", "provider",
+				"provider_attribute", "provider_attribute_type",
+				"relationship", "relationship_type", "role", "role_privilege",
+				"role_role", "scheduler_task_config",
+				"scheduler_task_config_property", "serialized_object",
+				"test_order", "user_property", "user_role", "users", "visit",
+				"visit_attribute", "visit_attribute_type", "visit_type"};
+		for (String table : sourceTables) {
+			String query = "SELECT * FROM "
+					+ table
+					+ " INTO OUTFILE '"
+					+ dataPath.replace("\\", "\\\\")
+					+ table
+					+ ".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
+			Object obj = openmrsDb.runCommand(CommandType.EXECUTE, query);
+			if (obj == null) {
+				log.warning("No data was exported to CSV for table: " + table);
+			}
+		}
+		log.info("Importing data from raw files into data warehouse");
+		for (String table : sourceTables) {
+			String filePath = dataPath.replace("\\", "\\\\") + table + ".csv";
+			File file = new File(filePath);
+			if (!file.exists()) {
+				log.warning("No CSV file exists for table " + table);
+				continue;
+			}
+			String query = "LOAD DATA INFILE '"
+					+ filePath
+					+ "' INTO TABLE "
+					+ table
+					+ " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
+			Object obj = dwDb.runCommand(CommandType.EXECUTE, query);
+			if (obj == null) {
+				log.warning("No data was from CSV for table: " + table);
+			}
 		}
 		// Create Field Monitoring DB clone into DW
 		log.info("Finished ETL");
