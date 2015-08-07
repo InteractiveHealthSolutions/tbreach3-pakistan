@@ -22,9 +22,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.CommandType;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DatabaseUtil;
-import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
 
 /**
  * Data warehousing process for TBR3 Sehatmand Zindagi
@@ -126,7 +124,6 @@ public final class DataWarehouseMain {
 		DatabaseUtil openMrsDb = new DatabaseUtil(url, driver, username,
 				password);
 		openMrs = new OpenMrsProcessor("openmrs_schema.sql", openMrsDb, dwDb);
-
 		// Field Monitoring DB credentials
 		driver = DataWarehouseMain
 				.getProperty("fieldmonitoring.connection.driver_class");
@@ -212,17 +209,17 @@ public final class DataWarehouseMain {
 		openMrs.createSchema(fromScratch);
 		openMrs.extract(dataPath);
 		openMrs.load(dataPath);
-
 		// Field Monitoring ETL
 		fm.createSchema(fromScratch);
 		fm.extract(dataPath);
 		fm.load(dataPath);
-
 		log.info("Finished ETL");
 	}
 
 	public void transform() {
 		log.info("Starting data transformation");
+		openMrs.transform();
+		fm.transform();
 		log.info("Finished data transformation");
 	}
 

@@ -17,6 +17,8 @@ import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DatabaseUtil;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
 
 /**
+ * Field Monitoring database processing class for TBR3 warehouse
+ * 
  * @author owais.hussain@ihsinformatics.com
  *
  */
@@ -27,15 +29,22 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 	private String scriptFilePath;
 	private DatabaseUtil dwDb;
 	private DatabaseUtil fmDb;
-	String[] sourceTables = {};
+	String[] sourceTables = {"defaults", "definition", "definition_type",
+			"dictionary", "encounter", "encounter_element",
+			"encounter_prerequisite", "encounter_results", "encounter_type",
+			"encounter_value", "feedback", "lab_test", "location", "log_data",
+			"log_login", "patient", "person", "person_role", "referral",
+			"response", "screening", "sms", "sms_log", "sms_rule", "sms_text",
+			"sputum_test", "user", "user_mapping", "user_rights", "visit"};
 
 	/**
 	 * Constructor to initialize the object
 	 * 
 	 * @param scriptFilePath
-	 *            that contains SQL statements to execute for OpenMRS DB
+	 *            that contains SQL statements to execute for Field Monitoring
+	 *            DB
 	 * @param fmDb
-	 *            connection to OpenMRS
+	 *            connection to Field Monitoring DB
 	 * @param dwDb
 	 *            connection to Data warehouse
 	 */
@@ -44,7 +53,8 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 		this.scriptFilePath = scriptFilePath;
 		this.fmDb = fmDb;
 		this.dwDb = dwDb;
-		Object 		obj = fmDb.runCommand(CommandType.SELECT, "select count(*) from users");
+		Object obj = fmDb.runCommand(CommandType.SELECT,
+				"select count(*) from user");
 		if (obj == null)
 			log.warning("Unable to connect with Field Monitoring!");
 		else
@@ -96,7 +106,6 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 		return true;
 	}
 
-
 	/**
 	 * Loads table data from CSV files into Data warehouse
 	 * 
@@ -105,6 +114,7 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 	 * @return
 	 */
 	public boolean load(String dataPath) {
+		boolean noImport = true;
 		log.info("Importing data from raw files into data warehouse");
 		for (String table : sourceTables) {
 			String filePath = dataPath.replace("\\", "\\\\") + schemaName + "_"
@@ -117,11 +127,14 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 			String query = "LOAD DATA INFILE '"
 					+ filePath
 					+ "' INTO TABLE "
+					+ "fm_"
 					+ table
 					+ " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
 			Object obj = dwDb.runCommand(CommandType.EXECUTE, query);
 			if (obj == null) {
 				log.warning("No data was from CSV for table: " + table);
+			} else {
+				noImport = false;
 			}
 			// Try to delete the CSV
 			try {
@@ -130,6 +143,14 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 				e.printStackTrace();
 			}
 		}
-		return true;
+		return !noImport;
+	}
+
+	/**
+	 * Denormalize and standardize tables according to the warehouse
+	 */
+	boolean transform() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

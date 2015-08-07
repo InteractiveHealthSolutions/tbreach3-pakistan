@@ -17,6 +17,8 @@ import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DatabaseUtil;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
 
 /**
+ * OpenMRS database processing class for TBR3 warehouse
+ * 
  * @author owais.hussain@ihsinformatics.com
  *
  */
@@ -137,6 +139,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 	 * @return
 	 */
 	public boolean load(String dataPath) {
+		boolean noImport = true;
 		log.info("Importing data from raw files into data warehouse");
 		for (String table : sourceTables) {
 			String filePath = dataPath.replace("\\", "\\\\") + schemaName + "_"
@@ -149,11 +152,14 @@ public class OpenMrsProcessor extends AbstractProcessor {
 			String query = "LOAD DATA INFILE '"
 					+ filePath
 					+ "' INTO TABLE "
+					+ "om_"
 					+ table
 					+ " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
 			Object obj = dwDb.runCommand(CommandType.EXECUTE, query);
 			if (obj == null) {
 				log.warning("No data was from CSV for table: " + table);
+			} else {
+				noImport = false;
 			}
 			// Try to delete the CSV
 			try {
@@ -162,6 +168,13 @@ public class OpenMrsProcessor extends AbstractProcessor {
 				e.printStackTrace();
 			}
 		}
-		return true;
+		return !noImport;
+	}
+
+	/**
+	 * Denormalize and standardize tables according to the warehouse
+	 */
+	boolean transform() {
+		return false;
 	}
 }

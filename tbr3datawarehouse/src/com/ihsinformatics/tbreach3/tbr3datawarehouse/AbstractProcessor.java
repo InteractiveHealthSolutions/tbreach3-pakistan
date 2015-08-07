@@ -15,11 +15,14 @@ package com.ihsinformatics.tbreach3.tbr3datawarehouse;
  */
 public abstract class AbstractProcessor {
 
-	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
-	
+	public static final String FILE_SEPARATOR = System
+			.getProperty("file.separator");
+
 	abstract boolean createSchema(boolean fromScratch);
-	
+
 	abstract boolean extract(String dataPath);
-	
+
 	abstract boolean load(String dataPath);
+
+	abstract boolean transform();
 }
