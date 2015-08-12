@@ -489,7 +489,7 @@ public final class DatabaseUtil {
 			this.openConnection();
 			Statement st = con.createStatement();
 			String command = "SELECT " + columnName + " FROM " + tableName
-					+ (filter.startsWith("where") || filter.startsWith("WHERE") ? " " : " WHERE 1=1 AND ") + filter;
+					+ setFilter(filter);
 			ResultSet rs = st.executeQuery(command);
 			while (rs.next()) {
 				array.add(rs.getObject(1));
@@ -501,6 +501,24 @@ public final class DatabaseUtil {
 			data = null;
 		}
 		return data;
+	}
+
+	/**
+	 * @param filter
+	 * @return
+	 */
+	private String setFilter(String filter) {
+		if (filter == null) {
+			return "";
+		}
+		if (filter.equals("")) {
+			return filter;
+		}
+		// If WHERE/where is not mentioned, append
+		if (!(filter.startsWith("where") || filter.startsWith("WHERE"))) {
+			filter = " WHERE " + filter;
+		}
+		return filter;
 	}
 
 	/**

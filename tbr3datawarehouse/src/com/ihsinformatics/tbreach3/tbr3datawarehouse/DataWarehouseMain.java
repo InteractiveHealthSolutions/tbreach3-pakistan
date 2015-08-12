@@ -218,8 +218,14 @@ public final class DataWarehouseMain {
 
 	public void transform() {
 		log.info("Starting data transformation");
-		openMrs.transform();
-		fm.transform();
+		boolean result = openMrs.transform();
+		if (!result) {
+			log.warning("OpenMRS DB transformation completed with warnings.");
+		}
+		result = fm.transform();
+		if (!result) {
+			log.warning("Field Monitoring DB transformation completed with warnings.");
+		}
 		log.info("Finished data transformation");
 	}
 

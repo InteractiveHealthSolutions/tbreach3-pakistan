@@ -150,7 +150,47 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 	 * Denormalize and standardize tables according to the warehouse
 	 */
 	boolean transform() {
-		// TODO Auto-generated method stub
+		// Fetch encounter types
+		Object[] encounterTypes = dwDb.getColumnData("fm_encounter_type",
+				"encounter_type", "");
+		if (encounterTypes == null) {
+			log.severe("No Encounter types found in Field Monitoring data.");
+			return false;
+		}
+		for (Object encounterType : encounterTypes) {
+			// Create a deencounterized table
+			Object[] elements = dwDb.getColumnData("fm_encounter_element",
+					"element", "encounter_type='" + encounterType.toString()
+							+ "'");
+			StringBuilder groupConcat = new StringBuilder();
+			for (Object element : elements) {
+				String str = element.toString().replace("'", "''");
+				groupConcat.append("group_concat(if(er.element = '" + str
+						+ "', er.value, NULL)) AS '" + str + "',");
+			}
+			String baseQuery = "select e.e_id, e.pid1, e.pid2, e.date_start, e.date_end, e.date_entered, "
+					+ groupConcat.toString()
+					+ "'' as BLANK "
+					+ "from fm_encounter as e inner join fm_encounter_results as er using (e_id, pid1, pid2) "
+					+ "where e.encounter_type = '"
+					+ encounterType
+					+ "' "
+					+ "group by e.e_id, e.pid1, e.pid2, e.date_entered";
+			// Drop previous table
+			dwDb.runCommand(CommandType.DROP, "drop table if exists fm_enc_"
+					+ encounterType);
+			log.info("Generating table for " + encounterType);
+			// Insert new data
+			Object result = dwDb.runCommand(CommandType.CREATE,
+					"create table fm_enc_" + encounterType + " " + baseQuery);
+			if (result == null) {
+				log.warning("No data imported for Encounter " + encounterType);
+			}
+			// Creating Primary key
+			dwDb.runCommand(CommandType.ALTER, "alter table fm_enc_"
+					+ encounterType
+					+ " add primary key (e_id, pid1, pid2, encounter_type)");
+		}
 		return false;
 	}
 }
