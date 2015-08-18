@@ -898,139 +898,139 @@ public class MobileService {
 		return json.toString();
 	}
 	
-//	@SuppressWarnings("deprecation")
-//	public String doLungScreening(String formType, JSONObject values) {
-//		JSONObject json = new JSONObject();
-//		String error = "";
-//		try {
-//			int age = Integer.parseInt(values.get("age").toString());
-//			String gender = values.getString("gender").toString();
-//			String location = values.getString("location").toString();
-//			String username = values.getString("username").toString();
-//			String patientId = values.getString("patient_id");
-//			
-//			String givenName = null;
-//			String familyName = null;
-//			
-//			if(!formType.equals(FormType.SCREENING)) // also do not create patient in case of Lung Screening
-//			{
-//				givenName = values.getString("given_name");
-//				familyName = values.getString("family_name");
-//			}
-//			
-//			String encounterType = values.getString("encounter_type");
-//			String formDate = values.getString("form_date");
-//			Date encounterDatetime = DateTimeUtil.getDateFromString(formDate, DateTimeUtil.SQL_DATE);
-//			String encounterLocation = values.getString("encounter_location");
-//			String provider = values.getString("provider");
-//			JSONArray obs = new JSONArray(values.getString("obs"));
-//			// Get Creator
-//			User creatorObj = Context.getUserService().getUserByUsername(username);
-//			// Get Identifier type
-//			List<PatientIdentifierType> allIdTypes = Context.getPatientService().getAllPatientIdentifierTypes();
-//			PatientIdentifierType patientIdTypeObj = allIdTypes.get(0);
-//			// Get Location
-//			Location locationObj = Context.getLocationService().getLocation(location);
-//			// Get Patient object
-//			List<Patient> patients = Context.getPatientService ().getPatients (patientId);
-//			if (patients.isEmpty ())
-//				throw new Exception ();
-//			Patient patient = Context.getPatientService ().getPatients (patientId).get (0);
-//			// Get Person object
-//			Person person = Context.getPersonService ().getPerson (patient.getPersonId ());
-//			
-//			// Get Encounter type
-//			EncounterType encounterTypeObj = Context.getEncounterService().getEncounterType(encounterType);
-//			// Create Patient
-//			{
-//				Encounter encounter = new Encounter();
-//				encounter.setEncounterType(encounterTypeObj);
-//				encounter.setPatient(patient);
-//				// In case of Encounter location different than login location
-//				if (!encounterLocation.equalsIgnoreCase(location)) {
-//					locationObj = Context.getLocationService().getLocation(encounterLocation);
-//				}
-//				encounter.setLocation(locationObj);
-//				encounter.setEncounterDatetime(encounterDatetime);
-//				encounter.setCreator(creatorObj);
-//				encounter.setDateCreated(new Date());
-//				// Create Observations set
-//				{
-//					for (int i = 0; i < obs.length(); i++) {
-//						Obs ob = new Obs();
-//						// Create Person object
-//						{
-//							Person personObj = Context.getPersonService().getPerson(patient.getPatientId());
-//							ob.setPerson(personObj);
-//						}
-//						// Create question/answer Concept object
-//						{
-//							JSONObject pair = obs.getJSONObject(i);
-//							Concept concept = Context.getConceptService().getConcept(pair.getString("concept"));
-//							ob.setConcept(concept);
-//							String hl7Abbreviation = concept.getDatatype().getHl7Abbreviation();
-//							if (hl7Abbreviation.equals("NM")) {
-//								ob.setValueNumeric(Double.parseDouble(pair.getString("value")));
-//							} else if (hl7Abbreviation.equals("CWE")) {
-//								Concept valueObj = Context.getConceptService().getConcept(pair.getString("value"));
-//								ob.setValueCoded(valueObj);
-//							} else if (hl7Abbreviation.equals("ST")) {
-//								ob.setValueText(pair.getString("value"));
-//							} else if (hl7Abbreviation.equals("DT")) {
-//								ob.setValueDate(DateTimeUtil.getDateFromString(pair.getString("value"),
-//								    DateTimeUtil.SQL_DATE));
-//							}
-//						}
-//						ob.setObsDatetime(encounterDatetime);
-//						ob.setLocation(locationObj);
-//						ob.setCreator(creatorObj);
-//						ob.setDateCreated(new Date());
-//						encounter.addObs(ob);
-//					}
-//					if (creatorObj.getUsername().equals(provider))
-//						encounter.setProvider(creatorObj);
-//				}
-//				Context.getEncounterService().saveEncounter(encounter);
-//				json.put("result", "SUCCESS");
-//			}
-//		}
-//		catch (NonUniqueObjectException e) {
-//			e.printStackTrace();
-//			error = CustomMessage.getErrorMessage(ErrorType.DUPLICATION_ERROR);
-//		}
-//		catch (NullPointerException e) {
-//			e.printStackTrace();
-//			error += CustomMessage.getErrorMessage(ErrorType.INVALID_DATA_ERROR);
-//		}
-//		catch (IllegalArgumentException e) {
-//			e.printStackTrace();
-//			error += CustomMessage.getErrorMessage(ErrorType.INVALID_DATA_ERROR);
-//		}
-//		catch (JSONException e) {
-//			e.printStackTrace();
-//			error += CustomMessage.getErrorMessage(ErrorType.INVALID_DATA_ERROR);
-//		}
-//		catch (ParseException e) {
-//			e.printStackTrace();
-//			error += CustomMessage.getErrorMessage(ErrorType.PARSING_ERROR);
-//		}
-//		catch (Exception e)
-//		{
-//			e.printStackTrace ();
-////			error = "PatientID: " + CustomMessage.getErrorMessage (ErrorType.ITEM_NOT_FOUND);
-//		}
-//		finally {
-//			try {
-//				if (!json.has("result")) {
-//					json.put("result", "FAIL. " + error);
-//				}
-//			}
-//			catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return json.toString();
-//	}
+	@SuppressWarnings("deprecation")
+	public String doLungScreening(String formType, JSONObject values) {
+		JSONObject json = new JSONObject();
+		String error = "";
+		try {
+			int age = Integer.parseInt(values.get("age").toString());
+			String gender = values.getString("gender").toString();
+			String location = values.getString("location").toString();
+			String username = values.getString("username").toString();
+			String patientId = values.getString("patient_id");
+			
+			String givenName = null;
+			String familyName = null;
+			
+			if(!formType.equals(FormType.SCREENING)) // also do not create patient in case of Lung Screening
+			{
+				givenName = values.getString("given_name");
+				familyName = values.getString("family_name");
+			}
+			
+			String encounterType = values.getString("encounter_type");
+			String formDate = values.getString("form_date");
+			Date encounterDatetime = DateTimeUtil.getDateFromString(formDate, DateTimeUtil.SQL_DATE);
+			String encounterLocation = values.getString("encounter_location");
+			String provider = values.getString("provider");
+			JSONArray obs = new JSONArray(values.getString("obs"));
+			// Get Creator
+			User creatorObj = Context.getUserService().getUserByUsername(username);
+			// Get Identifier type
+			List<PatientIdentifierType> allIdTypes = Context.getPatientService().getAllPatientIdentifierTypes();
+			PatientIdentifierType patientIdTypeObj = allIdTypes.get(0);
+			// Get Location
+			Location locationObj = Context.getLocationService().getLocation(location);
+			// Get Patient object
+			List<Patient> patients = Context.getPatientService ().getPatients (patientId);
+			if (patients.isEmpty ())
+				throw new Exception ();
+			Patient patient = Context.getPatientService ().getPatients (patientId).get (0);
+			// Get Person object
+			Person person = Context.getPersonService ().getPerson (patient.getPersonId ());
+			
+			// Get Encounter type
+			EncounterType encounterTypeObj = Context.getEncounterService().getEncounterType(encounterType);
+			// Create Patient
+			{
+				Encounter encounter = new Encounter();
+				encounter.setEncounterType(encounterTypeObj);
+				encounter.setPatient(patient);
+				// In case of Encounter location different than login location
+				if (!encounterLocation.equalsIgnoreCase(location)) {
+					locationObj = Context.getLocationService().getLocation(encounterLocation);
+				}
+				encounter.setLocation(locationObj);
+				encounter.setEncounterDatetime(encounterDatetime);
+				encounter.setCreator(creatorObj);
+				encounter.setDateCreated(new Date());
+				// Create Observations set
+				{
+					for (int i = 0; i < obs.length(); i++) {
+						Obs ob = new Obs();
+						// Create Person object
+						{
+							Person personObj = Context.getPersonService().getPerson(patient.getPatientId());
+							ob.setPerson(personObj);
+						}
+						// Create question/answer Concept object
+						{
+							JSONObject pair = obs.getJSONObject(i);
+							Concept concept = Context.getConceptService().getConcept(pair.getString("concept"));
+							ob.setConcept(concept);
+							String hl7Abbreviation = concept.getDatatype().getHl7Abbreviation();
+							if (hl7Abbreviation.equals("NM")) {
+								ob.setValueNumeric(Double.parseDouble(pair.getString("value")));
+							} else if (hl7Abbreviation.equals("CWE")) {
+								Concept valueObj = Context.getConceptService().getConcept(pair.getString("value"));
+								ob.setValueCoded(valueObj);
+							} else if (hl7Abbreviation.equals("ST")) {
+								ob.setValueText(pair.getString("value"));
+							} else if (hl7Abbreviation.equals("DT")) {
+								ob.setValueDate(DateTimeUtil.getDateFromString(pair.getString("value"),
+								    DateTimeUtil.SQL_DATE));
+							}
+						}
+						ob.setObsDatetime(encounterDatetime);
+						ob.setLocation(locationObj);
+						ob.setCreator(creatorObj);
+						ob.setDateCreated(new Date());
+						encounter.addObs(ob);
+					}
+					if (creatorObj.getUsername().equals(provider))
+						encounter.setProvider(creatorObj);
+				}
+				Context.getEncounterService().saveEncounter(encounter);
+				json.put("result", "SUCCESS");
+			}
+		}
+		catch (NonUniqueObjectException e) {
+			e.printStackTrace();
+			error = CustomMessage.getErrorMessage(ErrorType.DUPLICATION_ERROR);
+		}
+		catch (NullPointerException e) {
+			e.printStackTrace();
+			error += CustomMessage.getErrorMessage(ErrorType.INVALID_DATA_ERROR);
+		}
+		catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			error += CustomMessage.getErrorMessage(ErrorType.INVALID_DATA_ERROR);
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+			error += CustomMessage.getErrorMessage(ErrorType.INVALID_DATA_ERROR);
+		}
+		catch (ParseException e) {
+			e.printStackTrace();
+			error += CustomMessage.getErrorMessage(ErrorType.PARSING_ERROR);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace ();
+//			error = "PatientID: " + CustomMessage.getErrorMessage (ErrorType.ITEM_NOT_FOUND);
+		}
+		finally {
+			try {
+				if (!json.has("result")) {
+					json.put("result", "FAIL. " + error);
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return json.toString();
+	}
 	
 	/**
 	 * Save Client's Contact and Address information. Also creates and Encounter without
