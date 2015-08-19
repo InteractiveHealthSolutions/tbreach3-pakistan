@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 15, 2013 5:34:55 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+    <class name="com.ihsinformatics.tbr3fieldmonitoring.shared.model.SmsText" table="sms_text" catalog="tbr3_monitoring">
+        <id name="textId" type="java.lang.Integer">
+            <column name="text_id" />
+            <generator class="identity" />
+        </id>
+        <property name="ruleId" type="string">
+            <column name="rule_id" length="10" />
+        </property>
+        <property name="text" type="string">
+            <column name="text" length="2048" />
+        </property>
+        <property name="languageId" type="string">
+            <column name="language_id" length="10" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+    </class>
+</hibernate-mapping>

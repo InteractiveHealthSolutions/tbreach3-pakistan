@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 17, 2012 3:02:56 PM by Hibernate Tools 3.4.0.Beta1 -->
+<hibernate-mapping>
+ <class catalog="tbr3_monitoring"
+  name="com.ihsinformatics.tbr3fieldmonitoring.shared.model.Visit" table="visit">
+  <id name="visitNo" type="java.lang.Integer">
+   <column name="visit_no"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="patientId" type="string">
+   <column length="12" name="patient_id" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="visitPurpose" type="string">
+   <column length="10" name="visit_purpose" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="diseaseConfirmed" type="java.lang.Boolean">
+   <column name="disease_confirmed"/>
+  </property>
+  <property generated="never" lazy="false" name="visitDate" type="timestamp">
+   <column length="10" name="visit_date"/>
+  </property>
+ </class>
+</hibernate-mapping>

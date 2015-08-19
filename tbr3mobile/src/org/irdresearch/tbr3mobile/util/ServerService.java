@@ -515,7 +515,7 @@ public class ServerService
 					for (int i = 0; i < encounters.length (); i++)
 					{
 						JSONObject obj = new JSONObject (encounters.get (i).toString ());
-						details[i + 2] = new String[] {obj.get ("encounter").toString (), obj.get ("date").toString ()};
+						details[i + 3] = new String[] {obj.get ("encounter").toString (), obj.get ("date").toString ()};
 					}
 				}
 				catch (JSONException e)
@@ -866,8 +866,12 @@ public class ServerService
 	{
 		String response = "";
 		// Demographics
-		String givenName = TextUtil.capitalizeFirstLetter (values.getAsString ("firstName"));
-		String familyName = TextUtil.capitalizeFirstLetter (values.getAsString ("lastName"));
+		if(!encounterType.equals(FormType.SCREENING))
+		{
+			String givenName = TextUtil.capitalizeFirstLetter (values.getAsString ("firstName"));
+			String familyName = TextUtil.capitalizeFirstLetter (values.getAsString ("lastName"));
+		}
+		
 		int age = values.getAsInteger ("age");
 		String gender = values.getAsString ("gender");
 		String patientId = values.getAsString ("patientId");
@@ -884,8 +888,8 @@ public class ServerService
 			json.put ("form_name", encounterType);
 			json.put ("username", App.getUsername ());
 			json.put ("patient_id", patientId);
-			json.put ("given_name", givenName);
-			json.put ("family_name", familyName);
+//			json.put ("given_name", givenName);
+//			json.put ("family_name", familyName);
 			json.put ("gender", gender);
 			json.put ("age", age);
 			json.put ("location", location);
