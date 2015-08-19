@@ -175,6 +175,57 @@ public class OpenMrsProcessor extends AbstractProcessor {
 	 * Denormalize and standardize tables according to the warehouse
 	 */
 	boolean transform() {
+		// Create a temporary table to hold respective questions for each
+		// encounter type
+		dwDb.runCommand(CommandType.DROP, "drop table if exists tmp");
+		dwDb.runCommand(CommandType.CREATE,
+				"create table tmp select distinct encounter_type, question from dim_obs");
+		// Fetch encounter types and names
+		Object[][] encounterTypes = dwDb.getTableData("dim_encounter",
+				"distinct encounter_type, encounter_name", "");
+		if (encounterTypes == null) {
+			log.severe("No Encounter types found in OpenMRS data.");
+			return false;
+		}
+		for (Object[] encounterType : encounterTypes) {
+			// Create a deencounterized table
+			Object[] elements = dwDb.getColumnData("tmp", "question",
+					"encounter_type=" + encounterType[0].toString());
+			StringBuilder groupConcat = new StringBuilder();
+			for (Object element : elements) {
+				if (element == null)
+					continue;
+				String str = element.toString().replace("'", "''");
+				groupConcat.append("group_concat(if(o.question = '" + str
+						+ "', o.answer, NULL)) AS '"
+						+ str.replace("(\\W|^_)*", "_").toLowerCase() + "', ");
+			}
+			String baseQuery = "select e.surrogate_id, e.system_id, e.encounter_id, e.provider, e.location_id, l.location_name, e.patient_id, e.date_entered, "
+					+ groupConcat.toString()
+					+ "'' as BLANK "
+					+ "from dim_encounter as e inner join dim_obs as o on o.encounter_id = e.encounter_id inner join dim_location as l on l.location_id = e.location_id "
+					+ "where e.encounter_type = '"
+					+ encounterType[0].toString()
+					+ "' "
+					+ "group by e.surrogate_id, e.system_id, e.encounter_id, e.patient_id, e.provider, e.location_id, l.location_name, e.patient_id, e.date_entered";
+			String encounterName = encounterType[1].toString().toLowerCase()
+					.replace(" ", "_").replace("-", "_");
+			// Drop previous table
+			dwDb.runCommand(CommandType.DROP, "drop table if exists om_enc_"
+					+ encounterName);
+			log.info("Generating table for " + encounterType[1].toString());
+			// Insert new data
+			Object result = dwDb.runCommand(CommandType.CREATE,
+					"create table om_enc_" + encounterName + " " + baseQuery);
+			if (result == null) {
+				log.warning("No data imported for Encounter "
+						+ encounterType[1].toString());
+			}
+			// Creating Primary key
+			dwDb.runCommand(CommandType.ALTER, "alter table om_enc_"
+					+ encounterName
+					+ " add primary key surrogate_id (surrogate_id)");
+		}
 		return false;
 	}
 }

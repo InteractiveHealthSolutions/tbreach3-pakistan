@@ -49,8 +49,8 @@ public final class DatabaseUtil {
 	 * @param userName
 	 * @param password
 	 */
-	public void setConnection(String url, String driverName,
-			String userName, String password) {
+	public void setConnection(String url, String driverName, String userName,
+			String password) {
 		this.setUrl(url);
 		this.setDriverName(driverName);
 		this.setUser(userName, password);
@@ -480,7 +480,8 @@ public final class DatabaseUtil {
 	 * @param filter
 	 * @return
 	 */
-	public Object[] getColumnData(String tableName, String columnName, String filter) {
+	public Object[] getColumnData(String tableName, String columnName,
+			String filter) {
 		// Object array to hold the table data
 		Object[] data;
 		// Array list of array lists to record data during transaction
@@ -544,7 +545,7 @@ public final class DatabaseUtil {
 			this.openConnection();
 			Statement st = con.createStatement();
 			String command = "SELECT " + columnList + " FROM " + tableName
-					+ (filter.startsWith("where") || filter.startsWith("WHERE") ? " " : " WHERE 1=1 AND ") + filter;
+					+ setFilter(filter);
 			ResultSet rs = st.executeQuery(command);
 			// Get the number of columns
 			int columns = rs.getMetaData().getColumnCount();

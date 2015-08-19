@@ -1,0 +1,3 @@
+# Module tbr3fieldmonitoring
+# RPC service class, partial path of RPC policy file
+com.ihsinformatics.tbr3fieldmonitoring.client.ServerService, AD35B025F9BD25C72BCCC3AE4DFA3DB5.gwt.rpc

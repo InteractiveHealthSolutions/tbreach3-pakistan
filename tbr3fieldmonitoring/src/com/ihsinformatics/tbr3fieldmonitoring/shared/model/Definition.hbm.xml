@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 12, 2012 4:08:49 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.ihsinformatics.tbr3fieldmonitoring.shared.model.Definition" table="definition" catalog="tbr3_monitoring">
+        <composite-id name="id" class="com.ihsinformatics.tbr3fieldmonitoring.shared.model.DefinitionId">
+            <key-property name="definitionType" type="string">
+                <column name="definition_type" length="20" />
+            </key-property>
+            <key-property name="definitionKey" type="string">
+                <column name="definition_key" length="10" />
+            </key-property>
+        </composite-id>
+        <property name="definitionValue" type="string">
+            <column name="definition_value" length="50" />
+        </property>
+    </class>
+</hibernate-mapping>

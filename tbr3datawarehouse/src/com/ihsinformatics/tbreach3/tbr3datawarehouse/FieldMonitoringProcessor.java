@@ -166,7 +166,7 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 			for (Object element : elements) {
 				String str = element.toString().replace("'", "''");
 				groupConcat.append("group_concat(if(er.element = '" + str
-						+ "', er.value, NULL)) AS '" + str + "',");
+						+ "', er.value, NULL)) AS '" + str.toLowerCase() + "',");
 			}
 			String baseQuery = "select e.e_id, e.pid1, e.pid2, e.date_start, e.date_end, e.date_entered, "
 					+ groupConcat.toString()

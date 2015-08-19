@@ -35,6 +35,7 @@
     <string name="goto_last">>></string>
     <string name="empty_string" translatable="false"></string>
     <string name="dot_dot_dot" translatable="false">...</string>
+    <string name="validate_patient_id">Validate Patient ID</string>
 
     <string-array name="gender">
         <item>Male</item>

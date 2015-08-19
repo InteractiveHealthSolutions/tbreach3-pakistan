@@ -22,7 +22,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.CommandType;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DatabaseUtil;
+import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
 
 /**
  * Data warehousing process for TBR3 Sehatmand Zindagi
@@ -196,8 +198,8 @@ public final class DataWarehouseMain {
 			dwDb.deleteTable(t.toString());
 		}
 		extractLoad(true);
-		transform();
 		createDimensions();
+		transform();
 		createFacts();
 		updateWarehosue();
 		log.info("Finished DW hard reset");
@@ -216,6 +218,25 @@ public final class DataWarehouseMain {
 		log.info("Finished ETL");
 	}
 
+	public void createDimensions() {
+		log.info("Starting dimension modeling");
+		FileUtil fileUtil = new FileUtil();
+		String[] queries = fileUtil.getLines("dimension_modeling.sql");
+		// Recreate tables
+		for (String query : queries) {
+			if (query.toUpperCase().startsWith("DROP")) {
+				dwDb.runCommand(CommandType.DROP, query);
+			} else if (query.toUpperCase().startsWith("CREATE")) {
+				dwDb.runCommand(CommandType.CREATE, query);
+			} else if (query.toUpperCase().startsWith("UPDATE")) {
+				dwDb.runCommand(CommandType.UPDATE, query);
+			} else {
+				dwDb.runCommand(CommandType.INSERT, query);
+			}
+		}
+		log.info("Finished dimension modeling");
+	}
+
 	public void transform() {
 		log.info("Starting data transformation");
 		boolean result = openMrs.transform();
@@ -227,11 +248,6 @@ public final class DataWarehouseMain {
 			log.warning("Field Monitoring DB transformation completed with warnings.");
 		}
 		log.info("Finished data transformation");
-	}
-
-	public void createDimensions() {
-		log.info("Starting dimension modeling");
-		log.info("Finished dimension modeling");
 	}
 
 	public void createFacts() {

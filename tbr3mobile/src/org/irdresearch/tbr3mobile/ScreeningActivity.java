@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
+
 import org.irdresearch.tbr3mobile.custom.MyButton;
 import org.irdresearch.tbr3mobile.custom.MyCheckBox;
 import org.irdresearch.tbr3mobile.custom.MyEditText;
@@ -19,6 +20,7 @@ import org.irdresearch.tbr3mobile.custom.MyTextView;
 import org.irdresearch.tbr3mobile.shared.AlertType;
 import org.irdresearch.tbr3mobile.shared.FormType;
 import org.irdresearch.tbr3mobile.util.RegexUtil;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +33,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.InputType;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -58,6 +61,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 	MyTextView		formDateTextView;
 	MyButton		formDateButton;
 
+	MyTextView		patientIdTextView;
+	MyEditText		patientId;
+	MyButton		scanBarcode;
+	MyButton		validatePatientId;
+	
 	MyTextView		ageTextView;
 	MyEditText		age;
 	MyTextView		genderTextView;
@@ -121,15 +129,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 	MyCheckBox		cxrRifIndication;
 	MyCheckBox		bloodGlucoseIndication;
 	MyCheckBox		cxrSpirometryIndication;
-
-	MyTextView		firstNameTextView;
-	MyEditText		firstName;
-	MyTextView		lastNameTextView;
-	MyEditText		lastName;
-
-	MyTextView		patientIdTextView;
-	MyEditText		patientId;
-	MyButton		scanBarcode;
 
 	boolean			isSuspect;
 
@@ -217,6 +216,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		formDateButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.form_date, R.string.form_date);
 
 		// Demographics
+		patientIdTextView = new MyTextView (context, R.style.text, R.string.patient_id);
+		patientId = new MyEditText (context, R.string.patient_id, R.string.patient_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.idLength, false);
+		scanBarcode = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.scan_barcode, R.string.scan_barcode);
+		validatePatientId = new MyButton(context, R.style.button, R.drawable.custom_button_beige, R.string.validate_patient_id, R.string.validate_patient_id);
+		
 		ageTextView = new MyTextView (context, R.style.text, R.string.age);
 		age = new MyEditText (context, R.string.age, R.string.age_hint, InputType.TYPE_CLASS_NUMBER, R.style.edit, 3, false);
 		genderTextView = new MyTextView (context, R.style.text, R.string.gender);
@@ -287,24 +291,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		cxrSpirometryIndication = new MyCheckBox (context, R.string.cxr_spirometry_indication, R.style.text, R.string.cxr_spirometry_indication, false);
 		cxrSpirometryIndication.setClickable (false);
 
-		// Patient's Name
-		firstNameTextView = new MyTextView (context, R.style.text, R.string.first_name);
-		firstName = new MyEditText (context, R.string.first_name, R.string.first_name_hint, InputType.TYPE_TEXT_VARIATION_PERSON_NAME, R.style.edit, 20, false);
-		lastNameTextView = new MyTextView (context, R.style.text, R.string.last_name);
-		lastName = new MyEditText (context, R.string.last_name, R.string.last_name_hint, InputType.TYPE_TEXT_VARIATION_PERSON_NAME, R.style.edit, 20, false);
-
-		patientIdTextView = new MyTextView (context, R.style.text, R.string.patient_id);
-		patientId = new MyEditText (context, R.string.patient_id, R.string.patient_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.idLength, false);
-		scanBarcode = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.scan_barcode, R.string.scan_barcode);
-
-		View[][] viewGroups = { {formDateTextView, formDateButton, ageTextView, age, genderTextView, gender, ethnicityTextView, ethnicity},
+		View[][] viewGroups = { {formDateTextView, formDateButton, patientIdTextView, patientId, scanBarcode, validatePatientId, ageTextView, age, genderTextView, gender, ethnicityTextView, ethnicity},
 				{measurementTextView, measurement, heightTextView, height, weightTextView, weight, bmiTextTextView, bmiTextView},
 				{coughTextView, cough, coughDurationTextView, coughDuration, coughDurationModifierTextView, coughDurationModifier},
 				{symptomsTextView, fever, haemoptysis, nightSweats, weightLoss, fatigue, appetiteLoss}, {diabetesTextView, diabetes, familyDiabetesTextView, familyDiabetes},
 				{hypertensionTextView, hypertension}, {breathingShortnessTextView, breathingShortness, physicalActivityTextView, activeBreathingShortness, wheezingTextView, wheezing},
 				{tobaccoCurrentTextView, tobaccoCurrent, tobaccoPastTextView, tobaccoPast}, {contactReferral, contactVoucherTypeTextView, contactVoucherType, contactIdTextView, contactId},
-				{conclusionTextView, cxrRifIndication, bloodGlucoseIndication, cxrSpirometryIndication},
-				{firstNameTextView, firstName, lastNameTextView, lastName, patientIdTextView, patientId, scanBarcode}};
+				{conclusionTextView, cxrRifIndication, bloodGlucoseIndication, cxrSpirometryIndication}};
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();
 		for (int i = 0; i < PAGE_COUNT; i++)
@@ -330,10 +323,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		clearButton.setOnClickListener (this);
 		saveButton.setOnClickListener (this);
 		scanBarcode.setOnClickListener (this);
+		validatePatientId.setOnClickListener (this);
 		navigationSeekbar.setOnSeekBarChangeListener (this);
 		height.setOnEditorActionListener (this);
 		weight.setOnEditorActionListener (this);
-		views = new View[] {age, firstName, lastName, measurement, height, weight, cough, ethnicity, coughDuration, coughDurationModifier, fever, haemoptysis, nightSweats, weightLoss, fatigue,
+		views = new View[] {age, measurement, height, weight, cough, ethnicity, coughDuration, coughDurationModifier, fever, haemoptysis, nightSweats, weightLoss, fatigue,
 				appetiteLoss, diabetes, familyDiabetes, hypertension, breathingShortness, activeBreathingShortness, wheezing, tobaccoCurrentTextView, tobaccoCurrent, tobaccoPast, contactReferral,
 				contactVoucherType, contactId, cxrRifIndication, bloodGlucoseIndication, cxrSpirometryIndication, patientId};
 		for (View v : views)
@@ -380,13 +374,9 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		contactVoucherType.setEnabled (false);
 		contactIdTextView.setEnabled (false);
 		contactId.setEnabled (false);
-		firstNameTextView.setEnabled (false);
-		firstName.setEnabled (false);
-		lastNameTextView.setEnabled (false);
-		lastName.setEnabled (false);
-		patientIdTextView.setEnabled (false);
-		patientId.setEnabled (false);
-		scanBarcode.setEnabled (false);
+//		patientIdTextView.setEnabled (false);
+//		patientId.setEnabled (false);
+//		scanBarcode.setEnabled (false);
 		height.setText ("150");
 		weight.setText ("45");
 		bmiTextView.setText ("20");
@@ -468,13 +458,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		boolean valid = true;
 		StringBuffer message = new StringBuffer ();
 		// Validate mandatory controls
-		View[] mandatory = {firstName, lastName, age, height, weight};
+		View[] mandatory = {age, height, weight};
 		for (View v : mandatory)
 		{
-			if (!isSuspect && (v == firstName || v == lastName))
-			{
-				continue;
-			}
+//			if (!isSuspect && (v == firstName || v == lastName))
+//			{
+//				continue;
+//			}
 			if (!measurement.isChecked () && (v == height || v == weight))
 			{
 				continue;
@@ -511,18 +501,18 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		{
 			if (isSuspect)
 			{
-				if (!RegexUtil.isWord (App.get (firstName)))
-				{
-					valid = false;
-					message.append (firstName.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
-					firstName.setTextColor (getResources ().getColor (R.color.Red));
-				}
-				if (!RegexUtil.isWord (App.get (lastName)))
-				{
-					valid = false;
-					message.append (lastName.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
-					lastName.setTextColor (getResources ().getColor (R.color.Red));
-				}
+//				if (!RegexUtil.isWord (App.get (firstName)))
+//				{
+//					valid = false;
+//					message.append (firstName.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
+//					firstName.setTextColor (getResources ().getColor (R.color.Red));
+//				}
+//				if (!RegexUtil.isWord (App.get (lastName)))
+//				{
+//					valid = false;
+//					message.append (lastName.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
+//					lastName.setTextColor (getResources ().getColor (R.color.Red));
+//				}
 			}
 			if (!RegexUtil.isNumeric (App.get (age), false))
 			{
@@ -629,8 +619,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 			{
 				values.put ("formDate", App.getSqlDate (formDate));
 				values.put ("location", App.getLocation ());
-				values.put ("firstName", App.get (firstName));
-				values.put ("lastName", App.get (lastName));
+//				values.put ("firstName", App.get (firstName));
+//				values.put ("lastName", App.get (lastName));
 				values.put ("age", App.get (age));
 				values.put ("gender", male.isChecked () ? "M" : "F");
 				values.put ("patientId", App.get (patientId));
@@ -794,6 +784,84 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 			intent.putExtra (Barcode.SCAN_MODE, Barcode.QR_MODE);
 			startActivityForResult (intent, Barcode.BARCODE_RESULT);
 		}
+		else if(view == validatePatientId)
+		{
+			// validate Patient ID and fill gender and age
+			final String id = App.get (patientId);
+			// If searching by Id, then get details
+			if (!"".equals (id))
+			{
+				AsyncTask<String , String, Object> searchTask = new AsyncTask<String, String, Object>()
+				{
+
+					protected Object doInBackground (String... params)
+					{
+						runOnUiThread (new Runnable ()
+						{
+							@Override
+							public void run ()
+							{
+								loading.setIndeterminate (true);
+								loading.setCancelable (false);
+								loading.setMessage (getResources ().getString (R.string.loading_message));
+								loading.show ();
+							}
+						});
+						String[][] patientDetail = serverService.getPatientDetail (id);
+						return patientDetail;
+					}
+
+					protected void onPostExecute (Object result)
+					{
+						super.onPostExecute (result);
+						loading.dismiss ();
+						try
+						{
+							// Display a message if no results were found
+							if (result == null)
+							{
+								App.getAlertDialog (ScreeningActivity.this, AlertType.INFO, getResources ().getString (R.string.patients_not_found)).show ();
+							}
+							else
+							{
+								String[][] patientDetails = (String[][]) result;
+//								patientsRadioGroup.removeAllViews ();
+								for (String[] pair : patientDetails)
+								{
+									MyTextView textView = new MyTextView (ScreeningActivity.this, R.style.text, R.string.empty_string);
+//									textView.setId (counter.getAndIncrement ());
+									if (pair == null)
+									{
+										continue;
+									}
+//									textView.setText (pair[0] + ": " + pair[1]);
+//									textView.setTag (id);
+//									patientsRadioGroup.addView (textView);
+									if(pair[0].contains("Age"))
+									{
+										age.setText(pair[1]);
+									}
+									else if(pair[0].contains("Gender"))
+									{
+										male.setChecked(pair[1].equals("M") ? true : false);
+										female.setChecked(pair[1].equals("F") ? true : false);
+									}
+								}
+//								searchLayout.setVisibility (View.GONE);
+//								searchResultsScrollView.setVisibility (View.VISIBLE);
+							}
+						}
+						catch (Exception e)
+						{
+							Log.e (TAG, e.getMessage ());
+							App.getAlertDialog (ScreeningActivity.this, AlertType.ERROR, getResources ().getString (R.string.parsing_error)).show ();
+						}
+					}
+				};
+				searchTask.execute ("");
+			}
+				
+		}
 	}
 
 	@Override
@@ -848,13 +916,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		else if (button == cxrRifIndication || button == bloodGlucoseIndication || button == cxrSpirometryIndication)
 		{
 			boolean check = cxrRifIndication.isChecked () | bloodGlucoseIndication.isChecked () | cxrSpirometryIndication.isChecked ();
-			firstNameTextView.setEnabled (check);
-			firstName.setEnabled (check);
-			lastNameTextView.setEnabled (check);
-			lastName.setEnabled (check);
-			patientIdTextView.setEnabled (check);
-			patientId.setEnabled (check);
-			scanBarcode.setEnabled (check);
+//			firstNameTextView.setEnabled (check);
+//			firstName.setEnabled (check);
+//			lastNameTextView.setEnabled (check);
+//			lastName.setEnabled (check);
+//			patientIdTextView.setEnabled (check);
+//			patientId.setEnabled (check);
+//			scanBarcode.setEnabled (check);
 			isSuspect = check;
 		}
 	}
