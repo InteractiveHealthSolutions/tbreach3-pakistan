@@ -36,8 +36,8 @@ public final class DataWarehouseMain {
 	public static final String version = "0.0.1";
 
 	private static final Logger log = Logger.getLogger(Class.class.getName());
-	public static final String directoryPath = "c:\\Users\\Owais\\git\\tbreach3-pakistan\\tbr3datawarehouse\\";
-	public static final String dataPath = "e:\\Data\\";
+	public static final String directoryPath = "c:\\Users\\New User.Admin-PC\\git\\tbreach3-pakistan\\tbr3datawarehouse\\";
+	public static final String dataPath = "e:\\Owais\\data\\";
 	public static final String dwSchema = "sz_dw";
 	public static final String filePath = directoryPath + new Date().getTime()
 			+ ".sql";
@@ -46,7 +46,7 @@ public final class DataWarehouseMain {
 			+ "tbr3datawarehouse.properties";
 	public OpenMrsProcessor openMrs;
 	public FieldMonitoringProcessor fm;
-	public FieldMonitoringProcessor ilms;
+	public IlmsProcessor ilms;
 	public DatabaseUtil dwDb;
 	public static Properties props;
 
@@ -206,16 +206,20 @@ public final class DataWarehouseMain {
 	}
 
 	public void extractLoad(boolean fromScratch) {
-		log.info("Starting ETL");
-		// OpenMRS ETL
+		log.info("Starting Extract/Load");
+		// OpenMRS EL
 		openMrs.createSchema(fromScratch);
 		openMrs.extract(dataPath);
 		openMrs.load(dataPath);
-		// Field Monitoring ETL
+		// Field Monitoring EL
 		fm.createSchema(fromScratch);
 		fm.extract(dataPath);
 		fm.load(dataPath);
-		log.info("Finished ETL");
+		// ILMS EL
+//		ilms.createSchema(fromScratch);
+//		ilms.extract(dataPath);
+//		ilms.load(dataPath);
+		log.info("Finished Extract/Load");
 	}
 
 	public void createDimensions() {
