@@ -226,7 +226,7 @@ public class HttpsClient extends DefaultHttpClient
 			// Test
 			socketFactory.setHostnameVerifier (SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 			// Prodcution
-			socketFactory.setHostnameVerifier (SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
+//			socketFactory.setHostnameVerifier (SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
 
 			SchemeRegistry registry = new SchemeRegistry ();
 			registry.register (new Scheme ("http", PlainSocketFactory.getSocketFactory (), HTTP_PORT));

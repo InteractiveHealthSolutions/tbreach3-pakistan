@@ -73,6 +73,10 @@
     <string name="cxr_rif_indication">CXR and MTB/RIF</string>
     <string name="blood_sugar_indication">Blood Sugar</string>
     <string name="cxr_spirometry_indication">CXR and Spirometry</string>
+    <string name="tb_before">Have you ever suffered from TB before?</string>
+    <string name="tb_treatment">Did you completed TB Treatment Course?</string>
+    <string name="family_tb_past">Has anyone from your family got TB in the past?</string>
+    <string name="family_tb_relation">Please mention the relation with that family member</string>
 
     <!-- String arrays -->
     <string-array name="cough_duration_options">
@@ -125,5 +129,14 @@
         <item>Unknown</item>
         <item>Refused</item>
     </string-array>
-
+    
+    <string-array name="tb_family_member_relation">
+        <item>Parent</item>
+        <item>Brother/Sister</item>
+        <item>Father/Mother in Law</item>
+        <item>Spouse</item>
+        <item>Child</item>
+        <item>Other</item>
+    </string-array>
+    
 </resources>

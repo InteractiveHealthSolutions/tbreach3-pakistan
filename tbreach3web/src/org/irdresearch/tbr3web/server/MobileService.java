@@ -203,9 +203,11 @@ public class MobileService {
 				response = getPatientDetail(formType, jsonObject);
 			else if (formType.equals(FormType.NON_SUSPECT))
 				response = doNonSuspectScreening(formType, jsonObject);
-			else if (formType.equals(FormType.NON_SUSPECT) || formType.equals(FormType.SCREENING)
-			        || formType.equals(FormType.NON_PULMONARY) || formType.equals(FormType.PAEDIATRIC_SCREENING))
+			else if (formType.equals(FormType.NON_SUSPECT) || formType.equals(FormType.NON_PULMONARY)
+					|| formType.equals(FormType.PAEDIATRIC_SCREENING))
 				response = doScreening(formType, jsonObject);
+			else if(formType.equals(FormType.SCREENING))
+				response = doLungScreening(formType, jsonObject);
 			else if (formType.equals(FormType.CUSTOMER_INFO))
 				response = doCustomerInfo(formType, jsonObject);
 			else if (formType.equals(FormType.BLOOD_SUGAR_TEST))
@@ -749,15 +751,8 @@ public class MobileService {
 			String location = values.getString("location").toString();
 			String username = values.getString("username").toString();
 			String patientId = values.getString("patient_id");
-			
-			String givenName = null;
-			String familyName = null;
-			
-			if(!formType.equals(FormType.SCREENING)) // also do not create patient in case of Lung Screening
-			{
-				givenName = values.getString("given_name");
-				familyName = values.getString("family_name");
-			}
+			String givenName = values.getString("given_name");
+			String familyName = values.getString("family_name");
 			
 			String encounterType = values.getString("encounter_type");
 			String formDate = values.getString("form_date");
@@ -909,14 +904,14 @@ public class MobileService {
 			String username = values.getString("username").toString();
 			String patientId = values.getString("patient_id");
 			
-			String givenName = null;
-			String familyName = null;
+//			String givenName = null;
+//			String familyName = null;
 			
-			if(!formType.equals(FormType.SCREENING)) // also do not create patient in case of Lung Screening
-			{
-				givenName = values.getString("given_name");
-				familyName = values.getString("family_name");
-			}
+//			if(!formType.equals(FormType.SCREENING)) // also do not create patient in case of Lung Screening
+//			{
+//				givenName = values.getString("given_name");
+//				familyName = values.getString("family_name");
+//			}
 			
 			String encounterType = values.getString("encounter_type");
 			String formDate = values.getString("form_date");
@@ -1017,7 +1012,7 @@ public class MobileService {
 		catch (Exception e)
 		{
 			e.printStackTrace ();
-//			error = "PatientID: " + CustomMessage.getErrorMessage (ErrorType.ITEM_NOT_FOUND);
+			error = "PatientID: " + CustomMessage.getErrorMessage (ErrorType.ITEM_NOT_FOUND);
 		}
 		finally {
 			try {

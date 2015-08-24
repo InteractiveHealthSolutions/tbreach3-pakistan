@@ -46,6 +46,12 @@
         <item>Yes</item>
         <item>Refuse</item>
     </string-array>
+    
+    <string-array name="options_two">
+        <item>No</item>
+        <item>Yes</item>
+    </string-array>
+    
     <string-array name="frequency">
         <item>Never</item>
         <item>Hardly ever</item>

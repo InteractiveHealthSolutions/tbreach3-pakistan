@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.bouncycastle.jce.provider.JDKDSASigner.noneDSA;
 import org.irdresearch.tbr3mobile.App;
 import org.irdresearch.tbr3mobile.R;
 import org.irdresearch.tbr3mobile.model.OpenMrsObject;
@@ -20,6 +22,7 @@ import org.irdresearch.tbr3mobile.shared.Metadata;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
@@ -866,10 +869,12 @@ public class ServerService
 	{
 		String response = "";
 		// Demographics
+		String givenName = null;
+		String familyName = null;
 		if(!encounterType.equals(FormType.SCREENING))
 		{
-			String givenName = TextUtil.capitalizeFirstLetter (values.getAsString ("firstName"));
-			String familyName = TextUtil.capitalizeFirstLetter (values.getAsString ("lastName"));
+			givenName = TextUtil.capitalizeFirstLetter (values.getAsString ("firstName"));
+			familyName = TextUtil.capitalizeFirstLetter (values.getAsString ("lastName"));
 		}
 		
 		int age = values.getAsInteger ("age");
@@ -879,17 +884,23 @@ public class ServerService
 		String formDate = values.getAsString ("formDate");
 		try
 		{
-			String id = getPatientId (patientId);
-			if (id != null)
-				return context.getResources ().getString (R.string.duplication);
+			if(!App.isOfflineMode())
+			{
+				String id = getPatientId (patientId);
+				if (id == null)
+					return context.getResources ().getString (R.string.patients_not_found);
+			}
 			// Save Patient
 			JSONObject json = new JSONObject ();
 			json.put ("app_ver", App.getVersion ());
 			json.put ("form_name", encounterType);
 			json.put ("username", App.getUsername ());
 			json.put ("patient_id", patientId);
-//			json.put ("given_name", givenName);
-//			json.put ("family_name", familyName);
+			if(!encounterType.equals(FormType.SCREENING))
+			{
+				json.put ("given_name", givenName);
+				json.put ("family_name", familyName);
+			}
 			json.put ("gender", gender);
 			json.put ("age", age);
 			json.put ("location", location);
