@@ -14,7 +14,7 @@ import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
  *
  */
 
-public class ILMSProcessor extends AbstractProcessor{
+public class IlmsProcessor extends AbstractProcessor{
 	
 	private static final Logger log = Logger.getLogger(Class.class.getName());
 	private static final String schemaName = "ilms";
@@ -35,7 +35,7 @@ public class ILMSProcessor extends AbstractProcessor{
 	 * @param dwDb
 	 *            connection to Data warehouse
 	 */
-	public ILMSProcessor(String scriptFilePath, DatabaseUtil ilmsDb,
+	public IlmsProcessor(String scriptFilePath, DatabaseUtil ilmsDb,
 			DatabaseUtil dwDb) {
 		this.scriptFilePath = scriptFilePath;
 		this.ilmsDb = ilmsDb;
