@@ -210,7 +210,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 	public void createViews (Context context)
 	{
 		TAG = "ScreeningActivity";
-		PAGE_COUNT = 9;
+		PAGE_COUNT = 10;
 		pager = (ViewPager) findViewById (R.template_id.pager);
 		navigationSeekbar.setMax (PAGE_COUNT - 1);
 		navigatorLayout = (LinearLayout) findViewById (R.template_id.navigatorLayout);
@@ -519,11 +519,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		{
 			message.append (getResources ().getString (R.string.empty_data) + "\n");
 		}
-		if (isSuspect && App.get (patientId).equals (""))
-		{
-			valid = false;
-			message.append (patientId.getTag ().toString () + ": " + getResources ().getString (R.string.empty_data) + "\n");
-		}
+//		if (isSuspect && App.get (patientId).equals (""))
+//		{
+//			valid = false;
+//			message.append (patientId.getTag ().toString () + ": " + getResources ().getString (R.string.empty_data) + "\n");
+//		}
 //		if (contactReferral.isChecked () && App.get (contactId).equals (""))
 //		{
 //			valid = false;
@@ -581,6 +581,18 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 				valid = false;
 				message.append (formDateButton.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
 			}
+			
+			// cough duration must be greater than 1
+			if (cough.getSelectedItemPosition () == 1)
+			{
+				int coughDuration = Integer.parseInt(App.get(this.coughDuration));
+				if(coughDuration <= 0 || coughDuration > 99)
+				{
+					valid = false;
+					message.append (this.coughDuration.getTag ().toString () + ": " + "Please insert a valid cough duration value between 1 and 99." + "\n");
+				}
+			}
+			
 			// Age range
 			int a = Integer.parseInt (App.get (age));
 			if (a < 10 || a > 110)
@@ -608,11 +620,14 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 					message.append (weight.getTag ().toString () + ": " + getResources ().getString (R.string.out_of_range) + "\n");
 				}
 			}
-			if (isSuspect && !RegexUtil.isValidId (App.get (patientId)))
+			if (!App.get(patientId).equals(""))
 			{
+				if(!RegexUtil.isValidId (App.get (patientId)))
+				{
 				valid = false;
 				message.append (patientId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
 				patientId.setTextColor (getResources ().getColor (R.color.Red));
+				}
 			}
 //			if (contactReferral.isChecked () && !RegexUtil.isValidId (App.get (contactId)))
 //			{

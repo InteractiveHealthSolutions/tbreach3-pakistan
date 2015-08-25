@@ -510,15 +510,29 @@ public class ServerService
 					String name = jsonResponse.get ("name").toString ();
 					int age = jsonResponse.getInt ("age");
 					String gen = jsonResponse.get ("gender").toString ();
-					JSONArray encounters = new JSONArray (jsonResponse.get ("encounters").toString ());
-					details = new String[encounters.length () + 3][];
+					JSONArray encounters = null;
+					if(json.has("encounters"))
+					{
+						encounters = new JSONArray (jsonResponse.get ("encounters").toString ());
+						details = new String[encounters.length () + 3][];
+					}
+					else
+					{
+						details = new String[3][];
+					}
 					details[0] = new String[] {"Name", name};
 					details[1] = new String[] {"Age", String.valueOf (age)};
 					details[2] = new String[] {"Gender", gen};
-					for (int i = 0; i < encounters.length (); i++)
+					if(encounters != null)
 					{
-						JSONObject obj = new JSONObject (encounters.get (i).toString ());
-						details[i + 3] = new String[] {obj.get ("encounter").toString (), obj.get ("date").toString ()};
+						if(encounters.length() > 0)
+						{
+							for (int i = 0; i < encounters.length (); i++)
+							{
+								JSONObject obj = new JSONObject (encounters.get (i).toString ());
+								details[i + 3] = new String[] {obj.get ("encounter").toString (), obj.get ("date").toString ()};
+							}
+						}
 					}
 				}
 				catch (JSONException e)
