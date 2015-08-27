@@ -119,11 +119,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 	MyTextView		tobaccoPastTextView;
 	MySpinner		tobaccoPast;
 
-//	MyCheckBox		contactReferral;
-//	MyTextView		contactVoucherTypeTextView;
-//	MySpinner		contactVoucherType;
-//	MyTextView		contactIdTextView;
-//	MyEditText		contactId;
+	MyCheckBox		contactReferral;
+	MyTextView		contactVoucherTypeTextView;
+	MySpinner		contactVoucherType;
+	MyTextView		contactIdTextView;
+	MyEditText		contactId;
 
 	MyTextView		conclusionTextView;
 	MyCheckBox		cxrRifIndication;
@@ -210,7 +210,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 	public void createViews (Context context)
 	{
 		TAG = "ScreeningActivity";
-		PAGE_COUNT = 10;
+		PAGE_COUNT = 11;
 		pager = (ViewPager) findViewById (R.template_id.pager);
 		navigationSeekbar.setMax (PAGE_COUNT - 1);
 		navigatorLayout = (LinearLayout) findViewById (R.template_id.navigatorLayout);
@@ -289,11 +289,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		tobaccoPast = new MySpinner (context, getResources ().getStringArray (R.array.tobacco_durations), R.string.tobacco_past, R.string.option_hint);
 
 		// Contact Referral info..
-//		contactReferral = new MyCheckBox (context, R.string.contact_referral, R.style.edit, R.string.contact_referral, false);
-//		contactVoucherTypeTextView = new MyTextView (context, R.style.text, R.string.voucher_type);
-//		contactVoucherType = new MySpinner (context, getResources ().getStringArray (R.array.voucher_type_options), R.string.voucher_type, R.string.option_hint);
-//		contactIdTextView = new MyTextView (context, R.style.text, R.string.contact_referral_id);
-//		contactId = new MyEditText (context, R.string.contact_referral_id, R.string.patient_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.idLength, false);
+		contactReferral = new MyCheckBox (context, R.string.contact_referral, R.style.edit, R.string.contact_referral, false);
+		contactVoucherTypeTextView = new MyTextView (context, R.style.text, R.string.voucher_type);
+		contactVoucherType = new MySpinner (context, getResources ().getStringArray (R.array.voucher_type_options), R.string.voucher_type, R.string.option_hint);
+		contactIdTextView = new MyTextView (context, R.style.text, R.string.contact_referral_id);
+		contactId = new MyEditText (context, R.string.contact_referral_id, R.string.patient_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.idLength, false);
 
 		// Conclusion
 		conclusionTextView = new MyTextView (context, R.style.text, R.string.test_indication);
@@ -321,7 +321,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 				{coughTextView, cough, coughDurationTextView, coughDuration, coughDurationModifierTextView, coughDurationModifier},
 				{symptomsTextView, fever, haemoptysis, nightSweats, weightLoss, fatigue, appetiteLoss}, {diabetesTextView, diabetes, familyDiabetesTextView, familyDiabetes},
 				{hypertensionTextView, hypertension}, {breathingShortnessTextView, breathingShortness, physicalActivityTextView, activeBreathingShortness, wheezingTextView, wheezing},
-				{tobaccoCurrentTextView, tobaccoCurrent, tobaccoPastTextView, tobaccoPast}, /* {contactReferral, contactVoucherTypeTextView, contactVoucherType, contactIdTextView, contactId}, */
+				{tobaccoCurrentTextView, tobaccoCurrent, tobaccoPastTextView, tobaccoPast}, {contactReferral, contactVoucherTypeTextView, contactVoucherType, contactIdTextView, contactId},
 				{tbBeforeTextView, tbBefore, tbTreatmentCourseTextView, tbTreatmentCourse, familyTbPastTextView, familyTbPast, familyTbRelationTextView, familyTbRelation},
 				{conclusionTextView, cxrRifIndication, bloodGlucoseIndication, cxrSpirometryIndication}};
 		// Create layouts and store in ArrayList
@@ -354,8 +354,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		height.setOnEditorActionListener (this);
 		weight.setOnEditorActionListener (this);
 		views = new View[] {age, measurement, height, weight, cough, ethnicity, coughDuration, coughDurationModifier, fever, haemoptysis, nightSweats, weightLoss, fatigue,
-				appetiteLoss, diabetes, familyDiabetes, hypertension, breathingShortness, activeBreathingShortness, wheezing, tobaccoCurrentTextView, tobaccoCurrent, tobaccoPast, /* contactReferral,
-				contactVoucherType, contactId, */ cxrRifIndication, bloodGlucoseIndication, cxrSpirometryIndication, patientId, tbBefore, tbTreatmentCourse, familyTbPast, familyTbRelation};
+				appetiteLoss, diabetes, familyDiabetes, hypertension, breathingShortness, activeBreathingShortness, wheezing, tobaccoCurrentTextView, tobaccoCurrent, tobaccoPast, contactReferral,
+				contactVoucherType, contactId, cxrRifIndication, bloodGlucoseIndication, cxrSpirometryIndication, patientId, tbBefore, tbTreatmentCourse, familyTbPast, familyTbRelation};
 		for (View v : views)
 		{
 			if (v instanceof Spinner)
@@ -396,11 +396,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		male.setChecked (true);
 		cxrRifIndication.setChecked (false);
 		
-//		contactReferral.setChecked (false);
-//		contactVoucherTypeTextView.setEnabled (false);
-//		contactVoucherType.setEnabled (false);
-//		contactIdTextView.setEnabled (false);
-//		contactId.setEnabled (false);
+		contactReferral.setChecked (false);
+		contactVoucherTypeTextView.setEnabled (false);
+		contactVoucherType.setEnabled (false);
+		contactIdTextView.setEnabled (false);
+		contactId.setEnabled (false);
 		
 //		patientIdTextView.setEnabled (false);
 //		patientId.setEnabled (false);
@@ -456,8 +456,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		boolean hasPhysicalActivityBreathingShortness = activeBreathingShortness.getSelectedItemPosition () == 1;
 		boolean hasWheezing = wheezing.getSelectedItemPosition () == 1;
 		// CXR and RIF test indication logic
-//		if (hasCough | hasFever | hasHaemoptysis | hasNightSweats | hasWeightLioss | hasFatigue | hasAppetiteLoss | hasBmiUnder | isSmoker | wasSmoker | contactReferral.isChecked ())
-		if (hasCough | hasFever | hasHaemoptysis | hasNightSweats | hasWeightLioss | hasFatigue | hasAppetiteLoss | hasBmiUnder | isSmoker | wasSmoker) // after changes
+//		if (hasCough | hasFever | hasHaemoptysis | hasNightSweats | hasWeightLioss | hasFatigue | hasAppetiteLoss | hasBmiUnder | isSmoker | wasSmoker) // after changes
+		if (hasCough | hasFever | hasHaemoptysis | hasNightSweats | hasWeightLioss | hasFatigue | hasAppetiteLoss | hasBmiUnder | isSmoker | wasSmoker | contactReferral.isChecked ())
 		{
 			cxrRifIndication.setChecked (true);
 		}
@@ -519,16 +519,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 		{
 			message.append (getResources ().getString (R.string.empty_data) + "\n");
 		}
-//		if (isSuspect && App.get (patientId).equals (""))
-//		{
-//			valid = false;
-//			message.append (patientId.getTag ().toString () + ": " + getResources ().getString (R.string.empty_data) + "\n");
-//		}
-//		if (contactReferral.isChecked () && App.get (contactId).equals (""))
-//		{
-//			valid = false;
-//			message.append (contactId.getTag ().toString () + ": " + getResources ().getString (R.string.empty_data) + "\n");
-//		}
+		if (contactReferral.isChecked () && App.get (contactId).equals (""))
+		{
+			valid = false;
+			message.append (contactId.getTag ().toString () + ": " + getResources ().getString (R.string.empty_data) + "\n");
+		}
 		// Validate data
 		if (valid)
 		{
@@ -629,12 +624,12 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 				patientId.setTextColor (getResources ().getColor (R.color.Red));
 				}
 			}
-//			if (contactReferral.isChecked () && !RegexUtil.isValidId (App.get (contactId)))
-//			{
-//				valid = false;
-//				message.append (contactId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
-//				contactId.setTextColor (getResources ().getColor (R.color.Red));
-//			}
+			if (contactReferral.isChecked () && !RegexUtil.isValidId (App.get (contactId)))
+			{
+				valid = false;
+				message.append (contactId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
+				contactId.setTextColor (getResources ().getColor (R.color.Red));
+			}
 		}
 		catch (NumberFormatException e)
 		{
@@ -700,7 +695,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 				observations.add (new String[] {"Blood Glucose", bloodGlucoseIndication.isChecked () ? "Yes" : "No"});
 				observations.add (new String[] {"GXP", cxrRifIndication.isChecked () ? "Yes" : "No"});
 				observations.add (new String[] {"Spirometry", cxrSpirometryIndication.isChecked () ? "Yes" : "No"});
-//				observations.add (new String[] {"Referral Voucher", contactReferral.isChecked () ? "Yes" : "No"});
+				observations.add (new String[] {"Referral Voucher", contactReferral.isChecked () ? "Yes" : "No"});
 				
 				observations.add(new String[] {"TB Before", App.get(tbBefore)});
 				
@@ -716,14 +711,14 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 					observations.add(new String[] {"TB Family Member Relation", App.get(familyTbRelation)});
 				}
 				
-//				if (contactReferral.isChecked ())
-//				{
-//					observations.add (new String[] {"Voucher Type", App.get (contactVoucherType)});
-//					if (contactVoucherType.getSelectedItemPosition () == 0)
-//					{
-//						observations.add (new String[] {"Contact Patient ID", App.get (contactId)});
-//					}
-//				}
+				if (contactReferral.isChecked ())
+				{
+					observations.add (new String[] {"Voucher Type", App.get (contactVoucherType)});
+					if (contactVoucherType.getSelectedItemPosition () == 0)
+					{
+						observations.add (new String[] {"Contact Patient ID", App.get (contactId)});
+					}
+				}
 			}
 			AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String> ()
 			{
@@ -852,6 +847,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 			// validate Patient ID and fill gender and age
 			if (validatePatientId())
 			{
+				age.setText("");
 				final String id = App.get (patientId);
 				AsyncTask<String , String, Object> searchTask = new AsyncTask<String, String, Object>()
 				{
@@ -965,24 +961,24 @@ public class ScreeningActivity extends AbstractFragmentActivity implements OnEdi
 			bmiTextTextView.setEnabled (state);
 			bmiTextView.setEnabled (state);
 		}
-//		else if (button == contactReferral)
-//		{
-//			if (button.isChecked ())
-//			{
-//				contactVoucherTypeTextView.setEnabled (true);
-//				contactVoucherType.setEnabled (true);
-//				contactIdTextView.setEnabled (true);
-//				contactId.setEnabled (true);
-//				updateDisplay ();
-//			}
-//			else
-//			{
-//				contactVoucherTypeTextView.setEnabled (false);
-//				contactVoucherType.setEnabled (false);
-//				contactIdTextView.setEnabled (false);
-//				contactId.setEnabled (false);
-//			}
-//		}
+		else if (button == contactReferral)
+		{
+			if (button.isChecked ())
+			{
+				contactVoucherTypeTextView.setEnabled (true);
+				contactVoucherType.setEnabled (true);
+				contactIdTextView.setEnabled (true);
+				contactId.setEnabled (true);
+				updateDisplay ();
+			}
+			else
+			{
+				contactVoucherTypeTextView.setEnabled (false);
+				contactVoucherType.setEnabled (false);
+				contactIdTextView.setEnabled (false);
+				contactId.setEnabled (false);
+			}
+		}
 		else if (button == fever || button == haemoptysis || button == nightSweats || button == weightLoss || button == fatigue || button == appetiteLoss)
 		{
 			updateDisplay ();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="trust_store_password" translatable="false">jingle94</string>
-    <string name="server_address" translatable="false">"202.141.249.106:8931"</string>
+    <string name="server_address" translatable="false">"202.141.249.106:8932"</string>
 <!-- 	<string name="server_address">"10.0.2.2:8080"</string> -->
     <string name="http_port" translatable="false">80</string>
     <string name="https_port" translatable="false">443</string>
