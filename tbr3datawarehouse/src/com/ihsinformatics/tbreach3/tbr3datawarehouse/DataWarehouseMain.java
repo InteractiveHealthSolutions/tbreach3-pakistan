@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,6 +39,7 @@ public final class DataWarehouseMain {
 	private static final Logger log = Logger.getLogger(Class.class.getName());
 	public static final String directoryPath = "c:\\Users\\New User.Admin-PC\\git\\tbreach3-pakistan\\tbr3datawarehouse\\";
 	public static final String dataPath = "e:\\Owais\\data\\";
+	public static final String dataPathForUpdate = "e:\\\\Owais\\\\data\\\\";
 	public static final String dwSchema = "sz_dw";
 	public static final String filePath = directoryPath + new Date().getTime()
 			+ ".sql";
@@ -46,7 +48,7 @@ public final class DataWarehouseMain {
 			+ "tbr3datawarehouse.properties";
 	public OpenMrsProcessor openMrs;
 	public FieldMonitoringProcessor fm;
-	public IlmsProcessor ilms;
+//	public IlmsProcessor ilms;
 	public DatabaseUtil dwDb;
 	public static Properties props;
 
@@ -98,7 +100,14 @@ public final class DataWarehouseMain {
 			dw.createFacts();
 		}
 		if (dw.hasSwitch(args, "u")) {
-			dw.updateWarehosue();
+			// TODO: Read date from parameters as number of days (not date string)
+			int days = 365;
+			Date dateFrom = new Date();
+			Date dateTo = new Date();
+			Calendar instance = Calendar.getInstance();
+			instance.add(Calendar.DATE, days);
+			dateFrom = instance.getTime();
+			dw.updateWarehosue(dataPathForUpdate, dateFrom, dateTo);
 		}
 		System.exit(0);
 	}
@@ -198,10 +207,9 @@ public final class DataWarehouseMain {
 			dwDb.deleteTable(t.toString());
 		}
 		extractLoad(true);
-		createDimensions();
+		createDimensions();;
 		transform();
 		createFacts();
-		updateWarehosue();
 		log.info("Finished DW hard reset");
 	}
 
@@ -259,8 +267,17 @@ public final class DataWarehouseMain {
 		log.info("Finished fact tables");
 	}
 
-	public void updateWarehosue() {
+	public void updateWarehosue(String dataPath, Date dateFrom, Date dateTo) {
 		log.info("Starting DW update");
+	//	openMrs.divideTables();
+		boolean result = openMrs.update(dataPath, dateFrom, dateTo);
+		if (!result) {
+			log.warning("OpenMRS DB transformation completed with warnings.");
+		}
+		result = fm.update(DataWarehouseMain.dataPath, dateFrom, dateTo);
+		if (!result) {
+			log.warning("Field Monitoring DB transformation completed with warnings.");
+		}		
 		log.info("Finished DW update");
 	}
 }
