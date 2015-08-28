@@ -191,7 +191,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 		log.info("Importing data from raw files into data warehouse");
 		for (String table : sourceTables) {
 			String filePath = dataPath.replace("\\", "\\\\") 
-					//+ schemaName + "_"
+					+ schemaName + "_"
 					+ table + ".csv";
 			File file = new File(filePath);
 			if (!file.exists()) {
@@ -322,28 +322,12 @@ public class OpenMrsProcessor extends AbstractProcessor {
 					}
 				}
 			} 
-	/*	for (String table : tablesNotWithDateCreated) {
-			System.out.println();
-		}
-		for (String table : tablesWithDateCreated) {
-			
-		}*/
+	
 		ArrayList<String> queriesList = new ArrayList<String>();
 		int count = 1;
-		/*for (String table : tablesWithDateCreatedAndChanged) {
+		for (String table : tablesWithDateCreatedAndChanged) {
 			
-			String query  ="SET @q"+count+"=concat(\"SELECT * FROM om_"+ table+ " WHERE (date_created BETWEEN '\", start_date, \"' AND '\", end_date, \"') OR (date_changed BETWEEN '\", start_date, \"' AND '\", end_date, \"') \", \" INTO OUTFILE '\", file_path, \""+table+".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' \");";
-			query = query+ "\n prepare s"+count+" from @q"+count+";";
-			query =query+ "\n execute s"+count+";";
-
-			queriesList.add(query);
-			count++;
-			System.out.println(query + "\n");
-		}*/
-		
-		/*for (String table : tablesWithDateCreated) {
-			
-			String query  ="SET @q"+count+"=concat(\"SELECT * FROM om_"+ table+ " WHERE (date_created BETWEEN '\", start_date, \"' AND '\", end_date, \"')\", \" INTO OUTFILE '\", file_path, \""+table+".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' \");";
+			String query  ="SET @q"+count+"=concat(\"SELECT * FROM om_"+ table+ " WHERE (date_created BETWEEN '\", start_date, \"' AND '\", end_date, \"') OR (date_changed BETWEEN '\", start_date, \"' AND '\", end_date, \"') \", \" INTO OUTFILE '\", file_path, \""+schemaName+"_"+table+".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' \");";
 			query = query+ "\n prepare s"+count+" from @q"+count+";";
 			query =query+ "\n execute s"+count+";";
 
@@ -351,10 +335,21 @@ public class OpenMrsProcessor extends AbstractProcessor {
 			count++;
 			System.out.println(query + "\n");
 		}
-*/	
+		
+		for (String table : tablesWithDateCreated) {
+			
+			String query  ="SET @q"+count+"=concat(\"SELECT * FROM om_"+ table+ " WHERE (date_created BETWEEN '\", start_date, \"' AND '\", end_date, \"')\", \" INTO OUTFILE '\", file_path, \""+schemaName+"_"+table+".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' \");";
+			query = query+ "\n prepare s"+count+" from @q"+count+";";
+			query =query+ "\n execute s"+count+";";
+
+			queriesList.add(query);
+			count++;
+			System.out.println(query + "\n");
+		}
+	
 		for (String table : tablesNotWithDateCreated) {
 			
-			String query  ="SET @q"+count+"=concat(\"SELECT * FROM om_"+ table+ "  INTO OUTFILE '\", file_path,\""+table+".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' \");";
+			String query  ="SET @q"+count+"=concat(\"SELECT * FROM om_"+ table+ "  INTO OUTFILE '\", file_path,\""+schemaName+"_"+table+".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' \");";
 			query = query+ "\n prepare s"+count+" from @q"+count+";";
 			query =query+ "\n execute s"+count+";";
 

@@ -100,14 +100,26 @@ public final class DataWarehouseMain {
 			dw.createFacts();
 		}
 		if (dw.hasSwitch(args, "u")) {
-			// TODO: Read date from parameters as number of days (not date string)
-			int days = 365;
-			Date dateFrom = new Date();
-			Date dateTo = new Date();
-			Calendar instance = Calendar.getInstance();
-			instance.add(Calendar.DATE, days);
-			dateFrom = instance.getTime();
-			dw.updateWarehosue(dataPathForUpdate, dateFrom, dateTo);
+			if(args.length < 2) {
+				System.out.println("Please enter the number of days in the argument \n"
+						+ "i.e. -u , 365");
+			}
+			else {
+				try {
+					//int days = 365;
+					int days = Integer.parseInt(args[1]); 
+					Date dateFrom = new Date();
+					Date dateTo = new Date();
+					Calendar instance = Calendar.getInstance();
+					instance.add(Calendar.DATE, days);
+					dateFrom = instance.getTime();
+					dw.updateWarehosue(dataPathForUpdate, dateFrom, dateTo);
+				} catch(NumberFormatException ex) {
+					System.out.println("Invalid Argument for days! \n"
+							+ "Please enter the number of days in the argument \n"
+							+ "i.e. -u , 365");
+				}
+			}
 		}
 		System.exit(0);
 	}

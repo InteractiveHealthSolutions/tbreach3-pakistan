@@ -121,7 +121,7 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 					+ "' AND '"
 					+ DateTimeUtil.getSQLDate(dateTo)
 					+ "') "*/
-					+ "INTO OUTFILE '"
+					+ " INTO OUTFILE '"
 					+ fileName
 					+ "' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
 			Object obj = fmDb.runCommand(CommandType.EXECUTE, query);
