@@ -1,6 +1,7 @@
 package com.ihsinformatics.tbreach3.tbr3datawarehouse;
 
 import java.io.File;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.CommandType;
@@ -138,9 +139,14 @@ public class IlmsProcessor extends AbstractProcessor{
 		 * Denormalize and standardize tables according to the warehouse
 		 */
 		boolean transform() {
-			
-			//TODO
-			
+			return false;
+		}
+
+		boolean update(String dataPath, Date dateFrom, Date dateTo) {
+			return false;
+		}
+
+		boolean extract(String dataPath, Date dateFrom, Date dateTo) {
 			return false;
 		}
 		

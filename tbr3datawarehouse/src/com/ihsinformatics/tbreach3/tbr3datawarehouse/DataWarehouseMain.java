@@ -37,7 +37,7 @@ public final class DataWarehouseMain {
 	public static final String version = "0.0.1";
 
 	private static final Logger log = Logger.getLogger(Class.class.getName());
-	public static final String directoryPath = "c:\\Users\\New User.Admin-PC\\git\\tbreach3-pakistan\\tbr3datawarehouse\\";
+	public static final String directoryPath = "c:\\Users\\New User.Admin-PC\\git\\tbreach3-pakistan\\tbr3datawarehouse\\res";
 	public static final String dataPath = "e:\\Owais\\data\\";
 	public static final String dataPathForUpdate = "e:\\\\Owais\\\\data\\\\";
 	public static final String dwSchema = "sz_dw";
@@ -161,7 +161,7 @@ public final class DataWarehouseMain {
 		password = DataWarehouseMain.getProperty("openmrs.connection.password");
 		DatabaseUtil openMrsDb = new DatabaseUtil(url, driver, username,
 				password);
-		openMrs = new OpenMrsProcessor("openmrs_schema.sql", openMrsDb, dwDb);
+		openMrs = new OpenMrsProcessor("res\\openmrs_schema.sql", openMrsDb, dwDb);
 		// Field Monitoring DB credentials
 		driver = DataWarehouseMain
 				.getProperty("fieldmonitoring.connection.driver_class");
@@ -171,7 +171,7 @@ public final class DataWarehouseMain {
 		password = DataWarehouseMain
 				.getProperty("fieldmonitoring.connection.password");
 		DatabaseUtil fmDb = new DatabaseUtil(url, driver, username, password);
-		fm = new FieldMonitoringProcessor("tbr3_monitoring_schema.sql", fmDb,
+		fm = new FieldMonitoringProcessor("res\\tbr3_monitoring_schema.sql", fmDb,
 				dwDb);
 
 	}
@@ -260,7 +260,7 @@ public final class DataWarehouseMain {
 	public void createDimensions() {
 		log.info("Starting dimension modeling");
 		FileUtil fileUtil = new FileUtil();
-		String[] queries = fileUtil.getLines("dimension_modeling.sql");
+		String[] queries = fileUtil.getLines("\\res\\dimension_modeling.sql");
 		// Recreate tables
 		for (String query : queries) {
 			if (query.toUpperCase().startsWith("DROP")) {
@@ -302,6 +302,7 @@ public final class DataWarehouseMain {
 			log.warning("OpenMRS DB transformation completed with warnings.");
 		}
 		result = fm.update(DataWarehouseMain.dataPath, dateFrom, dateTo);
+		
 		if (!result) {
 			log.warning("Field Monitoring DB transformation completed with warnings.");
 		}		
