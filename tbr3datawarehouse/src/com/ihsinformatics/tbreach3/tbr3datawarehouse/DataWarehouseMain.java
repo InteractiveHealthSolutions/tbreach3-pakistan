@@ -63,7 +63,8 @@ public final class DataWarehouseMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if (args.length == 0 || args[0] == null) {
+		//check arguments first
+		if (args.length == 0 || args.length > 2 || args[0] == null) {
 			System.out
 					.println("Arguments are invalid. Arguments must be provided as:\n"
 							+ "-R to hard reset warehouse (Extract/Load > Transform > Dimensional modeling > Fact tables)\n"
@@ -83,28 +84,43 @@ public final class DataWarehouseMain {
 		}
 		DataWarehouseMain dw = new DataWarehouseMain();
 		dw.setDataConnections();
-		if (dw.hasSwitch(args, "R")) {
-			dw.resetDataWarehouse();
-			return;
-		}
-		if (dw.hasSwitch(args, "l")) {
-			dw.extractLoad(false);
-		}
-		if (dw.hasSwitch(args, "t")) {
-			dw.transform();
-		}
-		if (dw.hasSwitch(args, "d")) {
-			dw.createDimensions();
-		}
-		if (dw.hasSwitch(args, "f")) {
-			dw.createFacts();
-		}
-		if (dw.hasSwitch(args, "u")) {
-			if(args.length < 2) {
-				System.out.println("Please enter the number of days in the argument \n"
-						+ "i.e. -u , 365");
+		
+	    //Single Argument
+		if (args.length == 1) {
+			if (dw.hasSwitch(args, "r") || dw.hasSwitch(args, "R")) {
+				dw.resetDataWarehouse();
+				return;
+			}
+			if (dw.hasSwitch(args, "l") || dw.hasSwitch(args, "L")) {
+				dw.extractLoad(false);
+			}
+			if (dw.hasSwitch(args, "t") || dw.hasSwitch(args, "T")) {
+				dw.transform();
+			}
+			if (dw.hasSwitch(args, "d") || dw.hasSwitch(args, "D")) {
+				dw.createDimensions();
+			}
+			if (dw.hasSwitch(args, "f") || dw.hasSwitch(args, "F")) {
+				dw.createFacts();
+			}
+			if (dw.hasSwitch(args, "u") || dw.hasSwitch(args, "U")) {
+					System.out.println("Please enter the number of days in the argument \n"
+							+ "i.e. -u , 365");
 			}
 			else {
+				System.out
+				.println("Arguments are invalid. Arguments must be provided as:\n"
+						+ "-R to hard reset warehouse (Extract/Load > Transform > Dimensional modeling > Fact tables)\n"
+						+ "-l to extract/load data from various sources (stage1)\n"
+						+ "-t to transform schema from (stage2)\n"
+						+ "-d to create dimension tables (data warehouse)\n"
+						+ "-f to create fact tables\n"
+						+ "-u,<space>(number of days) to update data warehouse (nightly run) i.e. -u, <space> 365\n");
+				return;
+			}
+		}
+		
+		else if (args.length == 2 || args[0].equals("-u") || args[0].equals("-U")) {
 				try {
 					//int days = 365;
 					int days = Integer.parseInt(args[1]); 
@@ -117,9 +133,8 @@ public final class DataWarehouseMain {
 				} catch(NumberFormatException ex) {
 					System.out.println("Invalid Argument for days! \n"
 							+ "Please enter the number of days in the argument \n"
-							+ "i.e. -u , 365");
+							+ "i.e. -u , <space> 365");
 				}
-			}
 		}
 		System.exit(0);
 	}
