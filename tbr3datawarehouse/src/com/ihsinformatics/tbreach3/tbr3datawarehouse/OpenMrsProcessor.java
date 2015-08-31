@@ -97,12 +97,14 @@ public class OpenMrsProcessor extends AbstractProcessor {
 	public boolean createSchema(boolean fromScratch) {
 		FileUtil fileUtil = new FileUtil();
 		String[] queries = fileUtil.getLines(scriptFilePath);
+		if(fromScratch) {
 		// Recreate tables
 		for (String query : queries) {
-			if (query.toUpperCase().startsWith("DROP")) {
-				dwDb.runCommand(CommandType.DROP, query);
-			} else {
-				dwDb.runCommand(CommandType.CREATE, query);
+				if (query.toUpperCase().startsWith("DROP")) {
+					dwDb.runCommand(CommandType.DROP, query);
+				} else {
+					dwDb.runCommand(CommandType.CREATE, query);
+				}
 			}
 		}
 		return true;
