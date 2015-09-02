@@ -5,5 +5,5 @@ package org.irdresearch.tbr3web.shared;
 
 public class App
 {
-	public static final String	appVersion	= "1.3.2";
+	public static final String	appVersion	= "1.4.1";
 }
