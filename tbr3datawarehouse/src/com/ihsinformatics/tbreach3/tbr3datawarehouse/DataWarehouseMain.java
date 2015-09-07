@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.CommandType;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DatabaseUtil;
+import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DateTimeUtil;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
 
 /**
@@ -34,21 +35,18 @@ import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
  */
 public final class DataWarehouseMain {
 
-	public static final String version = "0.0.1";
+	public static final String version = "1.0.0-beta";
 
 	private static final Logger log = Logger.getLogger(Class.class.getName());
-	public static final String directoryPath = "c:\\Users\\New User.Admin-PC\\git\\tbreach3-pakistan\\tbr3datawarehouse\\res";
-	public static final String dataPath = "e:\\Owais\\data\\";
-	public static final String dataPathForUpdate = "e:\\\\Owais\\\\data\\\\";
+	public static final String dataPath = System.getProperty("user.home")
+			+ FileUtil.SEPARATOR + "sz_dw" + FileUtil.SEPARATOR;
+	public static final String dataPathForUpdate = dataPath.replace(
+			FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR);
 	public static final String dwSchema = "sz_dw";
-	public static final String filePath = directoryPath + new Date().getTime()
-			+ ".sql";
-	public static final String propertiesFilePath = directoryPath
-			+ System.getProperty("file.separator")
-			+ "tbr3datawarehouse.properties";
+	public static final String propertiesFilePath = "tbr3datawarehouse.properties";
 	public OpenMrsProcessor openMrs;
 	public FieldMonitoringProcessor fm;
-//	public IlmsProcessor ilms;
+	// public IlmsProcessor ilms;
 	public DatabaseUtil dwDb;
 	public static Properties props;
 
@@ -63,7 +61,7 @@ public final class DataWarehouseMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//check arguments first
+		// check arguments first
 		if (args.length == 0 || args.length > 2 || args[0] == null) {
 			System.out
 					.println("Arguments are invalid. Arguments must be provided as:\n"
@@ -84,8 +82,8 @@ public final class DataWarehouseMain {
 		}
 		DataWarehouseMain dw = new DataWarehouseMain();
 		dw.setDataConnections();
-		
-	    //Single Argument
+
+		// Single Argument
 		if (args.length == 1) {
 			if (dw.hasSwitch(args, "r") || dw.hasSwitch(args, "R")) {
 				dw.resetDataWarehouse();
@@ -104,37 +102,38 @@ public final class DataWarehouseMain {
 				dw.createFacts();
 			}
 			if (dw.hasSwitch(args, "u") || dw.hasSwitch(args, "U")) {
-					System.out.println("Please enter the number of days in the argument \n"
-							+ "i.e. -u , 365");
-			}
-			else {
 				System.out
-				.println("Arguments are invalid. Arguments must be provided as:\n"
-						+ "-R to hard reset warehouse (Extract/Load > Transform > Dimensional modeling > Fact tables)\n"
-						+ "-l to extract/load data from various sources (stage1)\n"
-						+ "-t to transform schema from (stage2)\n"
-						+ "-d to create dimension tables (data warehouse)\n"
-						+ "-f to create fact tables\n"
-						+ "-u,<space>(number of days) to update data warehouse (nightly run) i.e. -u, <space> 365\n");
+						.println("Please enter the number of days in the argument \n"
+								+ "i.e. -u , 365");
+			} else {
+				System.out
+						.println("Arguments are invalid. Arguments must be provided as:\n"
+								+ "-R to hard reset warehouse (Extract/Load > Transform > Dimensional modeling > Fact tables)\n"
+								+ "-l to extract/load data from various sources (stage1)\n"
+								+ "-t to transform schema from (stage2)\n"
+								+ "-d to create dimension tables (data warehouse)\n"
+								+ "-f to create fact tables\n"
+								+ "-u,<space>(number of days) to update data warehouse (nightly run) i.e. -u, <space> 365\n");
 				return;
 			}
 		}
-		
-		else if (args.length == 2 || args[0].equals("-u") || args[0].equals("-U")) {
-				try {
-					//int days = 365;
-					int days = Integer.parseInt(args[1]); 
-					Date dateFrom = new Date();
-					Date dateTo = new Date();
-					Calendar instance = Calendar.getInstance();
-					instance.add(Calendar.DATE, days);
-					dateFrom = instance.getTime();
-					dw.updateWarehosue(dataPathForUpdate, dateFrom, dateTo);
-				} catch(NumberFormatException ex) {
-					System.out.println("Invalid Argument for days! \n"
-							+ "Please enter the number of days in the argument \n"
-							+ "i.e. -u , <space> 365");
-				}
+
+		else if (args.length == 2 || args[0].equals("-u")
+				|| args[0].equals("-U")) {
+			try {
+				// int days = 365;
+				int days = Integer.parseInt(args[1]);
+				Date dateFrom = new Date();
+				Date dateTo = new Date();
+				Calendar instance = Calendar.getInstance();
+				instance.add(Calendar.DATE, days);
+				dateFrom = instance.getTime();
+				dw.updateWarehosue(dataPathForUpdate, dateFrom, dateTo);
+			} catch (NumberFormatException ex) {
+				System.out.println("Invalid Argument for days! \n"
+						+ "Please enter the number of days in the argument \n"
+						+ "i.e. -u , <space> 365");
+			}
 		}
 		System.exit(0);
 	}
@@ -161,7 +160,7 @@ public final class DataWarehouseMain {
 		password = DataWarehouseMain.getProperty("openmrs.connection.password");
 		DatabaseUtil openMrsDb = new DatabaseUtil(url, driver, username,
 				password);
-		openMrs = new OpenMrsProcessor("res\\openmrs_schema.sql", openMrsDb, dwDb);
+		openMrs = new OpenMrsProcessor("openmrs_schema.sql", openMrsDb, dwDb);
 		// Field Monitoring DB credentials
 		driver = DataWarehouseMain
 				.getProperty("fieldmonitoring.connection.driver_class");
@@ -171,9 +170,8 @@ public final class DataWarehouseMain {
 		password = DataWarehouseMain
 				.getProperty("fieldmonitoring.connection.password");
 		DatabaseUtil fmDb = new DatabaseUtil(url, driver, username, password);
-		fm = new FieldMonitoringProcessor("res\\tbr3_monitoring_schema.sql", fmDb,
+		fm = new FieldMonitoringProcessor("tbr3_monitoring_schema.sql", fmDb,
 				dwDb);
-
 	}
 
 	/**
@@ -191,10 +189,10 @@ public final class DataWarehouseMain {
 			props.setProperty(pair.getKey(), pair.getValue());
 		}
 		try {
-			if (!(new File(directoryPath).exists())) {
-				boolean checkDir = new File(directoryPath).mkdir();
-				if (!checkDir) {
-					log.severe("Could not create properties file. Please check the permissions of your home folder");
+			if (!(new File(propertiesFilePath).exists())) {
+				boolean checkPropFile = new File(propertiesFilePath).mkdir();
+				if (!checkPropFile) {
+					log.severe("Could not read properties file.");
 				}
 			}
 			props.store(new FileOutputStream(propertiesFilePath), null);
@@ -251,16 +249,16 @@ public final class DataWarehouseMain {
 		fm.extract(dataPath);
 		fm.load(dataPath);
 		// ILMS EL
-//		ilms.createSchema(fromScratch);
-//		ilms.extract(dataPath);
-//		ilms.load(dataPath);
+		// ilms.createSchema(fromScratch);
+		// ilms.extract(dataPath);
+		// ilms.load(dataPath);
 		log.info("Finished Extract/Load");
 	}
 
 	public void createDimensions() {
 		log.info("Starting dimension modeling");
 		FileUtil fileUtil = new FileUtil();
-		String[] queries = fileUtil.getLines("\\res\\dimension_modeling.sql");
+		String[] queries = fileUtil.getLines("dimension_modeling.sql");
 		// Recreate tables
 		for (String query : queries) {
 			if (query.toUpperCase().startsWith("DROP")) {
@@ -272,6 +270,24 @@ public final class DataWarehouseMain {
 			} else {
 				dwDb.runCommand(CommandType.INSERT, query);
 			}
+		}
+		// Fill in datetime_dim table
+		Calendar start = Calendar.getInstance();
+		Calendar end = Calendar.getInstance();
+		start.set(Calendar.YEAR, 2000);
+		start.set(Calendar.MONTH, Calendar.JANUARY);
+		start.set(Calendar.DATE, 1);
+		end.set(Calendar.HOUR, 0);
+		int i = 1;
+		while (start.getTime().before(end.getTime())) {
+			String sqlDate = "'" + DateTimeUtil.getSqlDate(start.getTime())
+					+ "'";
+			String query = "insert into dim_datetime values (" + (i++) + ", "
+					+ sqlDate + ", year(" + sqlDate + "), month(" + sqlDate
+					+ "), day(" + sqlDate + "), dayname(" + sqlDate
+					+ "), monthname(" + sqlDate + "));";
+			dwDb.runCommand(CommandType.INSERT, query);
+			start.add(Calendar.DATE, 1);
 		}
 		log.info("Finished dimension modeling");
 	}
@@ -296,16 +312,16 @@ public final class DataWarehouseMain {
 
 	public void updateWarehosue(String dataPath, Date dateFrom, Date dateTo) {
 		log.info("Starting DW update");
-	//	openMrs.divideTables();
+		// openMrs.divideTables();
 		boolean result = openMrs.update(dataPath, dateFrom, dateTo);
 		if (!result) {
 			log.warning("OpenMRS DB transformation completed with warnings.");
 		}
 		result = fm.update(DataWarehouseMain.dataPath, dateFrom, dateTo);
-		
+
 		if (!result) {
 			log.warning("Field Monitoring DB transformation completed with warnings.");
-		}		
+		}
 		log.info("Finished DW update");
 	}
 }

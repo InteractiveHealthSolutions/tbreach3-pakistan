@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.CommandType;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DatabaseUtil;
-import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DateTimeUtil;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
 
 /**
