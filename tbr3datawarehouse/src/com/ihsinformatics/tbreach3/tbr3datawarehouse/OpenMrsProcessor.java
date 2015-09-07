@@ -171,8 +171,11 @@ public class OpenMrsProcessor extends AbstractProcessor {
 					+ fileName
 					+ "' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";*/
 			
-			String query = "CALL sz_dw.extract_openmrs ('"+ DateTimeUtil.getSQLDate(dateFrom)+"', '"+ DateTimeUtil.getSQLDate(dateTo)+"', 'e:\\\\\\\\Owais\\\\\\\\data\\\\\\\\')";
-			Object obj = openMrsDb.runCommand(CommandType.EXECUTE, query);
+		//syntax error in stored procedure	
+			createStoredProcedure();
+			
+		String query = "CALL sz_dw.extract_openmrs ('"+ DateTimeUtil.getSQLDate(dateFrom)+"', '"+ DateTimeUtil.getSQLDate(dateTo)+"', 'e:\\\\\\\\Owais\\\\\\\\data\\\\\\\\')";	
+		Object obj = openMrsDb.runCommand(CommandType.EXECUTE, query);
 			if (obj == null) {
 			//	log.warning("No data was exported to CSV for table: " + table);
 				log.warning("error");
@@ -180,7 +183,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 	//	}
 		return true;
 	}
-
+	
 	/**
 	 * Loads table data from CSV files into Data warehouse
 	 * 
@@ -362,4 +365,20 @@ public class OpenMrsProcessor extends AbstractProcessor {
 			
 	}
 	
+	public boolean createStoredProcedure(){
+		
+		FileUtil fileUtil = new FileUtil();
+		String dropProcedureQuery = "DROP PROCEDURE IF EXISTS `extract_openmrs1`";
+		String query = fileUtil.getText("res//stored_procedures.sql");
+		dwDb.runCommand(CommandType.CREATE, dropProcedureQuery);
+		Object obj = dwDb.runCommand(CommandType.CREATE, query);
+		if (obj == null) {
+			System.out.println("Stored procedure has error");
+		}
+		else{
+			System.out.println("Stored procedure created!");
+		}
+		return true;
+		
+	}
 }
