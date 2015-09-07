@@ -10,10 +10,13 @@ Interactive Health Solutions, hereby disclaims all copyright interest in this pr
 package com.ihsinformatics.tbreach3.tbr3datawarehouse;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.CommandType;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DatabaseUtil;
+import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DateTimeUtil;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
 
 /**
@@ -84,7 +87,25 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 	 * @return
 	 */
 	public boolean extract(String dataPath) {
-		log.info("Importing data from source into raw files");
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 1970);
+		return extract(dataPath, calendar.getTime(), new Date());
+	}
+	
+	/**
+	 * Extracts data from OpenMRS connection, 
+	 * Picks new/changed data and updates Data warehouse and stores as CSV files
+	 * 
+	 * @param dataPath
+	 *            where CSV files will be stored
+	 * @param dateFrom
+	 * 
+	 * @param dateTo           
+	 * @return
+	 */
+	public boolean extract(String dataPath, Date dateFrom, Date dateTo) {
+		//log.info("Importing data from source into raw files");
+		log.info("Updating Field Monitoring data");
 		// Fetch file from source and generate CSVs
 		for (String table : sourceTables) {
 			String fileName = dataPath.replace("\\", "\\\\") + schemaName + "_"
@@ -95,6 +116,11 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 			}
 			String query = "SELECT * FROM "
 					+ table
+					/*+ " WHERE (date_created BETWEEN '"
+					+ DateTimeUtil.getSQLDate(dateFrom)
+					+ "' AND '"
+					+ DateTimeUtil.getSQLDate(dateTo)
+					+ "') "*/
 					+ " INTO OUTFILE '"
 					+ fileName
 					+ "' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
@@ -111,6 +137,7 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 	 * 
 	 * @param dataPath
 	 *            where CSV files will be loaded from
+	 *            
 	 * @return
 	 */
 	public boolean load(String dataPath) {
@@ -189,8 +216,21 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 			// Creating Primary key
 			dwDb.runCommand(CommandType.ALTER, "alter table fm_enc_"
 					+ encounterType
-					+ " add primary key (e_id, pid1, pid2, encounter_type)");
+					+ " add primary key (e_id, pid1, pid2)");
 		}
 		return false;
+	}
+
+	/**
+	 * Picks new/changed data and updates Data warehouse
+	 */
+	boolean update(String dataPath, Date dateFrom, Date dateTo) {
+		boolean result = true;
+		log.info("Updating Field Monitoring data");
+		createSchema(true);
+		extract(dataPath);
+		load(dataPath);
+		transform();
+		return result;
 	}
 }
