@@ -29,6 +29,8 @@ import java.io.BufferedOutputStream;
  * 
  */
 public class FileUtil {
+	public static final String SEPARATOR = System.getProperty("file.separator");
+
 	public FileUtil() {
 	}
 

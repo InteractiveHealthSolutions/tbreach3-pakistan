@@ -10,10 +10,13 @@ Interactive Health Solutions, hereby disclaims all copyright interest in this pr
 package com.ihsinformatics.tbreach3.tbr3datawarehouse;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.CommandType;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DatabaseUtil;
+import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.DateTimeUtil;
 import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
 
 /**
@@ -29,6 +32,9 @@ public class OpenMrsProcessor extends AbstractProcessor {
 	private String scriptFilePath;
 	private DatabaseUtil dwDb;
 	private DatabaseUtil openMrsDb;
+	private ArrayList<String> tablesWithDateCreated;
+	private ArrayList<String> tablesWithDateCreatedAndChanged;
+	private ArrayList<String> tablesNotWithDateCreated;
 	String[] sourceTables = {"active_list_type", "cohort", "cohort_member",
 			"concept", "concept_answer", "concept_class", "concept_complex",
 			"concept_datatype", "concept_description", "concept_map_type",
@@ -90,12 +96,14 @@ public class OpenMrsProcessor extends AbstractProcessor {
 	public boolean createSchema(boolean fromScratch) {
 		FileUtil fileUtil = new FileUtil();
 		String[] queries = fileUtil.getLines(scriptFilePath);
-		// Recreate tables
-		for (String query : queries) {
-			if (query.toUpperCase().startsWith("DROP")) {
-				dwDb.runCommand(CommandType.DROP, query);
-			} else {
-				dwDb.runCommand(CommandType.CREATE, query);
+		if (fromScratch) {
+			// Recreate tables
+			for (String query : queries) {
+				if (query.toUpperCase().startsWith("DROP")) {
+					dwDb.runCommand(CommandType.DROP, query);
+				} else {
+					dwDb.runCommand(CommandType.CREATE, query);
+				}
 			}
 		}
 		return true;
@@ -113,7 +121,10 @@ public class OpenMrsProcessor extends AbstractProcessor {
 		log.info("Importing data from source into raw files");
 		// Fetch file from source and generate CSVs
 		for (String table : sourceTables) {
-			String fileName = dataPath.replace("\\", "\\\\") + schemaName + "_"
+			String fileName = dataPath.replace(FileUtil.SEPARATOR,
+					FileUtil.SEPARATOR + FileUtil.SEPARATOR)
+					+ schemaName
+					+ "_"
 					+ table + ".csv";
 			File file = new File(fileName);
 			if (file.exists()) {
@@ -131,6 +142,46 @@ public class OpenMrsProcessor extends AbstractProcessor {
 		}
 		return true;
 	}
+
+	/**
+	 * Extracts data from OpenMRS connection and stores as CSV files. If a file
+	 * already exists, it will be recreated
+	 * 
+	 * @param dataPath
+	 *            where CSV files will be stored
+	 * @return
+	 */
+	public boolean extract(String dataPath, Date dateFrom, Date dateTo) {
+		log.info("Importing data from source into raw files");
+		// Fetch file from source and generate CSVs
+
+		/*
+		 * for (String table : sourceTables) { String fileName =
+		 * dataPath.replace("\\", "\\\\") + schemaName + "_" + table + ".csv";
+		 * File file = new File(fileName); if (file.exists()) { file.delete(); }
+		 * String query = "SELECT * FROM " + table +
+		 * " WHERE date_created BETWEEN '" + DateTimeUtil.getSQLDate(dateFrom) +
+		 * "' AND '" + DateTimeUtil.getSQLDate(dateTo) + "' " +
+		 * " INTO OUTFILE '" + fileName +
+		 * "' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'"
+		 * ;
+		 */
+
+		// syntax error in stored procedure
+		createStoredProcedure();
+		String query = "CALL sz_dw.extract_openmrs ('"
+				+ DateTimeUtil.getSqlDateTime(dateFrom) + "', '"
+				+ DateTimeUtil.getSqlDateTime(dateTo)
+				+ "', 'e:\\\\\\\\Owais\\\\\\\\data\\\\\\\\')";
+		Object obj = openMrsDb.runCommand(CommandType.EXECUTE, query);
+		if (obj == null) {
+			// log.warning("No data was exported to CSV for table: " + table);
+			log.warning("error");
+		}
+		// }
+		return true;
+	}
+
 	/**
 	 * Loads table data from CSV files into Data warehouse
 	 * 
@@ -142,7 +193,10 @@ public class OpenMrsProcessor extends AbstractProcessor {
 		boolean noImport = true;
 		log.info("Importing data from raw files into data warehouse");
 		for (String table : sourceTables) {
-			String filePath = dataPath.replace("\\", "\\\\") + schemaName + "_"
+			String filePath = dataPath.replace(FileUtil.SEPARATOR,
+					FileUtil.SEPARATOR + FileUtil.SEPARATOR)
+					+ schemaName
+					+ "_"
 					+ table + ".csv";
 			File file = new File(filePath);
 			if (!file.exists()) {
@@ -227,5 +281,124 @@ public class OpenMrsProcessor extends AbstractProcessor {
 					+ " add primary key surrogate_id (surrogate_id)");
 		}
 		return false;
+	}
+
+	/**
+	 * Picks new/changed data and updates Data warehouse
+	 */
+	boolean update(String dataPath, Date dateFrom, Date dateTo) {
+		boolean result = true;
+		log.info("Updating OpenMRS data");
+		createSchema(false);
+		extract(dataPath, dateFrom, dateTo);
+		load(dataPath);
+		transform();
+		return result;
+	}
+
+	/**
+	 * Seperate all the tables with NoDateCreated, DateCreated and
+	 * DateCreated+Changed
+	 */
+	public void divideTables() {
+
+		tablesWithDateCreatedAndChanged = new ArrayList<String>();
+		tablesWithDateCreated = new ArrayList<String>();
+		tablesNotWithDateCreated = new ArrayList<String>();
+
+		for (String table : sourceTables) {
+
+			String firstQuery = "SELECT date_changed FROM " + "sz_dw.om_"
+					+ table;
+			Object obj = openMrsDb.runCommand(CommandType.EXECUTE, firstQuery);
+			if (obj != null) {
+				tablesWithDateCreatedAndChanged.add(table);
+			} else if (obj == null) {
+				String secondQuery = "SELECT date_created FROM " + "sz_dw.om_"
+						+ table;
+				obj = openMrsDb.runCommand(CommandType.EXECUTE, secondQuery);
+				if (obj != null) {
+					tablesWithDateCreated.add(table);
+				} else {
+					tablesNotWithDateCreated.add(table);
+				}
+			}
+		}
+
+		ArrayList<String> queriesList = new ArrayList<String>();
+		int count = 1;
+		for (String table : tablesWithDateCreatedAndChanged) {
+
+			String query = "SET @q"
+					+ count
+					+ "=concat(\"SELECT * FROM om_"
+					+ table
+					+ " WHERE (date_created BETWEEN '\", start_date, \"' AND '\", end_date, \"') OR (date_changed BETWEEN '\", start_date, \"' AND '\", end_date, \"') \", \" INTO OUTFILE '\", file_path, \""
+					+ schemaName
+					+ "_"
+					+ table
+					+ ".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' \");";
+			query = query + "\n prepare s" + count + " from @q" + count + ";";
+			query = query + "\n execute s" + count + ";";
+
+			queriesList.add(query);
+			count++;
+			System.out.println(query + "\n");
+		}
+
+		for (String table : tablesWithDateCreated) {
+
+			String query = "SET @q"
+					+ count
+					+ "=concat(\"SELECT * FROM om_"
+					+ table
+					+ " WHERE (date_created BETWEEN '\", start_date, \"' AND '\", end_date, \"')\", \" INTO OUTFILE '\", file_path, \""
+					+ schemaName
+					+ "_"
+					+ table
+					+ ".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' \");";
+			query = query + "\n prepare s" + count + " from @q" + count + ";";
+			query = query + "\n execute s" + count + ";";
+
+			queriesList.add(query);
+			count++;
+			System.out.println(query + "\n");
+		}
+
+		for (String table : tablesNotWithDateCreated) {
+
+			String query = "SET @q"
+					+ count
+					+ "=concat(\"SELECT * FROM om_"
+					+ table
+					+ "  INTO OUTFILE '\", file_path,\""
+					+ schemaName
+					+ "_"
+					+ table
+					+ ".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' \");";
+			query = query + "\n prepare s" + count + " from @q" + count + ";";
+			query = query + "\n execute s" + count + ";";
+
+			queriesList.add(query);
+			count++;
+			System.out.println(query + "\n");
+		}
+
+	}
+
+	public boolean createStoredProcedure() {
+
+		FileUtil fileUtil = new FileUtil();
+		String dropProcedureQuery = "DROP PROCEDURE IF EXISTS `extract_openmrs1`";
+		String query = fileUtil.getText("stored_procedures.sql");
+		dwDb.runCommand(CommandType.CREATE, dropProcedureQuery);
+		Object obj = dwDb.runCommand(CommandType.CREATE, query);
+		if (obj == null) {
+			System.out.println("Stored procedure has error");
+		} else {
+			System.out.println("Stored procedure created!");
+		}
+		return true;
+
 	}
 }

@@ -9,6 +9,8 @@ You can also access the license on the internet at the address: http://www.gnu.o
 Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 package com.ihsinformatics.tbreach3.tbr3datawarehouse;
 
+import java.util.Date;
+
 /**
  * @author owais.hussain@ihsinformatics.com
  *
@@ -21,8 +23,12 @@ public abstract class AbstractProcessor {
 	abstract boolean createSchema(boolean fromScratch);
 
 	abstract boolean extract(String dataPath);
+	
+	abstract boolean extract(String dataPath, Date dateFrom, Date dateTo);
 
 	abstract boolean load(String dataPath);
 
 	abstract boolean transform();
+	
+	abstract boolean update(String dataPath, Date dateFrom, Date dateTo);
 }
