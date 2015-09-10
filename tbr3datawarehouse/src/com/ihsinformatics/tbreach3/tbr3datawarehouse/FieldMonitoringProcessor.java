@@ -107,7 +107,9 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 		log.info("Updating Field Monitoring data");
 		// Fetch file from source and generate CSVs
 		for (String table : sourceTables) {
-			String fileName = dataPath.replace("\\", "\\\\") + schemaName + "_"
+		//	String fileName = dataPath.replace("\\", "\\\\") 
+			String fileName =  dataPath.replace("/", "//") +
+					schemaName + "_"
 					+ table + ".csv";
 			File file = new File(fileName);
 			if (file.exists()) {
@@ -143,7 +145,9 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 		boolean noImport = true;
 		log.info("Importing data from raw files into data warehouse");
 		for (String table : sourceTables) {
-			String filePath = dataPath.replace("\\", "\\\\") + schemaName + "_"
+		//	String filePath = dataPath.replace("\\", "\\\\") 
+			String filePath = dataPath.replace("/", "//")
+					+ schemaName + "_"
 					+ table + ".csv";
 			File file = new File(filePath);
 			if (!file.exists()) {

@@ -121,11 +121,13 @@ public class OpenMrsProcessor extends AbstractProcessor {
 		log.info("Importing data from source into raw files");
 		// Fetch file from source and generate CSVs
 		for (String table : sourceTables) {
-			String fileName = dataPath.replace(FileUtil.SEPARATOR,
-					FileUtil.SEPARATOR + FileUtil.SEPARATOR)
+		//	String fileName = dataPath.replace(FileUtil.SEPARATOR,
+		//			FileUtil.SEPARATOR + FileUtil.SEPARATOR)
+			String fileName = dataPath.replace("/", "//") 
 					+ schemaName
 					+ "_"
-					+ table + ".csv";
+					+ table + ".csv";	
+			
 			File file = new File(fileName);
 			if (file.exists()) {
 				file.delete();
@@ -169,10 +171,11 @@ public class OpenMrsProcessor extends AbstractProcessor {
 
 		// syntax error in stored procedure
 		createStoredProcedure();
-		String query = "CALL sz_dw.extract_openmrs ('"
+		String query = "CALL sz_dw.extract_openmrs1 ('"
 				+ DateTimeUtil.getSqlDateTime(dateFrom) + "', '"
 				+ DateTimeUtil.getSqlDateTime(dateTo)
-				+ "', 'e:\\\\\\\\Owais\\\\\\\\data\\\\\\\\')";
+				+ "', '"+ dataPath +"')";
+			//	+ "', 'e:\\\\\\\\Owais\\\\\\\\data\\\\\\\\')";
 		Object obj = openMrsDb.runCommand(CommandType.EXECUTE, query);
 		if (obj == null) {
 			// log.warning("No data was exported to CSV for table: " + table);
@@ -193,8 +196,9 @@ public class OpenMrsProcessor extends AbstractProcessor {
 		boolean noImport = true;
 		log.info("Importing data from raw files into data warehouse");
 		for (String table : sourceTables) {
-			String filePath = dataPath.replace(FileUtil.SEPARATOR,
-					FileUtil.SEPARATOR + FileUtil.SEPARATOR)
+		//	String filePath = dataPath.replace(FileUtil.SEPARATOR,
+		//			FileUtil.SEPARATOR + FileUtil.SEPARATOR)
+			String filePath = dataPath.replace("/", "//")
 					+ schemaName
 					+ "_"
 					+ table + ".csv";

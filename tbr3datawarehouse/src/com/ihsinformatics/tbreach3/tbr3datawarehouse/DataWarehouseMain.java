@@ -38,7 +38,7 @@ public final class DataWarehouseMain {
 	public static final String version = "1.0.0-beta";
 
 	private static final Logger log = Logger.getLogger(Class.class.getName());
-	public static final String dataPath = System.getProperty("user.home")
+	public static final String dataPath = (System.getProperty("user.home").replace("\\", "/"))
 			+ FileUtil.SEPARATOR + "sz_dw" + FileUtil.SEPARATOR;
 	public static final String dataPathForUpdate = dataPath.replace(
 			FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR);
