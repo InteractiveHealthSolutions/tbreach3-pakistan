@@ -273,17 +273,6 @@ public class Tbr3reporterweb implements EntryPoint, ClickHandler {
 		try {
 			flushAll();
 			setCookies("", "", "");
-			// service.recordLogout (userName, new AsyncCallback<Void> ()
-			// {
-			// public void onSuccess (Void result)
-			// {
-			// }
-			//
-			// public void onFailure (Throwable caught)
-			// {
-			// caught.printStackTrace ();
-			// }
-			// });
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

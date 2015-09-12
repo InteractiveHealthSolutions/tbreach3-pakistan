@@ -52,11 +52,12 @@ public class ReportsComposite extends Composite
 	private static ServerServiceAsync service = GWT.create(ServerService.class);
 	private static LoadingWidget loading = new LoadingWidget();
 	private static final String menuName = "DATALOG";
+	private static String[][] reports;
 	private String filter = "";
 	private String startDate = "";
 	private String endDate = "";
-	private String laboratoryId = "";
-	private String operatorId = "";
+	private String locationId = "";
+	private String userId = "";
 
 	private FlexTable flexTable = new FlexTable();
 	private FlexTable topFlexTable = new FlexTable();
@@ -70,20 +71,20 @@ public class ReportsComposite extends Composite
 
 	private Label lblSelectCategory = new Label("Select Category:");
 	private Label lblSnapshot = new Label("Snapshot:");
-	private Label snapshotLabel = new Label();
+	private Label snapshotLabel = new Label("Not available");
 	private Label lblCaution = new Label(
 			"Some reports may take 5 to 10 minutes to generate. Please wait until report download window appears.");
-	private Label lblXpertSmsLog = new Label("XpertSMS Reports");
+	private Label lblReportsTitle = new Label("Sehatmand Zindagi Reports");
 	private Label lblSelectReport = new Label("Select Report:");
 	private Label lblFilter = new Label("Filter (Check all that apply):");
 
-	private TextBox laboratoryIdTextBox = new TextBox();
-	private TextBox operatorIdTextBox = new TextBox();
+	private TextBox locationIdTextBox = new TextBox();
+	private TextBox userIdTextBox = new TextBox();
 
 	private ListBox categoryComboBox = new ListBox();
 	private ListBox reportsListComboBox = new ListBox();
-	private ListBox laboratoryFilterTypeComboBox = new ListBox();
-	private ListBox operatorFilterTypeComboBox = new ListBox();
+	private ListBox locationFilterTypeComboBox = new ListBox();
+	private ListBox userFilterTypeComboBox = new ListBox();
 	private ListBox sortTypeComboBox = new ListBox();
 
 	private DateBox fromDateBox = new DateBox();
@@ -93,8 +94,8 @@ public class ReportsComposite extends Composite
 
 	private CheckBox dateRangeFilterCheckBox = new CheckBox("Date Range:");
 	private CheckBox timeRangeFilterCheckBox = new CheckBox("Time Range:");
-	private CheckBox laboratoryIdCheckBox = new CheckBox("Laboratory ID:");
-	private CheckBox operatorIdCheckBox = new CheckBox("Operator ID:");
+	private CheckBox locationIdCheckBox = new CheckBox("Location ID:");
+	private CheckBox userIdCheckBox = new CheckBox("User ID:");
 	private CheckBox sortCheckBox = new CheckBox("Sort By:");
 
 	@SuppressWarnings("deprecation")
@@ -102,8 +103,8 @@ public class ReportsComposite extends Composite
 		initWidget(flexTable);
 		flexTable.setSize("100%", "100%");
 		flexTable.setWidget(0, 0, topFlexTable);
-		lblXpertSmsLog.setStyleName("title");
-		topFlexTable.setWidget(0, 0, lblXpertSmsLog);
+		lblReportsTitle.setStyleName("title");
+		topFlexTable.setWidget(0, 0, lblReportsTitle);
 		topFlexTable.getCellFormatter().setHorizontalAlignment(0, 0,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		topFlexTable.getRowFormatter().setVerticalAlign(0,
@@ -116,7 +117,7 @@ public class ReportsComposite extends Composite
 		rightFlexTable.setWidget(0, 1, snapshotLabel);
 		rightFlexTable.setWidget(1, 0, lblSelectCategory);
 		categoryComboBox.addItem("-- Select Category --");
-		categoryComboBox.addItem("GeneXpert Reports");
+		categoryComboBox.addItem("Reports");
 		categoryComboBox.addItem("Data Dumps");
 		rightFlexTable.setWidget(1, 1, categoryComboBox);
 		categoryComboBox.setWidth("100%");
@@ -161,24 +162,24 @@ public class ReportsComposite extends Composite
 				.getShortTimeFormat()));
 		filterFlexTable.setWidget(1, 2, toTimeDateBox);
 		toTimeDateBox.setWidth("50%");
-		filterFlexTable.setWidget(2, 0, laboratoryIdCheckBox);
-		laboratoryFilterTypeComboBox.setEnabled(false);
-		filterFlexTable.setWidget(2, 1, laboratoryFilterTypeComboBox);
-		laboratoryFilterTypeComboBox.setWidth("100%");
-		laboratoryIdTextBox.setVisibleLength(20);
-		laboratoryIdTextBox.setMaxLength(20);
-		laboratoryIdTextBox.setEnabled(false);
-		filterFlexTable.setWidget(2, 2, laboratoryIdTextBox);
-		laboratoryIdTextBox.setWidth("100%");
-		filterFlexTable.setWidget(3, 0, operatorIdCheckBox);
-		operatorFilterTypeComboBox.setEnabled(false);
-		filterFlexTable.setWidget(3, 1, operatorFilterTypeComboBox);
-		operatorFilterTypeComboBox.setWidth("100%");
-		operatorIdTextBox.setEnabled(false);
-		operatorIdTextBox.setVisibleLength(20);
-		operatorIdTextBox.setMaxLength(20);
-		filterFlexTable.setWidget(3, 2, operatorIdTextBox);
-		operatorIdTextBox.setWidth("100%");
+		filterFlexTable.setWidget(2, 0, locationIdCheckBox);
+		locationFilterTypeComboBox.setEnabled(false);
+		filterFlexTable.setWidget(2, 1, locationFilterTypeComboBox);
+		locationFilterTypeComboBox.setWidth("100%");
+		locationIdTextBox.setVisibleLength(20);
+		locationIdTextBox.setMaxLength(20);
+		locationIdTextBox.setEnabled(false);
+		filterFlexTable.setWidget(2, 2, locationIdTextBox);
+		locationIdTextBox.setWidth("100%");
+		filterFlexTable.setWidget(3, 0, userIdCheckBox);
+		userFilterTypeComboBox.setEnabled(false);
+		filterFlexTable.setWidget(3, 1, userFilterTypeComboBox);
+		userFilterTypeComboBox.setWidth("100%");
+		userIdTextBox.setEnabled(false);
+		userIdTextBox.setVisibleLength(20);
+		userIdTextBox.setMaxLength(20);
+		filterFlexTable.setWidget(3, 2, userIdTextBox);
+		userIdTextBox.setWidth("100%");
 		filterFlexTable.setWidget(4, 0, sortCheckBox);
 		sortTypeComboBox.setEnabled(false);
 		filterFlexTable.setWidget(4, 1, sortTypeComboBox);
@@ -188,7 +189,6 @@ public class ReportsComposite extends Composite
 		viewButton.setEnabled(false);
 		viewButton.setText("View");
 		grid.setWidget(0, 0, viewButton);
-		exportButton.setEnabled(false);
 		grid.setWidget(0, 1, exportButton);
 		grid.setWidget(0, 3, closeButton);
 		rightFlexTable.getCellFormatter().setHorizontalAlignment(4, 1,
@@ -202,8 +202,8 @@ public class ReportsComposite extends Composite
 
 		dateRangeFilterCheckBox.addValueChangeHandler(this);
 		timeRangeFilterCheckBox.addValueChangeHandler(this);
-		laboratoryIdCheckBox.addValueChangeHandler(this);
-		operatorIdCheckBox.addValueChangeHandler(this);
+		locationIdCheckBox.addValueChangeHandler(this);
+		userIdCheckBox.addValueChangeHandler(this);
 		sortCheckBox.addValueChangeHandler(this);
 		categoryComboBox.addChangeHandler(this);
 		viewButton.addClickHandler(this);
@@ -218,13 +218,12 @@ public class ReportsComposite extends Composite
 		String[] filterOptions = {"IS EXACTLY", "STARTS WITH", "ENDS ON",
 				"LOOKS LIKE"};
 		for (String s : filterOptions) {
-			laboratoryFilterTypeComboBox.addItem(s);
-			operatorFilterTypeComboBox.addItem(s);
+			locationFilterTypeComboBox.addItem(s);
+			userFilterTypeComboBox.addItem(s);
 		}
 		sortTypeComboBox.addItem("PatientID");
-		sortTypeComboBox.addItem("SampleID");
-		sortTypeComboBox.addItem("LaboratoryID");
-		sortTypeComboBox.addItem("DateTested");
+		sortTypeComboBox.addItem("LocationID");
+		sortTypeComboBox.addItem("DateEntered");
 	}
 
 	/**
@@ -243,20 +242,19 @@ public class ReportsComposite extends Composite
 	/**
 	 * Creates appropriate filter for given column names
 	 * 
-	 * @param laboratoryColumnName
+	 * @param locationColumnName
 	 * @param dateColumnName
-	 * @param gpColumnName
-	 * @param monitorColumnName
-	 * @param chwColumnName
+	 * @param userColumnName
+	 * @return
 	 */
 	@SuppressWarnings("deprecation")
-	private String filterData(String laboratoryColumnName,
-			String dateColumnName, String operatorColumnName) {
+	private String filterData(String locationColumnName, String dateColumnName,
+			String userColumnName) {
 		filter = "";
 		startDate = "";
 		endDate = "";
-		laboratoryId = "";
-		operatorId = "";
+		locationId = "";
+		userId = "";
 
 		if (dateRangeFilterCheckBox.getValue()) {
 			Date start = new Date(fromDateBox.getValue().getTime());
@@ -278,55 +276,53 @@ public class ReportsComposite extends Composite
 			startDate = startString.toString();
 			endDate = endString.toString();
 		}
-		if (laboratoryIdCheckBox.getValue()) {
-			switch (laboratoryFilterTypeComboBox.getSelectedIndex()) {
+		if (locationIdCheckBox.getValue()) {
+			switch (locationFilterTypeComboBox.getSelectedIndex()) {
 				case 0 :
-					laboratoryId = " = '"
-							+ TBR3ReporterClient.get(laboratoryIdTextBox) + "'";
+					locationId = " = '"
+							+ TBR3ReporterClient.get(locationIdTextBox) + "'";
 					break;
 				case 1 :
-					laboratoryId = " LIKE '"
-							+ TBR3ReporterClient.get(laboratoryIdTextBox)
-							+ "%'";
+					locationId = " LIKE '"
+							+ TBR3ReporterClient.get(locationIdTextBox) + "%'";
 					break;
 				case 2 :
-					laboratoryId = " LIKE '%"
-							+ TBR3ReporterClient.get(laboratoryIdTextBox) + "'";
+					locationId = " LIKE '%"
+							+ TBR3ReporterClient.get(locationIdTextBox) + "'";
 					break;
 				case 3 :
-					laboratoryId = " LIKE '%"
-							+ TBR3ReporterClient.get(laboratoryIdTextBox)
-							+ "%'";
+					locationId = " LIKE '%"
+							+ TBR3ReporterClient.get(locationIdTextBox) + "%'";
 					break;
 			}
 		}
-		if (operatorIdCheckBox.getValue()) {
-			switch (operatorFilterTypeComboBox.getSelectedIndex()) {
+		if (userIdCheckBox.getValue()) {
+			switch (userFilterTypeComboBox.getSelectedIndex()) {
 				case 0 :
-					operatorId = " = '"
-							+ TBR3ReporterClient.get(operatorIdTextBox) + "'";
+					userId = " = '" + TBR3ReporterClient.get(userIdTextBox)
+							+ "'";
 					break;
 				case 1 :
-					operatorId = " LIKE '"
-							+ TBR3ReporterClient.get(operatorIdTextBox) + "%'";
+					userId = " LIKE '" + TBR3ReporterClient.get(userIdTextBox)
+							+ "%'";
 					break;
 				case 2 :
-					operatorId = " LIKE '%"
-							+ TBR3ReporterClient.get(operatorIdTextBox) + "'";
+					userId = " LIKE '%" + TBR3ReporterClient.get(userIdTextBox)
+							+ "'";
 					break;
 				case 3 :
-					operatorId = " LIKE '%"
-							+ TBR3ReporterClient.get(operatorIdTextBox) + "%'";
+					userId = " LIKE '%" + TBR3ReporterClient.get(userIdTextBox)
+							+ "%'";
 					break;
 			}
 		}
 		if (dateRangeFilterCheckBox.getValue() && !dateColumnName.equals(""))
 			filter += " AND " + dateColumnName + " BETWEEN '" + startDate
 					+ "' AND '" + endDate + "'";
-		if (laboratoryIdCheckBox.getValue() && !laboratoryColumnName.equals(""))
-			filter += " AND " + laboratoryColumnName + laboratoryId;
-		if (operatorIdCheckBox.getValue() && !operatorColumnName.equals(""))
-			filter += " AND " + operatorColumnName + operatorId;
+		if (locationIdCheckBox.getValue() && !locationColumnName.equals(""))
+			filter += " AND " + locationColumnName + locationId;
+		if (userIdCheckBox.getValue() && !userColumnName.equals(""))
+			filter += " AND " + userColumnName + userId;
 		return filter;
 	}
 
@@ -353,39 +349,17 @@ public class ReportsComposite extends Composite
 				.replace(" ", "");
 		String query = "";
 		// Case Detection Reports
-		if (TBR3ReporterClient.get(categoryComboBox)
-				.equals("GeneXpert Reports")) {
-			if (reportSelected.equals("GeneXpertAllTestReport")) {
-				query = "SELECT G.TestID, G.PatientID, G.SputumTestID AS SampleID, G.LaboratoryID, G.OperatorID, G.DateTested, G.DrugResistance, G.GeneXpertResult, G.MTBBurden, G.ErrorCode, G.InstrumentID, G.ModuleID, G.ReagentLotID, G.PcID, G.CartridgeID, G.CartridgeExpiryDate, G.Remarks, G.ProbeResultA, G.ProbeResultB, G.ProbeResultC, G.ProbeResultD, G.ProbeResultE, G.ProbeResultSPC, G.ProbeCtA, G.ProbeCtB, G.ProbeCtC, G.ProbeCtD, G.ProbeCtE, G.ProbeCtSPC, G.ProbeEndptA, G.ProbeEndptB, G.ProbeEndptC, G.ProbeEndptD, G.ProbeEndptE, G.ProbeEndptSPC FROM GeneXpertResults AS G WHERE 1 = 1 "
-						+ filterData("G.LaboratoryID", "G.DateTested",
-								"G.OperatorID") + sortData();
-			} else if (reportSelected.equals("GeneXpertErrorReport")) {
-				query = "SELECT G.TestID, G.PatientID, G.SputumTestID AS SampleID, G.LaboratoryID, G.DateTested, G.ErrorCode, G.Remarks, G.InstrumentID, G.ModuleID, G.CartridgeID, G.ReagentLotID  FROM GeneXpertResults G WHERE IFNULL(G.ErrorCode, 0) <> 0 "
-						+ filterData("G.LaboratoryID", "G.DateTested",
-								"G.OperatorID") + sortData();
-			} else if (reportSelected.equals("GeneXpertFailedTestReport")) {
-				query = "SELECT G.TestID, G.PatientID, G.SputumTestID AS SampleID, G.LaboratoryID, G.DateTested, G.OperatorID, G.GeneXpertResult, G.DrugResistance, G.ErrorCode, G.InstrumentID, G.ModuleID, G.CartridgeID, G.ReagentLotID FROM GeneXpertResults AS G WHERE GeneXpertResult in ('ERROR', 'INVALID', 'NO RESULT') "
-						+ filterData("G.LaboratoryID", "G.DateTested",
-								"G.OperatorID") + sortData();
-			} else if (reportSelected.equals("GeneXpertPositiveReport")) {
-				query = "SELECT G.TestID, G.PatientID, G.SputumTestID AS SampleID, G.LaboratoryID, G.MTBBurden, G.DrugResistance, G.DateTested, Remarks FROM GeneXpertResults G WHERE G.GeneXpertResult = 'MTB DETECTED' "
-						+ filterData("G.LaboratoryID", "G.DateTested",
-								"G.OperatorID") + sortData();
-			} else if (reportSelected.equals("GeneXpertProbeReport")) {
-				query = "SELECT G.TestID, G.PatientID, G.SputumTestID AS SampleID, G.LaboratoryID AS LabID, G.DateTested, G.GeneXpertResult AS Result, G.MTBBurden, G.DrugResistance AS Resistance, G.ProbeResultA AS A, G.ProbeCtA AS CtA, G.ProbeEndptA AS EndPtA, G.ProbeResultB AS B, G.ProbeCtB AS CtB, G.ProbeEndptB AS EndPtB, G.ProbeResultC AS C, G.ProbeCtC AS CtC, G.ProbeEndptC AS EndPtC, G.ProbeResultD AS D, G.ProbeCtD AS CtD, G.ProbeEndptD AS EndPtD, G.ProbeResultE AS E, G.ProbeCtE AS CtE, G.ProbeEndptE AS EndPtE, G.ProbeResultSPC AS SPC, G.ProbeCtSPC AS CtSPC, G.ProbeEndptSPC AS EndPtSPC FROM GeneXpertResults G WHERE 1 = 1 "
-						+ filterData("G.LaboratoryID", "G.DateTested",
-								"G.OperatorID") + sortData();
-			} else if (reportSelected.equals("GeneXpertRifResistantReport")) {
-				query = "SELECT G.TestID, G.PatientID, G.SputumTestID AS SampleID, G.LaboratoryID, G.MTBBurden, G.DateTested  FROM GeneXpertResults G WHERE DrugResistance='DETECTED' "
-						+ filterData("G.LaboratoryID", "G.DateTested",
-								"G.OperatorID") + sortData();
+		if (TBR3ReporterClient.get(categoryComboBox).equals("Reports")) {
+			if (reportSelected.equals("ScreeningReport")) {
+				query = "select p.identifier, p.gender, p.birthdate, p.birthdate_estimated, p.first_name, p.last_name, p.date_created, u.username from sz_dw.dim_patient as p inner join dim_user as u on u.person_id = p.creator WHERE 1 = 1 "
+						+ filterData("", "p.date_created", "") + sortData();
 			} else {
 				query = "";
 			}
 		} else if (TBR3ReporterClient.get(categoryComboBox)
 				.equals("Data Dumps")) {
-			if (reportSelected.equals("GeneXpertResultsDump")) {
-				query = "SELECT TestID, PatientID, SputumTestID, LaboratoryID, DateSubmitted, DateTested, GeneXpertResult, IsPositive, MTBBurden, DrugResistance, ErrorCode, Remarks, PcID, InstrumentID, ModuleID, CartridgeID, ReagentLotID, OperatorID, ProbeResultA, ProbeResultB, ProbeResultC, ProbeResultD, ProbeResultE, ProbeResultSPC, ProbeCtA, ProbeCtB, ProbeCtC, ProbeCtD, ProbeCtE, ProbeCtSPC, ProbeEndptA, ProbeEndptB, ProbeEndptC, ProbeEndptD, ProbeEndptE, ProbeEndptSPC FROM GeneXpertResults ORDER BY TestID";
+			if (reportSelected.equals("PatientDataDump")) {
+				query = "select * from sz_dw.dim_patient";
 			} else {
 				query = "";
 			}
@@ -461,6 +435,7 @@ public class ReportsComposite extends Composite
 		} else if (sender == exportButton) {
 			viewData(true);
 		} else if (sender == closeButton) {
+			load(false);
 			// MainMenuComposite.clear();
 		}
 	}
@@ -472,15 +447,27 @@ public class ReportsComposite extends Composite
 		if (sender == categoryComboBox) {
 			String text = TBR3ReporterClient.get(sender);
 			reportsListComboBox.clear();
-			if (text.equals("GeneXpert Reports")) {
-				reportsListComboBox.addItem("GeneXpert All Test Report");
-				reportsListComboBox.addItem("GeneXpert Error Report");
-				reportsListComboBox.addItem("GeneXpert Failed Test Report");
-				reportsListComboBox.addItem("GeneXpert Positive Report");
-				reportsListComboBox.addItem("GeneXpert Probe Report");
-				reportsListComboBox.addItem("GeneXpert Rif Resistant Report");
+			if (text.equals("Reports")) {
+				// Fetch list of reports from server
+				service.getReportsList(new AsyncCallback<String[][]>() {
+					@Override
+					public void onSuccess(String[][] result) {
+						reports = result;
+						for (String[] report : reports) {
+							if (report.length >= 2) {
+								reportsListComboBox.addItem(report[1].replace(".jrxml", ""));
+							}
+						}
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("List of reports cannot be populated. Have you copied the reports to rpt directory?");
+					}
+				});
+
 			} else if (text.equals("Data Dumps")) {
-				reportsListComboBox.addItem("GeneXpert Results Dump");
+				reportsListComboBox.addItem("Patient Data Dump");
 			}
 			// Disable view on data dumps
 			viewButton.setEnabled(!TBR3ReporterClient.get(categoryComboBox)
@@ -497,14 +484,13 @@ public class ReportsComposite extends Composite
 		} else if (sender == timeRangeFilterCheckBox) {
 			fromTimeDateBox.setEnabled(timeRangeFilterCheckBox.getValue());
 			toTimeDateBox.setEnabled(timeRangeFilterCheckBox.getValue());
-		} else if (sender == laboratoryIdCheckBox) {
-			laboratoryFilterTypeComboBox.setEnabled(laboratoryIdCheckBox
-					.getValue());
-			laboratoryIdTextBox.setEnabled(laboratoryIdCheckBox.getValue());
-		} else if (sender == operatorIdCheckBox) {
-			operatorFilterTypeComboBox
-					.setEnabled(operatorIdCheckBox.getValue());
-			operatorIdTextBox.setEnabled(operatorIdCheckBox.getValue());
+		} else if (sender == locationIdCheckBox) {
+			locationFilterTypeComboBox
+					.setEnabled(locationIdCheckBox.getValue());
+			locationIdTextBox.setEnabled(locationIdCheckBox.getValue());
+		} else if (sender == userIdCheckBox) {
+			userFilterTypeComboBox.setEnabled(userIdCheckBox.getValue());
+			userIdTextBox.setEnabled(userIdCheckBox.getValue());
 		} else if (sender == sortCheckBox) {
 			sortTypeComboBox.setEnabled(sortCheckBox.getValue());
 		}

@@ -29,4 +29,6 @@ public interface ServerService extends RemoteService {
 
 	String generateReportFromQuery(String reportSelected, String query,
 			Parameter[] params, boolean export) throws Exception;
+
+	String[][] getReportsList() throws Exception;
 }

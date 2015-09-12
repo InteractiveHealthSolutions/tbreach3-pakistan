@@ -13,7 +13,7 @@ public class CustomMessage {
 		String message = "";
 		switch (infoType) {
 		case ACCESS_GRANTED:
-			message = "Access granted, you have successfully logged into XpertSMS.";
+			message = "Access granted, you have successfully logged in.";
 			break;
 		case CONFIRM_CLOSE:
 			message = "Are you sure you want to close the application?";

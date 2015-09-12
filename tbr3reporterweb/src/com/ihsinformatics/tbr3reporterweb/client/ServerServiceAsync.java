@@ -24,21 +24,12 @@ public interface ServerServiceAsync {
 
 	void setCurrentUser(String userName, AsyncCallback<Void> asyncCallback);
 
-	/**
-	 * @param query
-	 * @param asyncCallback
-	 */
 	void generateCSVfromQuery(String query, AsyncCallback<String> asyncCallback)
 			throws Exception;
 
-	/**
-	 * @param reportSelected
-	 * @param query
-	 * @param params
-	 * @param export
-	 * @param asyncCallback
-	 */
 	void generateReportFromQuery(String reportSelected, String query,
 			Parameter[] params, boolean export,
 			AsyncCallback<String> asyncCallback) throws Exception;
+
+	void getReportsList(AsyncCallback<String[][]> callback);
 }

@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import net.sf.jasperreports.engine.JRAbstractExporter;
+import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JRResultSetDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -43,6 +44,9 @@ public class ReportUtil {
 	 * 
 	 */
 	public ReportUtil(String resourcesPath) {
+		if (!resourcesPath.endsWith(String.valueOf(separatorChar))) {
+			resourcesPath += separatorChar;
+		}
 		ReportUtil.resourcesPath = resourcesPath;
 		ReportUtil.reportsPath = resourcesPath + "rpt" + separatorChar;
 	}
@@ -203,7 +207,7 @@ public class ReportUtil {
 			}
 		};
 		File[] files = dir.listFiles(filter);
-		reports = new String[files.length][3];
+		reports = new String[files.length][4];
 		for (int i = 0; i < files.length; i++) {
 			reports[i][0] = String.valueOf(i);
 			reports[i][1] = files[i].getName();
@@ -211,6 +215,11 @@ public class ReportUtil {
 			Date date = new Date(files[i].lastModified());
 			SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
 			reports[i][2] = format.format(date);
+			try {
+				String query = "";
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return reports;
 	}

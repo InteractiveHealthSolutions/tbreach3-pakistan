@@ -12,13 +12,11 @@
 package com.ihsinformatics.tbr3reporterweb.server;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import org.openmrs.Privilege;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
@@ -48,7 +46,7 @@ public class ServerServiceImpl extends RemoteServiceServlet
 	// Form Openmrs properties file
 	// static final String resourcePath =
 	// "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
-	static final String resourcePath = "C:\\Application Data\\OpenMRS\\openmrs-runtime.properties";
+	static String resourcePath = "C:\\Users\\Owais\\git\\tbreach3-pakistan\\tbr3reporterweb\\war\\";
 
 	public ServerServiceImpl() {
 		initOpenMrs();
@@ -56,7 +54,7 @@ public class ServerServiceImpl extends RemoteServiceServlet
 
 	public Boolean initOpenMrs() {
 		String url, username, password;
-		File propsFile = new File(resourcePath);
+		File propsFile = new File(resourcePath + "openmrs-runtime.properties");
 		Properties props = new Properties();
 		OpenmrsUtil.loadProperties(props, propsFile);
 		url = (String) props.get("connection.url");
@@ -89,11 +87,12 @@ public class ServerServiceImpl extends RemoteServiceServlet
 			Context.authenticate(userName, password);
 			// Get user object and look for required privileges
 			User user = Context.getUserService().getUserByUsername(userName);
-			Collection<Privilege> privileges = user.getPrivileges();
 			Set<Role> roles = user.getAllRoles();
 			for (Iterator<Role> iter = roles.iterator(); iter.hasNext();) {
 				Role role = iter.next();
-				if(role.getRole().equals("System Developer")) {
+				if (role.getRole().equals("System Developer")
+						|| role.getRole().equals("Reporting")
+						|| role.getRole().equals("Program Admin")) {
 					result = true;
 				}
 			}
@@ -193,6 +192,7 @@ public class ServerServiceImpl extends RemoteServiceServlet
 						+ arrangeFilter(filter)).toString();
 	}
 
+	@Override
 	public String[][] getReportsList() throws Exception {
 		return new ReportUtil(resourcePath).getReportList();
 	}
