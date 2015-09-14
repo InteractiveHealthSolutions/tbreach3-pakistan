@@ -32,7 +32,7 @@ import com.ihsinformatics.tbr3reporterweb.shared.TBR3;
 public class HibernateUtil implements Serializable {
 	private static final long serialVersionUID = -2333198879612643152L;
 	public static HibernateUtil util = new HibernateUtil();
-	private static SessionFactory factory;
+	private static SessionFactory sessionFactory;
 	private Class<?>[] classes;
 
 	/**
@@ -40,9 +40,9 @@ public class HibernateUtil implements Serializable {
 	 */
 	public HibernateUtil() {
 		/* Use when trying Annotation */
-		// factory = getInitializedConfiguration().buildSessionFactory();
-		factory = new Configuration().configure().buildSessionFactory();
+		// sessionFactory = getInitializedConfiguration().buildSessionFactory();
 		try {
+			sessionFactory = new Configuration().configure().buildSessionFactory();
 			classes = getClasses(TBR3.packageName + ".shared.model");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -297,7 +297,7 @@ public class HibernateUtil implements Serializable {
 	 * @return the session
 	 */
 	public Session getSession() {
-		return factory.openSession();
+		return sessionFactory.openSession();
 	}
 
 	/**

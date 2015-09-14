@@ -10,14 +10,13 @@ import java.io.FilenameFilter;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
 import net.sf.jasperreports.engine.JRAbstractExporter;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JRResultSetDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -28,34 +27,59 @@ import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 
 import com.ihsinformatics.tbr3reporterweb.shared.Parameter;
+import com.ihsinformatics.tbr3reporterweb.shared.Report;
 
 /**
  * @author owais.hussain@ihsinformatics.com
  * 
  */
 public class ReportUtil {
-	private static String resourcesPath;
+	private static final String databaseName = "sz_dw";
+	private static String resourcePath;
 	private static String reportsPath;
 	public static final char separatorChar = File.separatorChar;
 	public static final String[] allowedExtensions = {"jrxml", "doc", "docx",
 			"xls", "xlsx", "rar", "zip"};
+	private Connection con;
 
 	/**
-	 * 
+	 * @param resourcePath
 	 */
-	public ReportUtil(String resourcesPath) {
-		if (!resourcesPath.endsWith(String.valueOf(separatorChar))) {
-			resourcesPath += separatorChar;
+	@SuppressWarnings("deprecation")
+	public ReportUtil(String resourcePath) {
+		if (!resourcePath.endsWith(String.valueOf(separatorChar))) {
+			resourcePath += separatorChar;
 		}
-		ReportUtil.resourcesPath = resourcesPath;
-		ReportUtil.reportsPath = resourcesPath + "rpt" + separatorChar;
+		ReportUtil.resourcePath = resourcePath;
+		ReportUtil.reportsPath = resourcePath + "rpt" + separatorChar;
+		try {
+			con = HibernateUtil.util.getSession().connection();
+			con.setCatalog(databaseName);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
-	@SuppressWarnings("deprecation")
+	/**
+	 * @param resourcePath
+	 * @param con
+	 */
+	public ReportUtil(String resourcePath, Connection con) {
+		if (!resourcePath.endsWith(String.valueOf(separatorChar))) {
+			resourcePath += separatorChar;
+		}
+		ReportUtil.resourcePath = resourcePath;
+		ReportUtil.reportsPath = resourcePath + "rpt" + separatorChar;
+		this.con = con;
+		try {
+			con.setCatalog(databaseName);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public String generateCSVfromQuery(String query, char separator) {
 		try {
-			Connection con = HibernateUtil.util.getSession().connection();
-			con.setCatalog("xpertsms");
 			Statement statement = con.createStatement();
 			ResultSet result = statement.executeQuery(query);
 			ArrayList<String> list = new ArrayList<String>();
@@ -71,7 +95,7 @@ public class ReportUtil {
 				if (record.length() > 0)
 					list.add(record.substring(0, record.length() - 1));
 			}
-			String dest = resourcesPath + String.valueOf(new Date().getTime())
+			String dest = resourcePath + String.valueOf(new Date().getTime())
 					+ ".csv";
 			StringBuilder text = new StringBuilder();
 			for (int i = 0; i < list.size(); i++)
@@ -95,12 +119,9 @@ public class ReportUtil {
 		}
 	}
 
-	@SuppressWarnings({"deprecation"})
 	public String generateReportFromQuery(String fileName, String query,
 			Parameter[] params, boolean export) {
 		try {
-			Connection con = HibernateUtil.util.getSession().connection();
-			con.setCatalog("xpertsms");
 			Statement statement = con.createStatement();
 			ResultSet result = statement.executeQuery(query);
 			JRResultSetDataSource resultSource = new JRResultSetDataSource(
@@ -117,7 +138,7 @@ public class ReportUtil {
 							+ (fileName.endsWith(".jrxml") ? "" : ".jrxml"));
 			JasperPrint print = JasperFillManager.fillReport(jasperReport, map,
 					resultSource);
-			String dest = resourcesPath + String.valueOf(new Date().getTime())
+			String dest = resourcePath + String.valueOf(new Date().getTime())
 					+ (export == true ? ".csv" : ".pdf");
 			// Delete file if existing
 			try {
@@ -144,12 +165,9 @@ public class ReportUtil {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public String generateReport(String fileName, Parameter[] params,
 			boolean export) {
 		try {
-			Connection con = HibernateUtil.util.getSession().connection();
-			con.setCatalog("xpertsms");
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			for (int i = 0; i < params.length; i++) {
 				/**
@@ -162,7 +180,7 @@ public class ReportUtil {
 							+ (fileName.endsWith(".jrxml") ? "" : ".jrxml"));
 			JasperPrint print = JasperFillManager.fillReport(jasperReport, map,
 					con);
-			String dest = resourcesPath + String.valueOf(new Date().getTime())
+			String dest = resourcePath + String.valueOf(new Date().getTime())
 					+ (export == true ? ".csv" : ".pdf");
 			// Delete file if existing
 			try {
@@ -194,8 +212,8 @@ public class ReportUtil {
 	 * 
 	 * @return String[][]
 	 */
-	public String[][] getReportList() {
-		String[][] reports;
+	public ArrayList<Report> getReportList() {
+		ArrayList<Report> reports = new ArrayList<Report>();
 		File dir = new File(reportsPath);
 		FilenameFilter filter = new FilenameFilter() {
 			@Override
@@ -207,19 +225,14 @@ public class ReportUtil {
 			}
 		};
 		File[] files = dir.listFiles(filter);
-		reports = new String[files.length][4];
 		for (int i = 0; i < files.length; i++) {
-			reports[i][0] = String.valueOf(i);
-			reports[i][1] = files[i].getName();
-
-			Date date = new Date(files[i].lastModified());
-			SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
-			reports[i][2] = format.format(date);
-			try {
-				String query = "";
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			Report report = new Report();
+			report.setPath(reportsPath + files[i].getName());
+			String fileName = files[i].getName();
+			report.setName(fileName.substring(0, fileName.lastIndexOf('.')));
+			report.setType(fileName.substring(fileName.lastIndexOf('.') + 1));
+			report.setParameters(null);
+			reports.add(report);
 		}
 		return reports;
 	}

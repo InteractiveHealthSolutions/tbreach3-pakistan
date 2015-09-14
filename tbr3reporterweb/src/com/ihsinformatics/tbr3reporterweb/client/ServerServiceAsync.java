@@ -13,6 +13,7 @@ package com.ihsinformatics.tbr3reporterweb.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.ihsinformatics.tbr3reporterweb.shared.Parameter;
+import com.ihsinformatics.tbr3reporterweb.shared.Report;
 
 /**
  * @author Owais
@@ -31,5 +32,5 @@ public interface ServerServiceAsync {
 			Parameter[] params, boolean export,
 			AsyncCallback<String> asyncCallback) throws Exception;
 
-	void getReportsList(AsyncCallback<String[][]> callback);
+	void getReportsList(AsyncCallback<Report[]> callback);
 }

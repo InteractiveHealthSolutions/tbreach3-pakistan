@@ -38,6 +38,7 @@ import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
 import com.ihsinformatics.tbr3reporterweb.shared.DataType;
 import com.ihsinformatics.tbr3reporterweb.shared.Parameter;
+import com.ihsinformatics.tbr3reporterweb.shared.Report;
 import com.ihsinformatics.tbr3reporterweb.shared.TBR3;
 
 /**
@@ -52,7 +53,7 @@ public class ReportsComposite extends Composite
 	private static ServerServiceAsync service = GWT.create(ServerService.class);
 	private static LoadingWidget loading = new LoadingWidget();
 	private static final String menuName = "DATALOG";
-	private static String[][] reports;
+	private static Report[] reports;
 	private String filter = "";
 	private String startDate = "";
 	private String endDate = "";
@@ -66,7 +67,6 @@ public class ReportsComposite extends Composite
 	private Grid grid = new Grid(1, 4);
 
 	private Button viewButton = new Button("Save");
-	private Button closeButton = new Button("Close");
 	private Button exportButton = new Button("Export");
 
 	private Label lblSelectCategory = new Label("Select Category:");
@@ -180,17 +180,12 @@ public class ReportsComposite extends Composite
 		userIdTextBox.setMaxLength(20);
 		filterFlexTable.setWidget(3, 2, userIdTextBox);
 		userIdTextBox.setWidth("100%");
-		filterFlexTable.setWidget(4, 0, sortCheckBox);
-		sortTypeComboBox.setEnabled(false);
-		filterFlexTable.setWidget(4, 1, sortTypeComboBox);
-		sortTypeComboBox.setWidth("100%");
 		rightFlexTable.setWidget(5, 1, grid);
 		grid.setSize("100%", "100%");
 		viewButton.setEnabled(false);
 		viewButton.setText("View");
 		grid.setWidget(0, 0, viewButton);
 		grid.setWidget(0, 1, exportButton);
-		grid.setWidget(0, 3, closeButton);
 		rightFlexTable.getCellFormatter().setHorizontalAlignment(4, 1,
 				HasHorizontalAlignment.ALIGN_CENTER);
 		flexTable.getRowFormatter().setVerticalAlign(1,
@@ -208,7 +203,6 @@ public class ReportsComposite extends Composite
 		categoryComboBox.addChangeHandler(this);
 		viewButton.addClickHandler(this);
 		exportButton.addClickHandler(this);
-		closeButton.addClickHandler(this);
 
 		refreshList();
 		setRights(menuName);
@@ -221,9 +215,6 @@ public class ReportsComposite extends Composite
 			locationFilterTypeComboBox.addItem(s);
 			userFilterTypeComboBox.addItem(s);
 		}
-		sortTypeComboBox.addItem("PatientID");
-		sortTypeComboBox.addItem("LocationID");
-		sortTypeComboBox.addItem("DateEntered");
 	}
 
 	/**
@@ -326,14 +317,6 @@ public class ReportsComposite extends Composite
 		return filter;
 	}
 
-	public String sortData() {
-		if (!sortCheckBox.getValue()) {
-			return "";
-		}
-		String columnName = TBR3ReporterClient.get(sortTypeComboBox);
-		return " ORDER BY " + columnName;
-	}
-
 	@Override
 	public void clearUp() {
 	}
@@ -348,13 +331,31 @@ public class ReportsComposite extends Composite
 		String reportSelected = TBR3ReporterClient.get(reportsListComboBox)
 				.replace(" ", "");
 		String query = "";
+		String locationName = "";
+		String dateName = "";
+		String username = "";
 		// Case Detection Reports
 		if (TBR3ReporterClient.get(categoryComboBox).equals("Reports")) {
-			if (reportSelected.equals("ScreeningReport")) {
-				query = "select p.identifier, p.gender, p.birthdate, p.birthdate_estimated, p.first_name, p.last_name, p.date_created, u.username from sz_dw.dim_patient as p inner join dim_user as u on u.person_id = p.creator WHERE 1 = 1 "
-						+ filterData("", "p.date_created", "") + sortData();
-			} else {
-				query = "";
+			// Fetch query and parameter names from Report object
+			for (Report report : reports) {
+				if (reportSelected.equals(report.getName())) {
+					// Look for parameters
+					Parameter[] parameters = report.getParameters();
+					for (Parameter param : parameters) {
+						if (param.getName().equals("query")) {
+							query = param.getValue();
+						} else if (param.getName().equals("date")) {
+							dateName = param.getValue();
+						} else if (param.getName().equals("location")) {
+							locationName = param.getValue();
+						} else if (param.getName().equals("username")) {
+							username = param.getValue();
+						}
+					}
+					query += " WHERE 1 = 1 "
+							+ filterData(locationName, dateName, username);
+					break;
+				}
 			}
 		} else if (TBR3ReporterClient.get(categoryComboBox)
 				.equals("Data Dumps")) {
@@ -434,9 +435,6 @@ public class ReportsComposite extends Composite
 			viewData(false);
 		} else if (sender == exportButton) {
 			viewData(true);
-		} else if (sender == closeButton) {
-			load(false);
-			// MainMenuComposite.clear();
 		}
 	}
 
@@ -449,14 +447,13 @@ public class ReportsComposite extends Composite
 			reportsListComboBox.clear();
 			if (text.equals("Reports")) {
 				// Fetch list of reports from server
-				service.getReportsList(new AsyncCallback<String[][]>() {
+				service.getReportsList(new AsyncCallback<Report[]>() {
+
 					@Override
-					public void onSuccess(String[][] result) {
+					public void onSuccess(Report[] result) {
 						reports = result;
-						for (String[] report : reports) {
-							if (report.length >= 2) {
-								reportsListComboBox.addItem(report[1].replace(".jrxml", ""));
-							}
+						for (Report report : reports) {
+							reportsListComboBox.addItem(report.getName());
 						}
 					}
 

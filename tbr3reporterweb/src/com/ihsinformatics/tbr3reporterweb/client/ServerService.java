@@ -14,6 +14,7 @@ package com.ihsinformatics.tbr3reporterweb.client;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.ihsinformatics.tbr3reporterweb.shared.Parameter;
+import com.ihsinformatics.tbr3reporterweb.shared.Report;
 
 /**
  * @author Owais
@@ -30,5 +31,5 @@ public interface ServerService extends RemoteService {
 	String generateReportFromQuery(String reportSelected, String query,
 			Parameter[] params, boolean export) throws Exception;
 
-	String[][] getReportsList() throws Exception;
+	Report[] getReportsList() throws Exception;
 }

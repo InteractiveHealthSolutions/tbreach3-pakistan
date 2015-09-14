@@ -12,6 +12,11 @@
 package com.ihsinformatics.tbr3reporterweb.server;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
@@ -23,6 +28,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.ModuleMustStartException;
 import org.openmrs.util.DatabaseUpdateException;
+import org.openmrs.util.DatabaseUpdater;
 import org.openmrs.util.InputRequiredException;
 import org.openmrs.util.OpenmrsUtil;
 
@@ -31,7 +37,9 @@ import com.ihsinformatics.tbr3reporterweb.client.ServerService;
 import com.ihsinformatics.tbr3reporterweb.server.util.DateTimeUtil;
 import com.ihsinformatics.tbr3reporterweb.server.util.HibernateUtil;
 import com.ihsinformatics.tbr3reporterweb.server.util.ReportUtil;
+import com.ihsinformatics.tbr3reporterweb.shared.DataType;
 import com.ihsinformatics.tbr3reporterweb.shared.Parameter;
+import com.ihsinformatics.tbr3reporterweb.shared.Report;
 import com.ihsinformatics.tbr3reporterweb.shared.TBR3;
 
 /**
@@ -42,6 +50,7 @@ public class ServerServiceImpl extends RemoteServiceServlet
 		implements
 			ServerService {
 	private static final long serialVersionUID = 4123609914879659870L;
+	private ReportUtil reportUtil;
 
 	// Form Openmrs properties file
 	// static final String resourcePath =
@@ -50,6 +59,12 @@ public class ServerServiceImpl extends RemoteServiceServlet
 
 	public ServerServiceImpl() {
 		initOpenMrs();
+		try {
+			Connection connection = DatabaseUpdater.getConnection();
+			reportUtil = new ReportUtil(resourcePath, connection);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Boolean initOpenMrs() {
@@ -138,7 +153,7 @@ public class ServerServiceImpl extends RemoteServiceServlet
 	 * @return
 	 */
 	public String generateCSVfromQuery(String query) throws Exception {
-		return new ReportUtil(resourcePath).generateCSVfromQuery(query, ',');
+		return reportUtil.generateCSVfromQuery(query, ',');
 	}
 
 	/**
@@ -151,8 +166,7 @@ public class ServerServiceImpl extends RemoteServiceServlet
 	 */
 	public String generateReport(String fileName, Parameter[] params,
 			boolean export) throws Exception {
-		return new ReportUtil(resourcePath).generateReport(fileName, params,
-				export);
+		return reportUtil.generateReport(fileName, params, export);
 	}
 
 	/**
@@ -166,8 +180,8 @@ public class ServerServiceImpl extends RemoteServiceServlet
 	 */
 	public String generateReportFromQuery(String reportName, String query,
 			Parameter[] params, boolean export) throws Exception {
-		return new ReportUtil(resourcePath).generateReportFromQuery(reportName,
-				query, params, export);
+		return reportUtil.generateReportFromQuery(reportName, query, params,
+				export);
 	}
 
 	public String[] getColumnData(String tableName, String columnName,
@@ -193,8 +207,54 @@ public class ServerServiceImpl extends RemoteServiceServlet
 	}
 
 	@Override
-	public String[][] getReportsList() throws Exception {
-		return new ReportUtil(resourcePath).getReportList();
+	public Report[] getReportsList() throws Exception {
+		ArrayList<Report> reports = reportUtil.getReportList();
+		for (Report report : reports) {
+			try {
+				report.setParameters(getReportParameters(report.getName())
+						.toArray(new Parameter[]{}));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return reports.toArray(new Report[]{});
+	}
+
+	/**
+	 * Get parameters of given report name (file name without extension),
+	 * reading from properties file
+	 * 
+	 * @param reportName
+	 * @return
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 */
+	public ArrayList<Parameter> getReportParameters(String reportName)
+			throws FileNotFoundException, IOException {
+		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+		File propsFile = new File(resourcePath + "rpt" + File.separatorChar
+				+ "report.properties");
+		Properties props = new Properties();
+		props.load(new FileInputStream(propsFile));
+		String property = props.getProperty(reportName + ".query");
+		if (property != null) {
+			parameters.add(new Parameter("query", property, DataType.STRING));
+		}
+		property = props.getProperty(reportName + ".param.date");
+		if (property != null) {
+			parameters.add(new Parameter("date", property, DataType.DATE));
+		}
+		property = props.getProperty(reportName + ".param.location");
+		if (property != null) {
+			parameters
+					.add(new Parameter("location", property, DataType.STRING));
+		}
+		property = props.getProperty(reportName + ".param.username");
+		if (property != null) {
+			parameters
+					.add(new Parameter("username", property, DataType.STRING));
+		}
+		return parameters;
 	}
 
 	public String[] getRowRecord(String tableName, String[] columnNames,
