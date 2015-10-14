@@ -44,6 +44,8 @@ import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.LocationAttribute;
+import org.openmrs.LocationAttributeType;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -72,9 +74,9 @@ public class MobileService {
 	private HttpServletRequest request;
 	
 // OpenMRS-related
-static final String				propFilePath	= "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
+//	static final String				propFilePath	= "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
 //	static final String propFilePath = "c:\\Application Data\\OpenMRS\\openmrs-runtime.properties";
-//	static final String	propFilePath	= "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
+	static final String	propFilePath	= "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
 	
 	private static File propsFile;
 	
@@ -277,11 +279,37 @@ static final String				propFilePath	= "/usr/share/tomcat6/.OpenMRS/openmrs-runti
 		String json = null;
 		try {
 			String locationName = values.getString("location_name");
+			
 			List<Location> locations = Context.getLocationService().getLocations(locationName);
 			Location location = locations.get(0);
+			
+//			for location attribute - town
+			String locationNameAndTown = "";
+			String townAttributeValue = "none";
+			Set<LocationAttribute> attributes = location.getAttributes();
+			for (Iterator<LocationAttribute> iter = attributes.iterator(); iter.hasNext();) {
+				LocationAttribute next = iter.next();
+//				String value = next.getValue().toString();
+				LocationAttributeType locationAttrType = next.getAttributeType();
+				String locationAttributeTypeName = locationAttrType.getName(); // if town
+				
+				if(locationAttributeTypeName.equals("Town"))
+				{
+					townAttributeValue = next.getValue().toString();
+					break;
+				}
+			}
+
+			/* since, town was required with the location name, 
+			metadata tables can not be changed to include attributes. 
+			therefore, appending town with location name */
+			
+			locationNameAndTown = location.getName() + "+" + townAttributeValue;
+			
 			JSONObject locationObj = new JSONObject();
 			locationObj.put("id", location.getLocationId());
-			locationObj.put("name", location.getName());
+//			locationObj.put("name", location.getName());
+			locationObj.put("name", locationNameAndTown);		
 			json = locationObj.toString();
 		}
 		catch (JSONException e) {
@@ -289,7 +317,7 @@ static final String				propFilePath	= "/usr/share/tomcat6/.OpenMRS/openmrs-runti
 		}
 		return json;
 	}
-	
+
 	/**
 	 * Return report of a user provided in JSONObject containing number of Suspects/Non-suspects in
 	 * the current month, previous month and all months
