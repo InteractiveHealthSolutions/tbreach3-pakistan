@@ -354,7 +354,8 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 										OpenMrsObject location = serverService.getLocation (selected);
 										if (location != null)
 										{
-											App.setLocation (location.getName ());
+//											App.setLocation (location.getName ());
+											App.setLocation (location.getName().split("\\+")[0]);
 											// Save location in preferences
 											SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (MainMenuActivity.this);
 											SharedPreferences.Editor editor = preferences.edit ();
