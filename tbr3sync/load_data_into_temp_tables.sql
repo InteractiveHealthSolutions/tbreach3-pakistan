@@ -194,9 +194,9 @@ DROP TABLE IF EXISTS openmrs.temp_concept_name;
 CREATE TABLE openmrs.temp_concept_name LIKE openmrs.concept_name;
 LOAD DATA LOCAL INFILE '/tmp/sz/concept_name.csv' INTO TABLE openmrs.temp_concept_name FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';
 
-DROP TABLE IF EXISTS openmrs.temp_concept_name_bkp;
-CREATE TABLE openmrs.temp_concept_name_bkp LIKE openmrs.concept_name_bkp;
-LOAD DATA LOCAL INFILE '/tmp/sz/concept_name_bkp.csv' INTO TABLE openmrs.temp_concept_name_bkp FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';
+-- DROP TABLE IF EXISTS openmrs.temp_concept_name_bkp;
+-- CREATE TABLE openmrs.temp_concept_name_bkp LIKE openmrs.concept_name_bkp;
+-- LOAD DATA LOCAL INFILE '/tmp/sz/concept_name_bkp.csv' INTO TABLE openmrs.temp_concept_name_bkp FIELDS TERMINATED BY ',' ENCLOSED BY '\"' -- -- LINES TERMINATED BY '\n';
 
 DROP TABLE IF EXISTS openmrs.temp_concept_name_tag;
 CREATE TABLE openmrs.temp_concept_name_tag LIKE openmrs.concept_name_tag;
@@ -330,9 +330,10 @@ DROP TABLE IF EXISTS openmrs.temp_scheduler_task_config_property;
 CREATE TABLE openmrs.temp_scheduler_task_config_property LIKE openmrs.scheduler_task_config_property;
 LOAD DATA LOCAL INFILE '/tmp/sz/scheduler_task_config_property.csv' INTO TABLE openmrs.temp_scheduler_task_config_property FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';
 
-DROP TABLE IF EXISTS openmrs.temp_test_order;
-CREATE TABLE openmrs.temp_test_order LIKE openmrs.test_order;
-LOAD DATA LOCAL INFILE '/tmp/sz/test_order.csv' INTO TABLE openmrs.temp_test_order FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';
+-- DROP TABLE IF EXISTS openmrs.temp_test_order;
+-- CREATE TABLE openmrs.temp_test_order LIKE openmrs.test_order;
+-- LOAD DATA LOCAL INFILE '/tmp/sz/test_order.csv' INTO TABLE openmrs.temp_test_order FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES 
+-- TERMINATED BY '\n';
 
 DROP TABLE IF EXISTS openmrs.temp_user_property;
 CREATE TABLE openmrs.temp_user_property LIKE openmrs.user_property;
