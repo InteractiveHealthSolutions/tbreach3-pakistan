@@ -35,15 +35,15 @@ import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
  */
 public final class DataWarehouseMain {
 
-	public static final String version = "1.0.0-beta";
+	public static final String version = "1.0.0";
 
 	private static final Logger log = Logger.getLogger(Class.class.getName());
-	public static final String dataPath = (System.getProperty("user.home").replace("\\", "/"))
+	public static final String dataPath = System.getProperty("user.home")
 			+ FileUtil.SEPARATOR + "sz_dw" + FileUtil.SEPARATOR;
 	public static final String dataPathForUpdate = dataPath.replace(
 			FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR);
 	public static final String dwSchema = "sz_dw";
-	public static final String propertiesFilePath = "tbr3datawarehouse.properties";
+	public static String propertiesFilePath = "tbr3datawarehouse.properties";
 	public OpenMrsProcessor openMrs;
 	public FieldMonitoringProcessor fm;
 	// public IlmsProcessor ilms;
@@ -62,77 +62,62 @@ public final class DataWarehouseMain {
 	 */
 	public static void main(String[] args) {
 		// check arguments first
-		if (args.length == 0 || args.length > 2 || args[0] == null) {
+		if (args.length == 0 || args.length < 3 || args[0] == null) {
 			System.out
 					.println("Arguments are invalid. Arguments must be provided as:\n"
 							+ "-R to hard reset warehouse (Extract/Load > Transform > Dimensional modeling > Fact tables)\n"
 							+ "-l to extract/load data from various sources (stage1)\n"
 							+ "-t to transform schema from (stage2)\n"
 							+ "-d to create dimension tables (data warehouse)\n"
+							+ "-p path to properties file\n"
 							+ "-f to create fact tables\n"
 							+ "-u to update data warehouse (nightly run)\n");
 			return;
 		}
-		// Read properties
-		props = new Properties();
-		try {
-			props.load(new FileInputStream(propertiesFilePath));
-		} catch (IOException e) {
-			log.severe("Properties file not found.");
-		}
 		DataWarehouseMain dw = new DataWarehouseMain();
-		dw.setDataConnections();
-
-		// Single Argument
-		if (args.length == 1) {
-			if (dw.hasSwitch(args, "r") || dw.hasSwitch(args, "R")) {
+		int days = 0;
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals("-p")) {
+				propertiesFilePath = args[i + 1];
+				// Read properties
+				props = new Properties();
+				try {
+					props.load(new FileInputStream(propertiesFilePath));
+				} catch (IOException e) {
+					try {
+						props.load(new FileInputStream(
+								"tbr3datawarehouse.properties"));
+					} catch (IOException e2) {
+						log.severe("Properties file not found.");
+						return;
+					}
+				}
+				dw.setDataConnections();
+			} else if (args[i].equalsIgnoreCase("-r")) {
 				dw.resetDataWarehouse();
 				return;
-			}
-			if (dw.hasSwitch(args, "l") || dw.hasSwitch(args, "L")) {
+			} else if (args[i].equalsIgnoreCase("-l")) {
 				dw.extractLoad(false);
-			}
-			if (dw.hasSwitch(args, "t") || dw.hasSwitch(args, "T")) {
+			} else if (args[i].equalsIgnoreCase("-t")) {
 				dw.transform();
-			}
-			if (dw.hasSwitch(args, "d") || dw.hasSwitch(args, "D")) {
+			} else if (args[i].equalsIgnoreCase("-d")) {
 				dw.createDimensions();
-			}
-			if (dw.hasSwitch(args, "f") || dw.hasSwitch(args, "F")) {
+			} else if (args[i].equalsIgnoreCase("-f")) {
 				dw.createFacts();
-			}
-			if (dw.hasSwitch(args, "u") || dw.hasSwitch(args, "U")) {
-				System.out
-						.println("Please enter the number of days in the argument \n"
-								+ "i.e. -u , 365");
-			} else {
-				System.out
-						.println("Arguments are invalid. Arguments must be provided as:\n"
-								+ "-R to hard reset warehouse (Extract/Load > Transform > Dimensional modeling > Fact tables)\n"
-								+ "-l to extract/load data from various sources (stage1)\n"
-								+ "-t to transform schema from (stage2)\n"
-								+ "-d to create dimension tables (data warehouse)\n"
-								+ "-f to create fact tables\n"
-								+ "-u,<space>(number of days) to update data warehouse (nightly run) i.e. -u, <space> 365\n");
-				return;
-			}
-		}
-
-		else if (args.length == 2 || args[0].equals("-u")
-				|| args[0].equals("-U")) {
-			try {
-				// int days = 365;
-				int days = Integer.parseInt(args[1]);
-				Date dateFrom = new Date();
-				Date dateTo = new Date();
-				Calendar instance = Calendar.getInstance();
-				instance.add(Calendar.DATE, days);
-				dateFrom = instance.getTime();
-				dw.updateWarehosue(dataPathForUpdate, dateFrom, dateTo);
-			} catch (NumberFormatException ex) {
-				System.out.println("Invalid Argument for days! \n"
-						+ "Please enter the number of days in the argument \n"
-						+ "i.e. -u , <space> 365");
+			} else if (args[i].equalsIgnoreCase("-u")) {
+				try {
+					days = Integer.parseInt(args[i + 1]);
+					Date dateFrom = new Date();
+					Date dateTo = new Date();
+					Calendar instance = Calendar.getInstance();
+					instance.add(Calendar.DATE, days);
+					dateFrom = instance.getTime();
+					dw.updateWarehosue(dataPathForUpdate, dateFrom, dateTo);
+				} catch (Exception e) {
+					System.out
+							.println("Please enter the number of days in the argument \n"
+									+ "i.e. -u 365");
+				}
 			}
 		}
 		System.exit(0);
@@ -232,7 +217,8 @@ public final class DataWarehouseMain {
 			dwDb.deleteTable(t.toString());
 		}
 		extractLoad(true);
-		createDimensions();;
+		createDimensions();
+		;
 		transform();
 		createFacts();
 		log.info("Finished DW hard reset");
