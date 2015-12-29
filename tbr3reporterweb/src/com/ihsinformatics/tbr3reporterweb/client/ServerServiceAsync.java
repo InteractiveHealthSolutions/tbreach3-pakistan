@@ -28,9 +28,9 @@ public interface ServerServiceAsync {
 	void generateCSVfromQuery(String query, AsyncCallback<String> asyncCallback)
 			throws Exception;
 
-	void generateReportFromQuery(String reportSelected, String query,
-			Parameter[] params, boolean export,
-			AsyncCallback<String> asyncCallback) throws Exception;
+	void generateReport(String reportSelected, Parameter[] params,
+			boolean export, AsyncCallback<String> asyncCallback)
+			throws Exception;
 
 	void getReportsList(AsyncCallback<Report[]> callback);
 }

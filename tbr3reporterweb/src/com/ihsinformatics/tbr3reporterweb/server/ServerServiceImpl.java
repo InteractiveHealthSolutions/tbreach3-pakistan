@@ -46,9 +46,8 @@ import com.ihsinformatics.tbr3reporterweb.shared.TBR3;
  * @author Owais
  * 
  */
-public class ServerServiceImpl extends RemoteServiceServlet
-		implements
-			ServerService {
+public class ServerServiceImpl extends RemoteServiceServlet implements
+		ServerService {
 	private static final long serialVersionUID = 4123609914879659870L;
 	private ReportUtil reportUtil;
 
@@ -162,26 +161,12 @@ public class ServerServiceImpl extends RemoteServiceServlet
 	 * @param Path
 	 *            of report as String Report parameters as Parameter[] Report to
 	 *            be exported in csv format as Boolean
-	 * @return String
-	 */
-	public String generateReport(String fileName, Parameter[] params,
-			boolean export) throws Exception {
-		return reportUtil.generateReport(fileName, params, export);
-	}
-
-	/**
-	 * Generate report on server side based on the query saved in the Database
-	 * against the reportName and return the path it was created to
-	 * 
-	 * @param reportName
-	 * @param params
 	 * @param export
 	 * @return
 	 */
-	public String generateReportFromQuery(String reportName, String query,
-			Parameter[] params, boolean export) throws Exception {
-		return reportUtil.generateReportFromQuery(reportName, query, params,
-				export);
+	public String generateReport(String reportName, Parameter[] params,
+			boolean export) throws Exception {
+		return reportUtil.generateReport(reportName, params, export);
 	}
 
 	public String[] getColumnData(String tableName, String columnName,
@@ -212,12 +197,12 @@ public class ServerServiceImpl extends RemoteServiceServlet
 		for (Report report : reports) {
 			try {
 				report.setParameters(getReportParameters(report.getName())
-						.toArray(new Parameter[]{}));
+						.toArray(new Parameter[] {}));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		return reports.toArray(new Report[]{});
+		return reports.toArray(new Report[] {});
 	}
 
 	/**

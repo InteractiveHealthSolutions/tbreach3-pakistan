@@ -11,6 +11,7 @@
  */
 package com.ihsinformatics.tbr3reporterweb.client;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
@@ -44,12 +45,8 @@ import com.ihsinformatics.tbr3reporterweb.shared.TBR3;
 /**
  * @author owais.hussain@ihsinformatics.com
  */
-public class ReportsComposite extends Composite
-		implements
-			IReport,
-			ClickHandler,
-			ChangeHandler,
-			ValueChangeHandler<Boolean> {
+public class ReportsComposite extends Composite implements IReport,
+		ClickHandler, ChangeHandler, ValueChangeHandler<Boolean> {
 	private static ServerServiceAsync service = GWT.create(ServerService.class);
 	private static LoadingWidget loading = new LoadingWidget();
 	private static final String menuName = "DATALOG";
@@ -209,8 +206,7 @@ public class ReportsComposite extends Composite
 	}
 
 	private void refreshList() {
-		String[] filterOptions = {"IS EXACTLY", "STARTS WITH", "ENDS ON",
-				"LOOKS LIKE"};
+		String[] filterOptions = { "LOOKS LIKE" };
 		for (String s : filterOptions) {
 			locationFilterTypeComboBox.addItem(s);
 			userFilterTypeComboBox.addItem(s);
@@ -268,44 +264,11 @@ public class ReportsComposite extends Composite
 			endDate = endString.toString();
 		}
 		if (locationIdCheckBox.getValue()) {
-			switch (locationFilterTypeComboBox.getSelectedIndex()) {
-				case 0 :
-					locationId = " = '"
-							+ TBR3ReporterClient.get(locationIdTextBox) + "'";
-					break;
-				case 1 :
-					locationId = " LIKE '"
-							+ TBR3ReporterClient.get(locationIdTextBox) + "%'";
-					break;
-				case 2 :
-					locationId = " LIKE '%"
-							+ TBR3ReporterClient.get(locationIdTextBox) + "'";
-					break;
-				case 3 :
-					locationId = " LIKE '%"
-							+ TBR3ReporterClient.get(locationIdTextBox) + "%'";
-					break;
-			}
+			locationId = " LIKE '" + TBR3ReporterClient.get(locationIdTextBox)
+					+ "%'";
 		}
 		if (userIdCheckBox.getValue()) {
-			switch (userFilterTypeComboBox.getSelectedIndex()) {
-				case 0 :
-					userId = " = '" + TBR3ReporterClient.get(userIdTextBox)
-							+ "'";
-					break;
-				case 1 :
-					userId = " LIKE '" + TBR3ReporterClient.get(userIdTextBox)
-							+ "%'";
-					break;
-				case 2 :
-					userId = " LIKE '%" + TBR3ReporterClient.get(userIdTextBox)
-							+ "'";
-					break;
-				case 3 :
-					userId = " LIKE '%" + TBR3ReporterClient.get(userIdTextBox)
-							+ "%'";
-					break;
-			}
+			userId = " LIKE '%" + TBR3ReporterClient.get(userIdTextBox) + "'";
 		}
 		if (dateRangeFilterCheckBox.getValue() && !dateColumnName.equals(""))
 			filter += " AND " + dateColumnName + " BETWEEN '" + startDate
@@ -396,10 +359,9 @@ public class ReportsComposite extends Composite
 				}
 			} else {
 				try {
-					Parameter[] params = new Parameter[]{new Parameter(
-							"UserName", TBR3.getCurrentUser(), DataType.STRING)};
-					service.generateReportFromQuery(reportSelected, query,
-							params, export, new AsyncCallback<String>() {
+					Parameter[] params = getParameters();
+					service.generateReport(reportSelected, params, export,
+							new AsyncCallback<String>() {
 								@Override
 								public void onSuccess(String result) {
 
@@ -421,6 +383,48 @@ public class ReportsComposite extends Composite
 				}
 			}
 		}
+	}
+
+	/**
+	 * Convert the form filters into respective parameters
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	public Parameter[] getParameters() {
+		ArrayList<Parameter> params = new ArrayList<Parameter>();
+		params.add(new Parameter("UserName", TBR3.getCurrentUser(),
+				DataType.STRING));
+		if (userIdCheckBox.getValue()) {
+			params.add(new Parameter("UserID", TBR3ReporterClient
+					.get(userIdTextBox), DataType.STRING));
+		}
+		if (locationIdCheckBox.getValue()) {
+			params.add(new Parameter("LocationID", TBR3ReporterClient
+					.get(locationIdTextBox), DataType.STRING));
+		}
+		if (dateRangeFilterCheckBox.getValue()) {
+			Date startDate = fromDateBox.getValue();
+			Date endDate = toDateBox.getValue();
+			// Add time part, if available
+			if (timeRangeFilterCheckBox.getValue()) {
+				startDate.setHours(fromTimeDateBox.getValue().getHours());
+				startDate.setMinutes(fromTimeDateBox.getValue().getMinutes());
+				endDate.setHours(toTimeDateBox.getValue().getHours());
+				endDate.setMinutes(toTimeDateBox.getValue().getMinutes());
+			}
+			params.add(new Parameter("DateFrom", String.valueOf(startDate
+					.getTime()), DataType.DATE));
+			params.add(new Parameter("DateTo",
+					String.valueOf(endDate.getTime()), DataType.DATE));
+		} else {
+			params.add(new Parameter("DateFrom", String.valueOf(1),
+					DataType.DATE));
+			params.add(new Parameter("DateTo", String.valueOf(new Date()
+					.getTime()), DataType.DATE));
+		}
+
+		return params.toArray(new Parameter[] {});
 	}
 
 	public void setRights(String menuName) {

@@ -28,8 +28,8 @@ public interface ServerService extends RemoteService {
 
 	String generateCSVfromQuery(String query) throws Exception;
 
-	String generateReportFromQuery(String reportSelected, String query,
-			Parameter[] params, boolean export) throws Exception;
+	String generateReport(String reportSelected, Parameter[] params,
+			boolean export) throws Exception;
 
 	Report[] getReportsList() throws Exception;
 }
