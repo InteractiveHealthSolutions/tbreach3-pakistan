@@ -62,7 +62,8 @@ public final class DataWarehouseMain {
 	 */
 	public static void main(String[] args) {
 		// check arguments first
-		if (args.length == 0 || args.length < 3 || args[0] == null) {
+		if (args.length == 0 || //args.length < 3 || 
+				args[0] == null) {
 			System.out
 					.println("Arguments are invalid. Arguments must be provided as:\n"
 							+ "-R to hard reset warehouse (Extract/Load > Transform > Dimensional modeling > Fact tables)\n"
@@ -94,17 +95,29 @@ public final class DataWarehouseMain {
 				}
 				dw.setDataConnections();
 			} else if (args[i].equalsIgnoreCase("-r")) {
+				dw.loadProperties();
+				dw.setDataConnections();
 				dw.resetDataWarehouse();
 				return;
 			} else if (args[i].equalsIgnoreCase("-l")) {
+				dw.loadProperties();
+				dw.setDataConnections();
 				dw.extractLoad(false);
 			} else if (args[i].equalsIgnoreCase("-t")) {
+				dw.loadProperties();
+				dw.setDataConnections();
 				dw.transform();
 			} else if (args[i].equalsIgnoreCase("-d")) {
+				dw.loadProperties();
+				dw.setDataConnections();
 				dw.createDimensions();
 			} else if (args[i].equalsIgnoreCase("-f")) {
+				dw.loadProperties();
+				dw.setDataConnections();
 				dw.createFacts();
 			} else if (args[i].equalsIgnoreCase("-u")) {
+				dw.loadProperties();
+				dw.setDataConnections();
 				try {
 					days = Integer.parseInt(args[i + 1]);
 					Date dateFrom = new Date();
@@ -123,6 +136,27 @@ public final class DataWarehouseMain {
 		System.exit(0);
 	}
 
+	
+	/**
+	* Load Properties
+	*/
+	
+	public void loadProperties() {
+		// Read properties
+		props = new Properties();
+		try {
+			props.load(new FileInputStream(propertiesFilePath));
+		} catch (IOException e) {
+			try {
+				props.load(new FileInputStream(
+						"tbr3datawarehouse.properties"));
+			} catch (IOException e2) {
+				log.severe("Properties file not found.");
+				return;
+			}
+		}
+	}
+	
 	/**
 	 * Set connection for all Data repositories and data warehouse. Data
 	 * warehouse user must have full privileges
@@ -218,7 +252,7 @@ public final class DataWarehouseMain {
 		}
 		extractLoad(true);
 		createDimensions();
-		;
+		
 		transform();
 		createFacts();
 		log.info("Finished DW hard reset");

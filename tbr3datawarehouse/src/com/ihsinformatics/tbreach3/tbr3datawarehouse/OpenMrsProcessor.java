@@ -123,7 +123,8 @@ public class OpenMrsProcessor extends AbstractProcessor {
 		for (String table : sourceTables) {
 		//	String fileName = dataPath.replace(FileUtil.SEPARATOR,
 		//			FileUtil.SEPARATOR + FileUtil.SEPARATOR)
-			String fileName = dataPath.replace("/", "//") 
+		//	String fileName = dataPath.replace("/", "//") 
+			String fileName =  dataPath.replace(FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR) 
 					+ schemaName
 					+ "_"
 					+ table + ".csv";	
@@ -198,7 +199,8 @@ public class OpenMrsProcessor extends AbstractProcessor {
 		for (String table : sourceTables) {
 		//	String filePath = dataPath.replace(FileUtil.SEPARATOR,
 		//			FileUtil.SEPARATOR + FileUtil.SEPARATOR)
-			String filePath = dataPath.replace("/", "//")
+		//	String filePath = dataPath.replace("/", "//")
+		String filePath =  dataPath.replace(FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR)
 					+ schemaName
 					+ "_"
 					+ table + ".csv";

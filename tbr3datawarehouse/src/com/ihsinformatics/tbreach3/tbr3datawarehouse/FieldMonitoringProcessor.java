@@ -108,7 +108,8 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 		// Fetch file from source and generate CSVs
 		for (String table : sourceTables) {
 		//	String fileName = dataPath.replace("\\", "\\\\") 
-			String fileName =  dataPath.replace("/", "//") +
+		//	String fileName =  dataPath.replace("/", "//") +
+			String fileName =  dataPath.replace(FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR) +
 					schemaName + "_"
 					+ table + ".csv";
 			File file = new File(fileName);
@@ -146,7 +147,8 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 		log.info("Importing data from raw files into data warehouse");
 		for (String table : sourceTables) {
 		//	String filePath = dataPath.replace("\\", "\\\\") 
-			String filePath = dataPath.replace("/", "//")
+		//	String filePath = dataPath.replace("/", "//")
+			String filePath =  dataPath.replace(FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR) 
 					+ schemaName + "_"
 					+ table + ".csv";
 			File file = new File(filePath);
@@ -212,7 +214,7 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 			log.info("Generating table for " + encounterType);
 			// Insert new data
 			Object result = dwDb.runCommand(CommandType.CREATE,
-					"create table fm_enc_" + encounterType + " " + baseQuery);
+					"create table fm_enc_" + encounterType.toString().toLowerCase() + " " + baseQuery);
 			if (result == null) {
 				log.warning("No data imported for Encounter " + encounterType);
 			}
