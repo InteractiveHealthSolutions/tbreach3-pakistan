@@ -207,6 +207,11 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 					+ "where e.encounter_type = '"
 					+ encounterType
 					+ "' "
+					+ " and er.encounter_type = '"
+					+ encounterType
+					+ "' "
+					
+				//	and er.encounter_type  = 'DAILY_VIS'
 					+ "group by e.e_id, e.pid1, e.pid2, e.date_entered";
 			// Drop previous table
 			dwDb.runCommand(CommandType.DROP, "drop table if exists fm_enc_"
