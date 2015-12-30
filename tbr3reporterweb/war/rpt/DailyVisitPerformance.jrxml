@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DailyVisitPerformance" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true">
+	<property name="ireport.zoom" value="1.652892561983471"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="203"/>
+	<style name="Column" fill="Solid" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false">
+		<box leftPadding="0">
+			<pen lineWidth="0.25" lineColor="#000000"/>
+			<topPen lineWidth="0.25" lineColor="#000000"/>
+			<leftPen lineWidth="0.25" lineColor="#000000"/>
+			<bottomPen lineWidth="0.25" lineColor="#000000"/>
+			<rightPen lineWidth="0.25" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Data" fill="Solid">
+		<box>
+			<pen lineWidth="0.0" lineColor="#666666"/>
+			<topPen lineWidth="0.0" lineColor="#666666"/>
+			<leftPen lineWidth="0.0" lineColor="#666666"/>
+			<bottomPen lineWidth="0.0" lineColor="#666666"/>
+			<rightPen lineWidth="0.0" lineColor="#666666"/>
+		</box>
+	</style>
+	<parameter name="UserName" class="java.lang.String"/>
+	<parameter name="LocationID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DateFrom" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new java.util.Date("01-01-1970")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DateTo" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="UserID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select month(date_entered) as month, round(avg(abs(departure_time - arrival_time)), 2) as avg_time_spent, count(case when met_gp = 'Yes' then 1 end) as gps_met, count(case when given_coupons = 'Yes' then 1 end) as gave_coupons, count(case when marketing_activity = 'Yes' then 1 end) as marketing_activities, count(case when gp_potential = 'A' then 1 end) as potential_a, count(case when gp_potential = 'B' then 1 end) as potential_b, count(case when gp_potential = 'C' then 1 end) as potential_c, sum(amount) as total_amount from sz_dw.fm_enc_daily_vis
+where (date_entered between $P{DateFrom} and $P{DateTo})
+group by month(date_entered)]]>
+	</queryString>
+	<field name="month" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="avg_time_spent" class="java.lang.Double"/>
+	<field name="gps_met" class="java.lang.Long"/>
+	<field name="gave_coupons" class="java.lang.Long"/>
+	<field name="marketing_activities" class="java.lang.Long"/>
+	<field name="potential_a" class="java.lang.Long"/>
+	<field name="potential_b" class="java.lang.Long"/>
+	<field name="potential_c" class="java.lang.Long"/>
+	<field name="total_amount" class="java.lang.Double"/>
+	<variable name="avg_time_spent_1" class="java.lang.Double" resetType="Page" calculation="Average">
+		<variableExpression><![CDATA[$F{avg_time_spent}]]></variableExpression>
+	</variable>
+	<variable name="gps_met_1" class="java.lang.Long" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{gps_met}]]></variableExpression>
+	</variable>
+	<variable name="gave_coupons_1" class="java.lang.Long" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{gave_coupons}]]></variableExpression>
+	</variable>
+	<variable name="marketing_activities_1" class="java.lang.Long" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{marketing_activities}]]></variableExpression>
+	</variable>
+	<variable name="potential_a_1" class="java.lang.Long" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{potential_a}]]></variableExpression>
+	</variable>
+	<variable name="potential_b_1" class="java.lang.Long" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{potential_b}]]></variableExpression>
+	</variable>
+	<variable name="potential_c_1" class="java.lang.Long" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{potential_c}]]></variableExpression>
+	</variable>
+	<variable name="total_amount_1" class="java.lang.Double" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_amount}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="320" height="40"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Daily Visit Performance]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="620" y="20" width="182" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Generated by: " + $P{UserName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="732" y="0" width="70" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page:" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement style="Column" x="0" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column" x="80" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Average Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column" x="160" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[GPs Met]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column" x="240" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Gave Coupons]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column" x="320" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Marketing Activities]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column" x="400" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Potential 'A']]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column" x="480" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Potential 'B']]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column" x="560" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Potential 'C']]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column" x="640" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Total Amount]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="Data" x="0" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Data" x="80" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{avg_time_spent}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Data" x="160" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{gps_met}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Data" x="240" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{gave_coupons}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Data" x="320" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{marketing_activities}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Data" x="400" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{potential_a}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Data" x="480" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{potential_b}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Data" x="560" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{potential_c}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Data" x="640" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20">
+			<textField pattern="###0.00">
+				<reportElement x="80" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{avg_time_spent_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column" x="0" y="0" width="80" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Summary:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="160" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{gps_met_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{gave_coupons_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{marketing_activities_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{potential_a_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{potential_b_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="560" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{potential_c_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="640" y="0" width="80" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_amount_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="142" height="13" forecolor="#010101"/>
+				<textElement>
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total Records: "+$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="250">
+			<lineChart>
+				<chart>
+					<reportElement positionType="FixRelativeToBottom" x="250" y="0" width="302" height="250"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["A Potential"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{month}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{potential_a}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["B Potential"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{month}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{potential_b}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["C Potential"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{month}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{potential_c}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+					<categoryAxisLabelExpression><![CDATA["Month"]]></categoryAxisLabelExpression>
+				</linePlot>
+			</lineChart>
+			<lineChart>
+				<chart>
+					<reportElement positionType="FixRelativeToBottom" x="552" y="0" width="250" height="250"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Expenditure"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{month}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{total_amount}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+					<categoryAxisLabelExpression><![CDATA["Month"]]></categoryAxisLabelExpression>
+				</linePlot>
+			</lineChart>
+			<pie3DChart>
+				<chart theme="eye.candy.sixties">
+					<reportElement x="0" y="0" width="250" height="250"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Top"/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[(new java.text.DateFormatSymbols().getShortMonths()[$F{month} - 1]).toUpperCase()]]></keyExpression>
+					<valueExpression><![CDATA[$F{gps_met}]]></valueExpression>
+				</pieDataset>
+				<pie3DPlot>
+					<plot/>
+					<itemLabel/>
+				</pie3DPlot>
+			</pie3DChart>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="732" y="0" width="70" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page:" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

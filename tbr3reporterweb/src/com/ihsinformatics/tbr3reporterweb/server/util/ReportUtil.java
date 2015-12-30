@@ -18,7 +18,6 @@ import java.util.HashMap;
 
 import net.sf.jasperreports.engine.JRAbstractExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JRResultSetDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -112,52 +111,6 @@ public class ReportUtil {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return dest.substring(dest.lastIndexOf(File.separatorChar) + 1);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
-
-	public String generateReportFromQuery(String fileName, String query,
-			Parameter[] params, boolean export) {
-		try {
-			Statement statement = con.createStatement();
-			ResultSet result = statement.executeQuery(query);
-			JRResultSetDataSource resultSource = new JRResultSetDataSource(
-					result);
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			for (int i = 0; i < params.length; i++) {
-				/**
-				 * Cast the parameter into appropriate type
-				 */
-				map.put(params[i].getName(), toObject(params[i]));
-			}
-			JasperReport jasperReport = JasperCompileManager
-					.compileReport(reportsPath + fileName
-							+ (fileName.endsWith(".jrxml") ? "" : ".jrxml"));
-			JasperPrint print = JasperFillManager.fillReport(jasperReport, map,
-					resultSource);
-			String dest = resourcePath + String.valueOf(new Date().getTime())
-					+ (export == true ? ".csv" : ".pdf");
-			// Delete file if existing
-			try {
-				File file = new File(dest);
-				file.delete();
-			} catch (Exception e) {
-				// Not implemented
-			}
-			JRAbstractExporter exporter;
-			if (export)
-				exporter = new JRCsvExporter();
-			else
-				exporter = new JRPdfExporter();
-			exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
-			exporter.setParameter(JRExporterParameter.OUTPUT_FILE, new File(
-					dest));
-			exporter.exportReport();
-			System.out.println(dest.substring(dest
-					.lastIndexOf(File.separatorChar) + 1));
 			return dest.substring(dest.lastIndexOf(File.separatorChar) + 1);
 		} catch (Exception e) {
 			e.printStackTrace();
