@@ -52,8 +52,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements
 	private ReportUtil reportUtil;
 
 	// Form Openmrs properties file
-	// static final String resourcePath =
-	// "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
+	// static final String resourcePath = "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
 	static String resourcePath = "C:\\Users\\Owais\\git\\tbreach3-pakistan\\tbr3reporterweb\\war\\";
 
 	public ServerServiceImpl() {

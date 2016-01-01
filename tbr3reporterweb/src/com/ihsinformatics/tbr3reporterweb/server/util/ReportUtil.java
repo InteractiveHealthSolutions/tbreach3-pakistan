@@ -34,11 +34,11 @@ import com.ihsinformatics.tbr3reporterweb.shared.Report;
  */
 public class ReportUtil {
 	private static final String databaseName = "sz_dw";
-	private static String resourcePath;
 	private static String reportsPath;
+	private static String dataPath;
 	public static final char separatorChar = File.separatorChar;
-	public static final String[] allowedExtensions = {"jrxml", "doc", "docx",
-			"xls", "xlsx", "rar", "zip"};
+	public static final String[] allowedExtensions = { "jrxml", "doc", "docx",
+			"xls", "xlsx", "rar", "zip" };
 	private Connection con;
 
 	/**
@@ -49,8 +49,8 @@ public class ReportUtil {
 		if (!resourcePath.endsWith(String.valueOf(separatorChar))) {
 			resourcePath += separatorChar;
 		}
-		ReportUtil.resourcePath = resourcePath;
-		ReportUtil.reportsPath = resourcePath + "rpt" + separatorChar;
+		reportsPath = resourcePath + "rpt" + separatorChar;
+		dataPath = resourcePath + "data" + separatorChar;
 		try {
 			con = HibernateUtil.util.getSession().connection();
 			con.setCatalog(databaseName);
@@ -67,8 +67,8 @@ public class ReportUtil {
 		if (!resourcePath.endsWith(String.valueOf(separatorChar))) {
 			resourcePath += separatorChar;
 		}
-		ReportUtil.resourcePath = resourcePath;
-		ReportUtil.reportsPath = resourcePath + "rpt" + separatorChar;
+		reportsPath = resourcePath + "rpt" + separatorChar;
+		dataPath = resourcePath + "data" + separatorChar;
 		this.con = con;
 		try {
 			con.setCatalog(databaseName);
@@ -94,7 +94,7 @@ public class ReportUtil {
 				if (record.length() > 0)
 					list.add(record.substring(0, record.length() - 1));
 			}
-			String dest = resourcePath + String.valueOf(new Date().getTime())
+			String dest = getDataPath() + String.valueOf(new Date().getTime())
 					+ ".csv";
 			StringBuilder text = new StringBuilder();
 			for (int i = 0; i < list.size(); i++)
@@ -129,11 +129,11 @@ public class ReportUtil {
 				map.put(params[i].getName(), toObject(params[i]));
 			}
 			JasperReport jasperReport = JasperCompileManager
-					.compileReport(reportsPath + fileName
+					.compileReport(getReportsPath() + fileName
 							+ (fileName.endsWith(".jrxml") ? "" : ".jrxml"));
 			JasperPrint print = JasperFillManager.fillReport(jasperReport, map,
 					con);
-			String dest = resourcePath + String.valueOf(new Date().getTime())
+			String dest = getDataPath() + String.valueOf(new Date().getTime())
 					+ (export == true ? ".csv" : ".pdf");
 			// Delete file if existing
 			try {
@@ -167,7 +167,7 @@ public class ReportUtil {
 	 */
 	public ArrayList<Report> getReportList() {
 		ArrayList<Report> reports = new ArrayList<Report>();
-		File dir = new File(reportsPath);
+		File dir = new File(getReportsPath());
 		FilenameFilter filter = new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
@@ -180,7 +180,7 @@ public class ReportUtil {
 		File[] files = dir.listFiles(filter);
 		for (int i = 0; i < files.length; i++) {
 			Report report = new Report();
-			report.setPath(reportsPath + files[i].getName());
+			report.setPath(getReportsPath() + files[i].getName());
 			String fileName = files[i].getName();
 			report.setName(fileName.substring(0, fileName.lastIndexOf('.')));
 			report.setType(fileName.substring(fileName.lastIndexOf('.') + 1));
@@ -194,32 +194,40 @@ public class ReportUtil {
 		try {
 			String value = param.getValue();
 			switch (param.getType()) {
-				case BOOLEAN :
-					return Boolean.parseBoolean(value);
-				case BYTE :
-					return Byte.parseByte(value);
-				case CHAR :
-					return value.charAt(0);
-				case DATE :
-					return new Date(Long.parseLong(value));
-				case DOUBLE :
-					return Double.parseDouble(value);
-				case FLOAT :
-					return Float.parseFloat(value);
-				case INT :
-					return Integer.parseInt(value);
-				case LONG :
-					return Long.parseLong(value);
-				case SHORT :
-					return Short.parseShort(value);
-				case STRING :
-					return value;
-				default :
-					return null;
+			case BOOLEAN:
+				return Boolean.parseBoolean(value);
+			case BYTE:
+				return Byte.parseByte(value);
+			case CHAR:
+				return value.charAt(0);
+			case DATE:
+				return new Date(Long.parseLong(value));
+			case DOUBLE:
+				return Double.parseDouble(value);
+			case FLOAT:
+				return Float.parseFloat(value);
+			case INT:
+				return Integer.parseInt(value);
+			case LONG:
+				return Long.parseLong(value);
+			case SHORT:
+				return Short.parseShort(value);
+			case STRING:
+				return value;
+			default:
+				return null;
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static String getReportsPath() {
+		return reportsPath;
+	}
+
+	public static String getDataPath() {
+		return dataPath;
 	}
 }

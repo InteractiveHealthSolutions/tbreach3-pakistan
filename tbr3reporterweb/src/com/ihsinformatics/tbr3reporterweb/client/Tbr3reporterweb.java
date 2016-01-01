@@ -235,6 +235,7 @@ public class Tbr3reporterweb implements EntryPoint, ClickHandler {
 				public void onSuccess(Void result) {
 					verticalPanel.clear();
 					verticalPanel.add(reportsComposite);
+					verticalPanel.add(new FileUploader().getFileUploaderWidget());
 				}
 				public void onFailure(Throwable caught) {
 					caught.printStackTrace();

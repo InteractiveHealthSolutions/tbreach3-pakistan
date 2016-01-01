@@ -23,4 +23,14 @@
 		<url-pattern>/tbr3reporterweb/greet</url-pattern>
 	</servlet-mapping>
 
+	<!-- File upload servlet -->
+	<servlet>
+		<servlet-name>fileUploaderServlet</servlet-name>
+		<servlet-class>com.ihsinformatics.tbr3reporterweb.server.FileUploadServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>fileUploaderServlet</servlet-name>
+		<url-pattern>/tbr3reporterweb/fileupload</url-pattern>
+	</servlet-mapping>
 </web-app>

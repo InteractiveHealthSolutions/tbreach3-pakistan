@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
@@ -61,16 +62,20 @@ public class ReportsComposite extends Composite implements IReport,
 	private FlexTable topFlexTable = new FlexTable();
 	private FlexTable rightFlexTable = new FlexTable();
 	private FlexTable filterFlexTable = new FlexTable();
+	private VerticalPanel manageReportsPanel = new VerticalPanel();
 	private Grid grid = new Grid(1, 4);
+
+	ListBox reportsList = new ListBox();
 
 	private Button viewButton = new Button("Save");
 	private Button exportButton = new Button("Export");
+	private Button manageButton = new Button("Manage");
+	private Button deleteButton = new Button("Delete");
 
 	private Label lblSelectCategory = new Label("Select Category:");
-	private Label lblSnapshot = new Label("Snapshot:");
-	private Label snapshotLabel = new Label("Not available");
+	private Label lblManage= new Label("Manage Reports:");
 	private Label lblCaution = new Label(
-			"Some reports may take 5 to 10 minutes to generate. Please wait until report download window appears.");
+			"Some reports may take up to 5 minutes to generate. Please wait until report download window appears.");
 	private Label lblReportsTitle = new Label("Sehatmand Zindagi Reports");
 	private Label lblSelectReport = new Label("Select Report:");
 	private Label lblFilter = new Label("Filter (Check all that apply):");
@@ -109,9 +114,10 @@ public class ReportsComposite extends Composite implements IReport,
 		topFlexTable.getCellFormatter().setVerticalAlignment(0, 0,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		flexTable.setWidget(1, 0, rightFlexTable);
+		manageReportsPanel.add(manageButton);
 		rightFlexTable.setSize("100%", "100%");
-		rightFlexTable.setWidget(0, 0, lblSnapshot);
-		rightFlexTable.setWidget(0, 1, snapshotLabel);
+		rightFlexTable.setWidget(0, 0, lblManage);
+		rightFlexTable.setWidget(0, 1, manageReportsPanel);
 		rightFlexTable.setWidget(1, 0, lblSelectCategory);
 		categoryComboBox.addItem("-- Select Category --");
 		categoryComboBox.addItem("Reports");
@@ -200,6 +206,7 @@ public class ReportsComposite extends Composite implements IReport,
 		categoryComboBox.addChangeHandler(this);
 		viewButton.addClickHandler(this);
 		exportButton.addClickHandler(this);
+		manageButton.addClickHandler(this);
 
 		refreshList();
 		setRights(menuName);
@@ -322,8 +329,86 @@ public class ReportsComposite extends Composite implements IReport,
 			}
 		} else if (TBR3ReporterClient.get(categoryComboBox)
 				.equals("Data Dumps")) {
-			if (reportSelected.equals("PatientDataDump")) {
+			if (reportSelected.equals("Patient Data")) {
 				query = "select * from sz_dw.dim_patient";
+			} else if (reportSelected.equals("Locations Data")) {
+				query = "select * from sz_dw.dim_location";
+			} else if (reportSelected.equals("Forms Data")) {
+				query = "select * from sz_dw.dim_encounter";
+			} else if (reportSelected.equals("Users Data")) {
+				query = "select surrogate_id, system_id, user_id, username, person_id, identifier, creator, date_created, changed_by, date_changed, retired, retire_reason, uuid from sz_dw.dim_user";
+			} else if (reportSelected.equals("Field Monitoring Camps")) {
+				query = "select * from sz_dw.fm_enc_camp_info";
+			} else if (reportSelected.equals("Field Monitoring Daily Visits")) {
+				query = "select * from sz_dw.fm_enc_daily_vis";
+			} else if (reportSelected.equals("Field Monitoring First Visits")) {
+				query = "select * from sz_dw.fm_enc_first_vis;";
+			} else if (reportSelected
+					.equals("Field Monitoring Supervisor Visits")) {
+				query = "select * from sz_dw.fm_enc_super_vis";
+			} else if (reportSelected.equals("OpenMRS Blood Sugar Order")) {
+				query = "select * from om_enc_blood_sugar_order";
+			} else if (reportSelected.equals("OpenMRS Blood Sugar Results")) {
+				query = "select * from om_enc_blood_sugar_results";
+			} else if (reportSelected.equals("OpenMRS Clinical Evaluation")) {
+				query = "select * from om_enc_clinical_evaluation";
+			} else if (reportSelected.equals("OpenMRS Client Information")) {
+				query = "select * from om_enc_customer_information";
+			} else if (reportSelected.equals("OpenMRS CXR Order")) {
+				query = "select * from om_enc_cxr_order";
+			} else if (reportSelected.equals("OpenMRS CXR Results")) {
+				query = "select * from om_enc_cxr_result";
+			} else if (reportSelected.equals("OpenMRS CXR Test")) {
+				query = "select * from om_enc_cxr_test";
+			} else if (reportSelected
+					.equals("OpenMRS Diabetes First Encounter")) {
+				query = "select * from om_enc_diabetes_first_encounter";
+			} else if (reportSelected.equals("OpenMRS Diabetes Follow-up")) {
+				query = "select * from om_enc_diabetes_follow_up";
+			} else if (reportSelected.equals("OpenMRS Drug Dispersal")) {
+				query = "select * from om_enc_drug_dispersal";
+			} else if (reportSelected.equals("OpenMRS GXP Order")) {
+				query = "select * from om_enc_gxp_order";
+			} else if (reportSelected.equals("OpenMRS GXP Results")) {
+				query = "select * from om_enc_gxp_result";
+			} else if (reportSelected.equals("OpenMRS GXP Test")) {
+				query = "select * from om_enc_gxp_test";
+			} else if (reportSelected.equals("OpenMRS HbA1c Order")) {
+				query = "select * from om_enc_hba1c_order";
+			} else if (reportSelected.equals("OpenMRS Mental Health Screening")) {
+				query = "select * from om_enc_mental_health_screening";
+			} else if (reportSelected.equals("OpenMRS Non-Pulmonary Suspect")) {
+				query = "select * from om_enc_non_pulmonary_suspect";
+			} else if (reportSelected.equals("OpenMRS Paediatric Screening")) {
+				query = "select * from om_enc_paediatric_screening";
+			} else if (reportSelected.equals("OpenMRS Patient GPS")) {
+				query = "select * from om_enc_patient_gps";
+			} else if (reportSelected.equals("OpenMRS Screening")) {
+				query = "select * from om_enc_screening";
+			} else if (reportSelected.equals("OpenMRS Side Effects")) {
+				query = "select * from om_enc_side_effects";
+			} else if (reportSelected.equals("OpenMRS Smear Microscopy Order")) {
+				query = "select * from om_enc_smear_order";
+			} else if (reportSelected
+					.equals("OpenMRS Smear Microscopy Results")) {
+				query = "select * from om_enc_smear_result";
+			} else if (reportSelected.equals("OpenMRS Spirometry Order")) {
+				query = "select * from om_enc_spirometry_order";
+			} else if (reportSelected.equals("OpenMRS Spirometry Results")) {
+				query = "select * from om_enc_spirometry_result";
+			} else if (reportSelected
+					.equals("OpenMRS Sputum Instructions Video")) {
+				query = "select * from om_enc_sputum_instructions";
+			} else if (reportSelected.equals("OpenMRS TB First Encounter")) {
+				query = "select * from om_enc_tb_first_encounter";
+			} else if (reportSelected.equals("OpenMRS TB Follow-up")) {
+				query = "select * from om_enc_tb_follow_up";
+			} else if (reportSelected.equals("OpenMRS Test Indication")) {
+				query = "select * from om_enc_test_indication";
+			} else if (reportSelected.equals("OpenMRS Treatment Initiation")) {
+				query = "select * from om_enc_treatment_initiation";
+			} else if (reportSelected.equals("OpenMRS Vitals")) {
+				query = "select * from om_enc_vital";
 			} else {
 				query = "";
 			}
@@ -431,6 +516,31 @@ public class ReportsComposite extends Composite implements IReport,
 		// Not implemented
 	}
 
+	public void reportsView(boolean reports) {
+		manageButton.setVisible(!reports);
+//		rightFlexTable.setVisible(!reports);
+		if (reports) {
+			FileUploader uploader = new FileUploader();
+			manageReportsPanel.add(uploader.getFileUploaderWidget());
+			// Fetch list of reports from server
+			service.getReportsList(new AsyncCallback<Report[]>() {
+				@Override
+				public void onSuccess(Report[] result) {
+					for (Report report : result) {
+						reportsList.addItem(report.getName());
+					}
+					manageReportsPanel.add(reportsList);
+					manageReportsPanel.add(deleteButton);
+				}
+
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("List of reports cannot be populated. Have you copied the reports to rpt directory?");
+				}
+			});
+		}
+	}
+
 	@Override
 	public void onClick(ClickEvent event) {
 		Widget sender = (Widget) event.getSource();
@@ -439,6 +549,9 @@ public class ReportsComposite extends Composite implements IReport,
 			viewData(false);
 		} else if (sender == exportButton) {
 			viewData(true);
+		} else if (sender == manageButton) {
+			reportsView(true);
+			load(false);
 		}
 	}
 
@@ -468,7 +581,47 @@ public class ReportsComposite extends Composite implements IReport,
 				});
 
 			} else if (text.equals("Data Dumps")) {
-				reportsListComboBox.addItem("Patient Data Dump");
+				reportsListComboBox.addItem("Patient Data");
+				reportsListComboBox.addItem("Locations Data");
+				reportsListComboBox.addItem("Forms Data");
+				reportsListComboBox.addItem("Users Data");
+				reportsListComboBox.addItem("Field Monitoring Camps");
+				reportsListComboBox.addItem("Field Monitoring Daily Visits");
+				reportsListComboBox.addItem("Field Monitoring First Visits");
+				reportsListComboBox
+						.addItem("Field Monitoring Supervisor Visits");
+				reportsListComboBox.addItem("OpenMRS Blood Sugar Order");
+				reportsListComboBox.addItem("OpenMRS Blood Sugar Results");
+				reportsListComboBox.addItem("OpenMRS Clinical Evaluation");
+				reportsListComboBox.addItem("OpenMRS Client Information");
+				reportsListComboBox.addItem("OpenMRS CXR Order");
+				reportsListComboBox.addItem("OpenMRS CXR Results");
+				reportsListComboBox.addItem("OpenMRS CXR Test");
+				reportsListComboBox.addItem("OpenMRS Diabetes First Encounter");
+				reportsListComboBox.addItem("OpenMRS Diabetes Follow-up");
+				reportsListComboBox.addItem("OpenMRS Drug Dispersal");
+				reportsListComboBox.addItem("OpenMRS GXP Order");
+				reportsListComboBox.addItem("OpenMRS GXP Results");
+				reportsListComboBox.addItem("OpenMRS GXP Test");
+				reportsListComboBox.addItem("OpenMRS HbA1c Order");
+				reportsListComboBox.addItem("OpenMRS Mental Health Screening");
+				reportsListComboBox.addItem("OpenMRS Non-Pulmonary Suspect");
+				reportsListComboBox.addItem("OpenMRS Paediatric Screening");
+				reportsListComboBox.addItem("OpenMRS Patient GPS");
+				reportsListComboBox.addItem("OpenMRS Screening");
+				reportsListComboBox.addItem("OpenMRS Side Effects");
+				reportsListComboBox.addItem("OpenMRS Smear Microscopy Order");
+				reportsListComboBox.addItem("OpenMRS Smear Microscopy Results");
+				reportsListComboBox.addItem("OpenMRS Spirometry Order");
+				reportsListComboBox.addItem("OpenMRS Spirometry Results");
+				reportsListComboBox
+						.addItem("OpenMRS Sputum Instructions Video");
+				reportsListComboBox.addItem("OpenMRS TB First Encounter");
+				reportsListComboBox.addItem("OpenMRS TB Follow-up");
+				reportsListComboBox.addItem("OpenMRS Test Indication");
+				reportsListComboBox.addItem("OpenMRS Treatment Initiation");
+				reportsListComboBox.addItem("OpenMRS Vitals");
+
 			}
 			// Disable view on data dumps
 			viewButton.setEnabled(!TBR3ReporterClient.get(categoryComboBox)
