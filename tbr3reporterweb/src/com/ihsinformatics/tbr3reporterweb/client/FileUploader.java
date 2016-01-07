@@ -27,12 +27,26 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FileUploader extends Composite {
+	private static LoadingWidget loading = new LoadingWidget();
 
 	private FormPanel form = new FormPanel();
 	private FileUpload fileUpload = new FileUpload();
 	private CheckBox updateCheckBox = new CheckBox("Update if report exists.");
 
 	public FileUploader() {
+	}
+
+	/**
+	 * Display/Hide main panel and loading widget
+	 * 
+	 * @param status
+	 */
+	public void load(boolean status) {
+		form.setVisible(!status);
+		if (status)
+			loading.show();
+		else
+			loading.hide();
 	}
 
 	public Widget getFileUploaderWidget() {
@@ -46,6 +60,7 @@ public class FileUploader extends Composite {
 		holder.add(new Button("Submit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				GWT.log("You selected: " + fileUpload.getFilename(), null);
+				load(true);
 				form.submit();
 			}
 		}));
@@ -56,13 +71,16 @@ public class FileUploader extends Composite {
 					GWT.log("Upload file...", null);
 				} else {
 					event.cancel();
+					load(false);
 				}
 			}
 		});
 
 		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 			public void onSubmitComplete(SubmitCompleteEvent event) {
-				Window.alert(event.getResults());
+				form.reset();
+				Window.alert("Report has been successfully uploaded.");
+				load(false);
 			}
 		});
 		form.add(holder);

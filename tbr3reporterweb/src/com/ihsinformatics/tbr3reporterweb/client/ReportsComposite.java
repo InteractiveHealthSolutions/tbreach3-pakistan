@@ -34,7 +34,6 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
@@ -62,21 +61,15 @@ public class ReportsComposite extends Composite implements IReport,
 	private FlexTable topFlexTable = new FlexTable();
 	private FlexTable rightFlexTable = new FlexTable();
 	private FlexTable filterFlexTable = new FlexTable();
-	private VerticalPanel manageReportsPanel = new VerticalPanel();
 	private Grid grid = new Grid(1, 4);
-
-	ListBox reportsList = new ListBox();
 
 	private Button viewButton = new Button("Save");
 	private Button exportButton = new Button("Export");
-	private Button manageButton = new Button("Manage");
-	private Button deleteButton = new Button("Delete");
 
 	private Label lblSelectCategory = new Label("Select Category:");
-	private Label lblManage= new Label("Manage Reports:");
 	private Label lblCaution = new Label(
 			"Some reports may take up to 5 minutes to generate. Please wait until report download window appears.");
-	private Label lblReportsTitle = new Label("Sehatmand Zindagi Reports");
+	private Label lblReportsTitle = new Label("Sehatmand Zindagi Reports v1.0");
 	private Label lblSelectReport = new Label("Select Report:");
 	private Label lblFilter = new Label("Filter (Check all that apply):");
 
@@ -114,25 +107,22 @@ public class ReportsComposite extends Composite implements IReport,
 		topFlexTable.getCellFormatter().setVerticalAlignment(0, 0,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		flexTable.setWidget(1, 0, rightFlexTable);
-		manageReportsPanel.add(manageButton);
 		rightFlexTable.setSize("100%", "100%");
-		rightFlexTable.setWidget(0, 0, lblManage);
-		rightFlexTable.setWidget(0, 1, manageReportsPanel);
-		rightFlexTable.setWidget(1, 0, lblSelectCategory);
+		rightFlexTable.setWidget(0, 0, lblSelectCategory);
 		categoryComboBox.addItem("-- Select Category --");
 		categoryComboBox.addItem("Reports");
 		categoryComboBox.addItem("Data Dumps");
-		rightFlexTable.setWidget(1, 1, categoryComboBox);
+		rightFlexTable.setWidget(0, 1, categoryComboBox);
 		categoryComboBox.setWidth("100%");
-		rightFlexTable.setWidget(2, 0, lblSelectReport);
-		rightFlexTable.setWidget(2, 1, reportsListComboBox);
+		rightFlexTable.setWidget(1, 0, lblSelectReport);
+		rightFlexTable.setWidget(1, 1, reportsListComboBox);
 		reportsListComboBox.setWidth("100%");
 		reportsListComboBox.addChangeHandler(this);
 		lblCaution.setStyleName("gwt-MenuItem-selected");
-		rightFlexTable.setWidget(3, 1, lblCaution);
+		rightFlexTable.setWidget(2, 1, lblCaution);
 		lblCaution.setWidth("100%");
-		rightFlexTable.setWidget(4, 0, lblFilter);
-		rightFlexTable.setWidget(4, 1, filterFlexTable);
+		rightFlexTable.setWidget(3, 0, lblFilter);
+		rightFlexTable.setWidget(3, 1, filterFlexTable);
 		filterFlexTable.setWidth("100%");
 		filterFlexTable.setWidget(0, 0, dateRangeFilterCheckBox);
 		dateRangeFilterCheckBox.setVisible(true);
@@ -206,7 +196,6 @@ public class ReportsComposite extends Composite implements IReport,
 		categoryComboBox.addChangeHandler(this);
 		viewButton.addClickHandler(this);
 		exportButton.addClickHandler(this);
-		manageButton.addClickHandler(this);
 
 		refreshList();
 		setRights(menuName);
@@ -516,29 +505,8 @@ public class ReportsComposite extends Composite implements IReport,
 		// Not implemented
 	}
 
-	public void reportsView(boolean reports) {
-		manageButton.setVisible(!reports);
-//		rightFlexTable.setVisible(!reports);
-		if (reports) {
-			FileUploader uploader = new FileUploader();
-			manageReportsPanel.add(uploader.getFileUploaderWidget());
-			// Fetch list of reports from server
-			service.getReportsList(new AsyncCallback<Report[]>() {
-				@Override
-				public void onSuccess(Report[] result) {
-					for (Report report : result) {
-						reportsList.addItem(report.getName());
-					}
-					manageReportsPanel.add(reportsList);
-					manageReportsPanel.add(deleteButton);
-				}
-
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("List of reports cannot be populated. Have you copied the reports to rpt directory?");
-				}
-			});
-		}
+	public void deleteSelectedReport() {
+		// TODO: To be implemented
 	}
 
 	@Override
@@ -549,9 +517,6 @@ public class ReportsComposite extends Composite implements IReport,
 			viewData(false);
 		} else if (sender == exportButton) {
 			viewData(true);
-		} else if (sender == manageButton) {
-			reportsView(true);
-			load(false);
 		}
 	}
 

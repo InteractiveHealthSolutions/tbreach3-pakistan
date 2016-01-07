@@ -18,6 +18,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Cookies;
@@ -29,6 +31,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -38,24 +41,35 @@ import com.google.gwt.user.client.ui.Widget;
 import com.ihsinformatics.tbr3reporterweb.shared.CustomMessage;
 import com.ihsinformatics.tbr3reporterweb.shared.ErrorType;
 import com.ihsinformatics.tbr3reporterweb.shared.InfoType;
+import com.ihsinformatics.tbr3reporterweb.shared.Report;
 import com.ihsinformatics.tbr3reporterweb.shared.TBR3;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Tbr3reporterweb implements EntryPoint, ClickHandler {
+public class Tbr3reporterweb implements EntryPoint, ClickHandler,
+		KeyDownHandler {
 	private static ServerServiceAsync service = GWT.create(ServerService.class);
 
-	static RootPanel rootPanel;
+	private static LoadingWidget loading = new LoadingWidget();
+	private static RootPanel rootPanel;
+
 	static VerticalPanel verticalPanel = new VerticalPanel();
 	private FlexTable headerFlexTable = new FlexTable();
 	private FlexTable loginFlexTable = new FlexTable();
+
 	private Label formHeadingLabel = new Label("USER AUTHENTICATION");
 	private Label userNameLabel = new Label("User ID:");
-	private TextBox userTextBox = new TextBox();
 	private Label passwordLabel = new Label("Password:");
+
+	private TextBox userTextBox = new TextBox();
 	private PasswordTextBox passwordTextBox = new PasswordTextBox();
+
 	private Button loginButton = new Button("Login");
+	private Button manageButton = new Button("Manage Reports");
+	private Button deleteButton = new Button("Delete");
+
+	private ListBox reportsList = new ListBox();
 
 	private final ReportsComposite reportsComposite = new ReportsComposite();
 
@@ -119,6 +133,7 @@ public class Tbr3reporterweb implements EntryPoint, ClickHandler {
 		// verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setBorderWidth(1);
 		loginButton.addClickHandler(this);
+		manageButton.addClickHandler(this);
 		passwordTextBox.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				boolean enterPressed = event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER;
@@ -129,58 +144,17 @@ public class Tbr3reporterweb implements EntryPoint, ClickHandler {
 		});
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Display/Hide main panel and loading widget
 	 * 
-	 * @see
-	 * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
-	 * .dom.client.ClickEvent)
+	 * @param status
 	 */
-	@Override
-	public void onClick(ClickEvent event) {
-		Widget sender = (Widget) event.getSource();
-		if (sender == loginButton) {
-			// Check for empty fields
-			if (TBR3ReporterClient.get(userTextBox).equals("")
-					|| TBR3ReporterClient.get(passwordTextBox).equals("")) {
-				Window.alert(CustomMessage
-						.getErrorMessage(ErrorType.EMPTY_DATA_ERROR));
-				return;
-			}
-			try {
-				service.authenticate(TBR3ReporterClient.get(userTextBox),
-						TBR3ReporterClient.get(passwordTextBox),
-						new AsyncCallback<Boolean>() {
-							@Override
-							public void onSuccess(Boolean result) {
-								if (result) {
-									Window.alert(CustomMessage
-											.getInfoMessage(InfoType.ACCESS_GRANTED));
-									setCookies(
-											TBR3ReporterClient.get(userTextBox),
-											String.valueOf(TBR3ReporterClient
-													.getSimpleCode(TBR3ReporterClient
-															.get(passwordTextBox)
-															.substring(0, 3))),
-											TBR3ReporterClient
-													.get(passwordTextBox));
-									login();
-								} else {
-									Window.alert(CustomMessage
-											.getErrorMessage(ErrorType.AUTHENTICATION_ERROR));
-								}
-							}
-
-							@Override
-							public void onFailure(Throwable caught) {
-								caught.printStackTrace();
-							}
-						});
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
+	public void load(boolean status) {
+		verticalPanel.setVisible(!status);
+		if (status)
+			loading.show();
+		else
+			loading.hide();
 	}
 
 	/**
@@ -204,6 +178,47 @@ public class Tbr3reporterweb implements EntryPoint, ClickHandler {
 			Cookies.setCookie("LoginTime", String.valueOf(new Date().getTime()));
 			Cookies.setCookie("SessionLimit",
 					String.valueOf(new Date().getTime() + TBR3.sessionLimit));
+		}
+	}
+
+	private void doLogin() {
+		// Check for empty fields
+		if (TBR3ReporterClient.get(userTextBox).equals("")
+				|| TBR3ReporterClient.get(passwordTextBox).equals("")) {
+			Window.alert(CustomMessage
+					.getErrorMessage(ErrorType.EMPTY_DATA_ERROR));
+			return;
+		}
+		try {
+			service.authenticate(TBR3ReporterClient.get(userTextBox),
+					TBR3ReporterClient.get(passwordTextBox),
+					new AsyncCallback<Boolean>() {
+						@Override
+						public void onSuccess(Boolean result) {
+							if (result) {
+								Window.alert(CustomMessage
+										.getInfoMessage(InfoType.ACCESS_GRANTED));
+								setCookies(
+										TBR3ReporterClient.get(userTextBox),
+										String.valueOf(TBR3ReporterClient
+												.getSimpleCode(TBR3ReporterClient
+														.get(passwordTextBox)
+														.substring(0, 3))),
+										TBR3ReporterClient.get(passwordTextBox));
+								login();
+							} else {
+								Window.alert(CustomMessage
+										.getErrorMessage(ErrorType.AUTHENTICATION_ERROR));
+							}
+						}
+
+						@Override
+						public void onFailure(Throwable caught) {
+							caught.printStackTrace();
+						}
+					});
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -235,8 +250,9 @@ public class Tbr3reporterweb implements EntryPoint, ClickHandler {
 				public void onSuccess(Void result) {
 					verticalPanel.clear();
 					verticalPanel.add(reportsComposite);
-					verticalPanel.add(new FileUploader().getFileUploaderWidget());
+					verticalPanel.add(manageButton);
 				}
+
 				public void onFailure(Throwable caught) {
 					caught.printStackTrace();
 				}
@@ -244,6 +260,40 @@ public class Tbr3reporterweb implements EntryPoint, ClickHandler {
 		} catch (Exception e) {
 			loginFlexTable.setVisible(true);
 		}
+	}
+
+	public void reportsView(boolean view) {
+		manageButton.setVisible(!view);
+		// rightFlexTable.setVisible(!reports);
+		if (view) {
+			verticalPanel.add(new FileUploader().getFileUploaderWidget());
+			// Fetch list of reports from server
+			service.getReportsList(new AsyncCallback<Report[]>() {
+				@Override
+				public void onSuccess(Report[] result) {
+					for (Report report : result) {
+						reportsList.addItem(report.getName());
+					}
+					verticalPanel.add(reportsList);
+					verticalPanel.add(deleteButton);
+					// TODO: Remove when delete function is complete
+					reportsList.setVisible(false);
+					deleteButton.setVisible(false);
+					load(false);
+				}
+
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("List of reports cannot be populated. Have you copied the reports to rpt directory?");
+					load(false);
+				}
+			});
+		}
+	}
+
+	public void deleteReport() {
+		// TODO: To be completed
+		load(false);
 	}
 
 	/**
@@ -287,5 +337,33 @@ public class Tbr3reporterweb implements EntryPoint, ClickHandler {
 		rootPanel
 				.add(new HTML(
 						"Application has been shut down. It is now safe to close the Browser window."));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
+	 * .dom.client.ClickEvent)
+	 */
+	@Override
+	public void onClick(ClickEvent event) {
+		Widget sender = (Widget) event.getSource();
+		if (sender == loginButton) {
+			doLogin();
+		} else if (sender == manageButton) {
+			reportsView(true);
+		} else if (sender == deleteButton) {
+			load(true);
+			deleteReport();
+		}
+	}
+
+	@Override
+	public void onKeyDown(KeyDownEvent event) {
+		Object source = event.getSource();
+		if (source == passwordTextBox || source == userTextBox) {
+			doLogin();
+		}
 	}
 }
