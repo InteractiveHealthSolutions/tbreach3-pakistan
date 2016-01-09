@@ -18,25 +18,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
-
-import org.openmrs.Role;
-import org.openmrs.User;
-import org.openmrs.api.context.Context;
-import org.openmrs.api.context.ContextAuthenticationException;
-import org.openmrs.module.ModuleMustStartException;
-import org.openmrs.util.DatabaseUpdateException;
-import org.openmrs.util.DatabaseUpdater;
-import org.openmrs.util.InputRequiredException;
-import org.openmrs.util.OpenmrsUtil;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.ihsinformatics.tbr3reporterweb.client.ServerService;
 import com.ihsinformatics.tbr3reporterweb.server.util.DateTimeUtil;
 import com.ihsinformatics.tbr3reporterweb.server.util.HibernateUtil;
 import com.ihsinformatics.tbr3reporterweb.server.util.ReportUtil;
+import com.ihsinformatics.tbr3reporterweb.server.util.Security;
 import com.ihsinformatics.tbr3reporterweb.shared.DataType;
 import com.ihsinformatics.tbr3reporterweb.shared.Parameter;
 import com.ihsinformatics.tbr3reporterweb.shared.Report;
@@ -51,39 +40,17 @@ public class ServerServiceImpl extends RemoteServiceServlet implements
 	private static final long serialVersionUID = 4123609914879659870L;
 	private ReportUtil reportUtil;
 
-	// Form Openmrs properties file
-	// static final String resourcePath = "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
 	static String resourcePath = "C:\\Users\\Owais\\git\\tbreach3-pakistan\\tbr3reporterweb\\war\\";
 
+	@SuppressWarnings("deprecation")
 	public ServerServiceImpl() {
-		initOpenMrs();
 		try {
-			Connection connection = DatabaseUpdater.getConnection();
+			Connection connection = HibernateUtil.util.getSession()
+					.connection();
 			reportUtil = new ReportUtil(resourcePath, connection);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public Boolean initOpenMrs() {
-		String url, username, password;
-		File propsFile = new File(resourcePath + "openmrs-runtime.properties");
-		Properties props = new Properties();
-		OpenmrsUtil.loadProperties(props, propsFile);
-		url = (String) props.get("connection.url");
-		username = (String) props.get("connection.username");
-		password = (String) props.get("connection.password");
-		try {
-			Context.startup(url, username, password, props);
-			Context.openSession();
-		} catch (ModuleMustStartException e) {
-			e.printStackTrace();
-		} catch (DatabaseUpdateException e) {
-			e.printStackTrace();
-		} catch (InputRequiredException e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 
 	/**
@@ -95,21 +62,20 @@ public class ServerServiceImpl extends RemoteServiceServlet implements
 			throws Exception {
 		boolean result = false;
 		try {
-			Context.openSession();
-			// Authenticate
-			Context.authenticate(userName, password);
-			// Get user object and look for required privileges
-			User user = Context.getUserService().getUserByUsername(userName);
-			Set<Role> roles = user.getAllRoles();
-			for (Iterator<Role> iter = roles.iterator(); iter.hasNext();) {
-				Role role = iter.next();
-				if (role.getRole().equals("System Developer")
-						|| role.getRole().equals("Reporting")
-						|| role.getRole().equals("Program Admin")) {
-					result = true;
+			if (userName != null && password != null) {
+				Object[][] data = HibernateUtil.util
+						.selectData("select password, salt from sz_dw.om_users inner join om_user_role using (user_id) where username = '"
+								+ userName
+								+ "' and retired = 0 and role in ('System Developer', 'Reporting', 'Program Admin')");
+				if (data != null) {
+					String passwordHash = data[0][0].toString();
+					String salt = data[0][1].toString();
+					if (Security.hashMatches(passwordHash, password + salt)) {
+						result = true;
+					}
 				}
 			}
-		} catch (ContextAuthenticationException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
