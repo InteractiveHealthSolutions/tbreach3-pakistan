@@ -51,9 +51,6 @@ public class ReportsComposite extends Composite implements IReport,
 	private static LoadingWidget loading = new LoadingWidget();
 	private static final String menuName = "DATALOG";
 	private static Report[] reports;
-	private String filter = "";
-	private String startDate = "";
-	private String endDate = "";
 	private String locationId = "";
 	private String userId = "";
 
@@ -231,49 +228,29 @@ public class ReportsComposite extends Composite implements IReport,
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
-	private String filterData(String locationColumnName, String dateColumnName,
+	private String getFilter(String locationColumnName, String dateColumnName,
 			String userColumnName) {
-		filter = "";
-		startDate = "";
-		endDate = "";
-		locationId = "";
-		userId = "";
-
-		if (dateRangeFilterCheckBox.getValue()) {
-			Date start = new Date(fromDateBox.getValue().getTime());
-			Date end = new Date(toDateBox.getValue().getTime());
-			StringBuilder startString = new StringBuilder();
-			StringBuilder endString = new StringBuilder();
-			if (timeRangeFilterCheckBox.getValue()) {
-				start.setHours(fromTimeDateBox.getValue().getHours());
-				start.setMinutes(fromTimeDateBox.getValue().getMinutes());
-				end.setHours(toTimeDateBox.getValue().getHours());
-				end.setMinutes(toTimeDateBox.getValue().getMinutes());
-			}
-			startString.append((start.getYear() + 1900) + "-"
-					+ (start.getMonth() + 1) + "-" + start.getDate() + " "
-					+ start.getHours() + ":" + start.getMinutes() + ":00");
-			endString.append((end.getYear() + 1900) + "-"
-					+ (end.getMonth() + 1) + "-" + end.getDate() + " "
-					+ end.getHours() + ":" + end.getMinutes() + ":00");
-			startDate = startString.toString();
-			endDate = endString.toString();
+		StringBuilder where = new StringBuilder(" WHERE 1 = 1 ");
+		if (locationIdCheckBox.getValue() && locationColumnName != null) {
+			where.append(" AND " + locationId + " LIKE '"
+					+ TBR3ReporterClient.get(locationIdTextBox) + "%'");
 		}
-		if (locationIdCheckBox.getValue()) {
-			locationId = " LIKE '" + TBR3ReporterClient.get(locationIdTextBox)
-					+ "%'";
+		if (userIdCheckBox.getValue() && userColumnName != null) {
+			where.append(" AND " + userId + " LIKE '"
+					+ TBR3ReporterClient.get(userIdTextBox) + "%'");
 		}
-		if (userIdCheckBox.getValue()) {
-			userId = " LIKE '%" + TBR3ReporterClient.get(userIdTextBox) + "'";
+		if (dateRangeFilterCheckBox.getValue() && !dateColumnName.equals("")
+				&& dateColumnName != null) {
+			Date fromDate = fromDateBox.getValue();
+			Date toDate = toDateBox.getValue();
+			String from = (fromDate.getYear() + 1900) + "-"
+					+ (fromDate.getMonth() + 1) + "-" + (fromDate.getDate());
+			String to = (toDate.getYear() + 1900) + "-"
+					+ (toDate.getMonth() + 1) + "-" + (toDate.getDate());
+			where.append(" AND " + dateColumnName + " BETWEEN '" + from
+					+ "' AND '" + to + "'");
 		}
-		if (dateRangeFilterCheckBox.getValue() && !dateColumnName.equals(""))
-			filter += " AND " + dateColumnName + " BETWEEN '" + startDate
-					+ "' AND '" + endDate + "'";
-		if (locationIdCheckBox.getValue() && !locationColumnName.equals(""))
-			filter += " AND " + locationColumnName + locationId;
-		if (userIdCheckBox.getValue() && !userColumnName.equals(""))
-			filter += " AND " + userColumnName + userId;
-		return filter;
+		return where.toString();
 	}
 
 	@Override
@@ -287,117 +264,130 @@ public class ReportsComposite extends Composite implements IReport,
 
 	@Override
 	public void viewData(final boolean export) {
-		String reportSelected = TBR3ReporterClient.get(reportsListComboBox)
-				.replace(" ", "");
+		String reportSelected = TBR3ReporterClient.get(reportsListComboBox);
 		String query = "";
-		String locationName = "";
-		String dateName = "";
-		String username = "";
-		// Case Detection Reports
 		if (TBR3ReporterClient.get(categoryComboBox).equals("Reports")) {
 			// Fetch query and parameter names from Report object
-			for (Report report : reports) {
-				if (reportSelected.equals(report.getName())) {
-					// Look for parameters
-					Parameter[] parameters = report.getParameters();
-					for (Parameter param : parameters) {
-						if (param.getName().equals("query")) {
-							query = param.getValue();
-						} else if (param.getName().equals("date")) {
-							dateName = param.getValue();
-						} else if (param.getName().equals("location")) {
-							locationName = param.getValue();
-						} else if (param.getName().equals("username")) {
-							username = param.getValue();
-						}
-					}
-					query += " WHERE 1 = 1 "
-							+ filterData(locationName, dateName, username);
-					break;
-				}
-			}
 		} else if (TBR3ReporterClient.get(categoryComboBox)
 				.equals("Data Dumps")) {
 			if (reportSelected.equals("Patient Data")) {
-				query = "select * from sz_dw.dim_patient";
+				query = "select * from sz_dw.dim_patient"
+						+ getFilter(null, "date_created", null);
 			} else if (reportSelected.equals("Locations Data")) {
-				query = "select * from sz_dw.dim_location";
+				query = "select * from sz_dw.dim_location"
+						+ getFilter(null, "date_created", null);
 			} else if (reportSelected.equals("Forms Data")) {
-				query = "select * from sz_dw.dim_encounter";
+				query = "select * from sz_dw.dim_encounter"
+						+ getFilter(null, "date_created", null);
 			} else if (reportSelected.equals("Users Data")) {
-				query = "select surrogate_id, system_id, user_id, username, person_id, identifier, creator, date_created, changed_by, date_changed, retired, retire_reason, uuid from sz_dw.dim_user";
+				query = "select surrogate_id, system_id, user_id, username, person_id, identifier, creator, date_created, changed_by, date_changed, retired, retire_reason, uuid from sz_dw.dim_user"
+						+ getFilter(null, "date_created", null);
 			} else if (reportSelected.equals("Field Monitoring Camps")) {
-				query = "select * from sz_dw.fm_enc_camp_info";
+				query = "select * from sz_dw.fm_enc_camp_info"
+						+ getFilter("location_name", "date_entered", "pid1");
 			} else if (reportSelected.equals("Field Monitoring Daily Visits")) {
-				query = "select * from sz_dw.fm_enc_daily_vis";
+				query = "select * from sz_dw.fm_enc_daily_vis"
+						+ getFilter("location_name", "date_entered", "pid1");
 			} else if (reportSelected.equals("Field Monitoring First Visits")) {
-				query = "select * from sz_dw.fm_enc_first_vis;";
+				query = "select * from sz_dw.fm_enc_first_vis"
+						+ getFilter("location_name", "date_entered", "pid1");
 			} else if (reportSelected
 					.equals("Field Monitoring Supervisor Visits")) {
-				query = "select * from sz_dw.fm_enc_super_vis";
+				query = "select * from sz_dw.fm_enc_super_vis"
+						+ getFilter("location_name", "date_entered", "pid1");
 			} else if (reportSelected.equals("OpenMRS Blood Sugar Order")) {
-				query = "select * from om_enc_blood_sugar_order";
+				query = "select * from om_enc_blood_sugar_order"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Blood Sugar Results")) {
-				query = "select * from om_enc_blood_sugar_results";
+				query = "select * from om_enc_blood_sugar_results"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Clinical Evaluation")) {
-				query = "select * from om_enc_clinical_evaluation";
+				query = "select * from om_enc_clinical_evaluation"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Client Information")) {
-				query = "select * from om_enc_customer_information";
+				query = "select * from om_enc_customer_information"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS CXR Order")) {
-				query = "select * from om_enc_cxr_order";
+				query = "select * from om_enc_cxr_order"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS CXR Results")) {
-				query = "select * from om_enc_cxr_result";
+				query = "select * from om_enc_cxr_result"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS CXR Test")) {
-				query = "select * from om_enc_cxr_test";
+				query = "select * from om_enc_cxr_test"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected
 					.equals("OpenMRS Diabetes First Encounter")) {
-				query = "select * from om_enc_diabetes_first_encounter";
+				query = "select * from om_enc_diabetes_first_encounter"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Diabetes Follow-up")) {
-				query = "select * from om_enc_diabetes_follow_up";
+				query = "select * from om_enc_diabetes_follow_up"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Drug Dispersal")) {
-				query = "select * from om_enc_drug_dispersal";
+				query = "select * from om_enc_drug_dispersal"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS GXP Order")) {
-				query = "select * from om_enc_gxp_order";
+				query = "select * from om_enc_gxp_order"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS GXP Results")) {
-				query = "select * from om_enc_gxp_result";
+				query = "select * from om_enc_gxp_result"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS GXP Test")) {
-				query = "select * from om_enc_gxp_test";
+				query = "select * from om_enc_gxp_test"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS HbA1c Order")) {
-				query = "select * from om_enc_hba1c_order";
+				query = "select * from om_enc_hba1c_order"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Mental Health Screening")) {
-				query = "select * from om_enc_mental_health_screening";
+				query = "select * from om_enc_mental_health_screening"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Non-Pulmonary Suspect")) {
-				query = "select * from om_enc_non_pulmonary_suspect";
+				query = "select * from om_enc_non_pulmonary_suspect"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Paediatric Screening")) {
-				query = "select * from om_enc_paediatric_screening";
+				query = "select * from om_enc_paediatric_screening"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Patient GPS")) {
-				query = "select * from om_enc_patient_gps";
+				query = "select * from om_enc_patient_gps"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Screening")) {
-				query = "select * from om_enc_screening";
+				query = "select * from om_enc_screening"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Side Effects")) {
-				query = "select * from om_enc_side_effects";
+				query = "select * from om_enc_side_effects"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Smear Microscopy Order")) {
-				query = "select * from om_enc_smear_order";
+				query = "select * from om_enc_smear_order"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected
 					.equals("OpenMRS Smear Microscopy Results")) {
-				query = "select * from om_enc_smear_result";
+				query = "select * from om_enc_smear_result"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Spirometry Order")) {
-				query = "select * from om_enc_spirometry_order";
+				query = "select * from om_enc_spirometry_order"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Spirometry Results")) {
-				query = "select * from om_enc_spirometry_result";
+				query = "select * from om_enc_spirometry_result"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected
 					.equals("OpenMRS Sputum Instructions Video")) {
-				query = "select * from om_enc_sputum_instructions";
+				query = "select * from om_enc_sputum_instructions"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS TB First Encounter")) {
-				query = "select * from om_enc_tb_first_encounter";
+				query = "select * from om_enc_tb_first_encounter"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS TB Follow-up")) {
-				query = "select * from om_enc_tb_follow_up";
+				query = "select * from om_enc_tb_follow_up"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Test Indication")) {
-				query = "select * from om_enc_test_indication";
+				query = "select * from om_enc_test_indication"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Treatment Initiation")) {
-				query = "select * from om_enc_treatment_initiation";
+				query = "select * from om_enc_treatment_initiation"
+						+ getFilter("location_name", "date_entered", null);
 			} else if (reportSelected.equals("OpenMRS Vitals")) {
-				query = "select * from om_enc_vital";
+				query = "select * from om_enc_vital"
+						+ getFilter("location_name", "date_entered", null);
 			} else {
 				query = "";
 			}
@@ -471,13 +461,18 @@ public class ReportsComposite extends Composite implements IReport,
 				DataType.STRING));
 		if (userIdCheckBox.getValue()) {
 			params.add(new Parameter("UserID", TBR3ReporterClient
-					.get(userIdTextBox), DataType.STRING));
+					.get(userIdTextBox) + "%", DataType.STRING));
+		} else {
+			params.add(new Parameter("UserID", "%", DataType.STRING));
 		}
 		if (locationIdCheckBox.getValue()) {
 			params.add(new Parameter("LocationID", TBR3ReporterClient
-					.get(locationIdTextBox), DataType.STRING));
+					.get(locationIdTextBox) + "%", DataType.STRING));
+		} else {
+			params.add(new Parameter("LocationID", "%", DataType.STRING));
 		}
-		if (dateRangeFilterCheckBox.getValue()) {
+		if (dateRangeFilterCheckBox.getValue()
+				&& !TBR3ReporterClient.get(fromDateBox).equals("")) {
 			Date startDate = fromDateBox.getValue();
 			Date endDate = toDateBox.getValue();
 			// Add time part, if available
@@ -497,7 +492,6 @@ public class ReportsComposite extends Composite implements IReport,
 			params.add(new Parameter("DateTo", String.valueOf(new Date()
 					.getTime()), DataType.DATE));
 		}
-
 		return params.toArray(new Parameter[] {});
 	}
 
@@ -595,11 +589,19 @@ public class ReportsComposite extends Composite implements IReport,
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void onValueChange(ValueChangeEvent<Boolean> event) {
 		Widget sender = (Widget) event.getSource();
 		if (sender == dateRangeFilterCheckBox) {
 			fromDateBox.setEnabled(dateRangeFilterCheckBox.getValue());
+			Date from = new Date(110, 0, 1);
+			fromDateBox.setValue(from);
 			toDateBox.setEnabled(dateRangeFilterCheckBox.getValue());
+			Date to = new Date();
+			to.setHours(0);
+			to.setMinutes(0);
+			to.setSeconds(0);
+			toDateBox.setValue(new Date());
 		} else if (sender == timeRangeFilterCheckBox) {
 			fromTimeDateBox.setEnabled(timeRangeFilterCheckBox.getValue());
 			toTimeDateBox.setEnabled(timeRangeFilterCheckBox.getValue());

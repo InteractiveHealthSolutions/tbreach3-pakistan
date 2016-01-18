@@ -28,7 +28,7 @@
 	<queryString>
 		<![CDATA[select p.identifier, p.gender, p.birthdate, p.birthdate_estimated, p.first_name, p.last_name, p.date_created, u.username from sz_dw.dim_patient as p
 inner join sz_dw.dim_user as u on u.person_id = p.creator
-]]>
+where u.username like ($P{UserID}) and p.date_created between $P{DateFrom} and $P{DateTo}]]>
 	</queryString>
 	<field name="identifier" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>

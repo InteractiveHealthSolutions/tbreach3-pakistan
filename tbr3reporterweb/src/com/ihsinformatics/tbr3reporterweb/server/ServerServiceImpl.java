@@ -47,7 +47,13 @@ public class ServerServiceImpl extends RemoteServiceServlet implements
 		try {
 			Connection connection = HibernateUtil.util.getSession()
 					.connection();
-			reportUtil = new ReportUtil(resourcePath, connection);
+			File file = new File(resourcePath);
+			if (file.exists() && file.isDirectory()) {
+				reportUtil = new ReportUtil(resourcePath, connection);
+			} else {
+				resourcePath = "/var/lib/tomcat6/webapps/tbr3reporterweb/";
+				reportUtil = new ReportUtil(resourcePath, connection);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

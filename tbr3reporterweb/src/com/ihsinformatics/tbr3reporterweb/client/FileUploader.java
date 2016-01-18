@@ -17,7 +17,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -31,7 +30,6 @@ public class FileUploader extends Composite {
 
 	private FormPanel form = new FormPanel();
 	private FileUpload fileUpload = new FileUpload();
-	private CheckBox updateCheckBox = new CheckBox("Update if report exists.");
 
 	public FileUploader() {
 	}
@@ -64,7 +62,6 @@ public class FileUploader extends Composite {
 				form.submit();
 			}
 		}));
-		holder.add(updateCheckBox);
 		form.addSubmitHandler(new FormPanel.SubmitHandler() {
 			public void onSubmit(SubmitEvent event) {
 				if (!"".equalsIgnoreCase(fileUpload.getFilename())) {
