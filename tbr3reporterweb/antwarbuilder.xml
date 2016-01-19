@@ -8,7 +8,7 @@
 		</fileset>
 	</path>
 
-	<target name="default" depends="gwtc, buildwar,deploy">
+	<target name="default" depends="gwtc,buildwar,deploy">
 	</target>
 
 	<target name="gwtc" description="GWT compile to JavaScript">

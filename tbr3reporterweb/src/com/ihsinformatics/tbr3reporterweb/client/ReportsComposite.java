@@ -393,58 +393,50 @@ public class ReportsComposite extends Composite implements IReport,
 			}
 		}
 		load(true);
-		if (query.equals("")) {
+		if (TBR3ReporterClient.get(categoryComboBox).equals("Data Dumps")) {
 			try {
-				Window.alert("Report is either out of format or does not match the schema. Please report to the developers.");
+				service.generateCSVfromQuery(query,
+						new AsyncCallback<String>() {
+							@Override
+							public void onSuccess(String result) {
+								String url = Window.Location.getHref()
+										+ "data/" + result;
+								Window.open(url, "_blank", "");
+								load(false);
+							}
+
+							@Override
+							public void onFailure(Throwable caught) {
+								caught.printStackTrace();
+								load(false);
+							}
+						});
 			} catch (Exception e) {
 				load(false);
 				e.printStackTrace();
 			}
 		} else {
-			if (TBR3ReporterClient.get(categoryComboBox).equals("Data Dumps")) {
-				try {
-					service.generateCSVfromQuery(query,
-							new AsyncCallback<String>() {
-								@Override
-								public void onSuccess(String result) {
-									Window.open(result, "_blank", "");
-									load(false);
-								}
+			try {
+				Parameter[] params = getParameters();
+				service.generateReport(reportSelected, params, export,
+						new AsyncCallback<String>() {
+							@Override
+							public void onSuccess(String result) {
+								String url = Window.Location.getHref()
+										+ "data/" + result;
+								Window.open(url, "_blank", "");
+								load(false);
+							}
 
-								@Override
-								public void onFailure(Throwable caught) {
-									caught.printStackTrace();
-									load(false);
-								}
-							});
-				} catch (Exception e) {
-					load(false);
-					e.printStackTrace();
-				}
-			} else {
-				try {
-					Parameter[] params = getParameters();
-					service.generateReport(reportSelected, params, export,
-							new AsyncCallback<String>() {
-								@Override
-								public void onSuccess(String result) {
-
-									String url = Window.Location.getHref()
-											+ "/" + result;
-									Window.open(url, "_blank", "");
-									load(false);
-								}
-
-								@Override
-								public void onFailure(Throwable caught) {
-									caught.printStackTrace();
-									load(false);
-								}
-							});
-				} catch (Exception e) {
-					load(false);
-					e.printStackTrace();
-				}
+							@Override
+							public void onFailure(Throwable caught) {
+								caught.printStackTrace();
+								load(false);
+							}
+						});
+			} catch (Exception e) {
+				load(false);
+				e.printStackTrace();
 			}
 		}
 	}
@@ -580,7 +572,6 @@ public class ReportsComposite extends Composite implements IReport,
 				reportsListComboBox.addItem("OpenMRS Test Indication");
 				reportsListComboBox.addItem("OpenMRS Treatment Initiation");
 				reportsListComboBox.addItem("OpenMRS Vitals");
-
 			}
 			// Disable view on data dumps
 			viewButton.setEnabled(!TBR3ReporterClient.get(categoryComboBox)

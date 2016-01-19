@@ -111,7 +111,8 @@ public class ReportUtil {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return dest.substring(dest.lastIndexOf(File.separatorChar) + 1);
+			String csv = dest.substring(dest.lastIndexOf(File.separatorChar) + 1);
+			return csv;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";
@@ -153,7 +154,8 @@ public class ReportUtil {
 			exporter.exportReport();
 			System.out.println(dest.substring(dest
 					.lastIndexOf(File.separatorChar) + 1));
-			return dest.substring(dest.lastIndexOf(File.separatorChar) + 1);
+			String report = dest.substring(dest.lastIndexOf(File.separatorChar) + 1);
+			return report;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";
