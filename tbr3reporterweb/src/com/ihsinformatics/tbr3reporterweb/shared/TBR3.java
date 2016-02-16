@@ -12,7 +12,7 @@ package com.ihsinformatics.tbr3reporterweb.shared;
 public final class TBR3 {
 	public static final String hashingAlgorithm = "SHA";
 	public static final String packageName = "com.ihsinformatics.tbr3reporterweb";
-	public static final String projectTitle = "Sehatmand Zindagi Reporter";
+	public static final String projectTitle = "Sehatmand Zindagi Warehouse Reporter";
 	public static final char separatorChar = ',';
 	public static final int sessionLimit = 900000;
 	public static final TBR3 xsms = new TBR3();

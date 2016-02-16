@@ -26,7 +26,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select * from sz_dw.fm_enc_FIRST_VIS where (date_entered between $P{DateFrom} and $P{DateTo}) and (pid1 like '%$P!{UserID}%') and (town like '%$P!{LocationID}%')]]>
+		<![CDATA[select * from sz_dw.fm_enc_first_vis where (date_entered between $P{DateFrom} and $P{DateTo}) and (pid1 like '%$P!{UserID}%') and (town like '%$P!{LocationID}%')]]>
 	</queryString>
 	<field name="e_id" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
