@@ -15,6 +15,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -108,14 +109,16 @@ public class HibernateUtil implements Serializable {
 	 * @return
 	 */
 	public Object[] findObjects(String query) {
+		Session session = getSession();
 		try {
-			Session session = getSession();
 			Query q = session.createQuery(query);
 			List<?> list = q.list();
 			return list.toArray();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			session.close();
 		}
 	}
 
@@ -137,10 +140,16 @@ public class HibernateUtil implements Serializable {
 	 */
 	public Object[] selectObjects(String SqlQuery) {
 		Session session = getSession();
-		// session.beginTransaction();
-		SQLQuery q = session.createSQLQuery(SqlQuery);
-		List<?> list = q.list();
-		return list.toArray();
+		try {
+			SQLQuery q = session.createSQLQuery(SqlQuery);
+			List<?> list = q.list();
+			return list.toArray();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			session.close();
+		}
 	}
 
 	/**
@@ -151,10 +160,10 @@ public class HibernateUtil implements Serializable {
 	 */
 	public Object[][] selectData(String SqlQuery) {
 		Session session = getSession();
-		SQLQuery q = session.createSQLQuery(SqlQuery);
-		List<?> list = q.list();
-		Object[][] tableData = new Object[list.size()][];
 		try {
+			SQLQuery q = session.createSQLQuery(SqlQuery);
+			List<?> list = q.list();
+			Object[][] tableData = new Object[list.size()][];
 			int cnt = 0;
 			for (ListIterator<?> iter = list.listIterator(); iter.hasNext();) {
 				Object[] array = (Object[]) iter.next();
@@ -164,6 +173,8 @@ public class HibernateUtil implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			session.close();
 		}
 	}
 
@@ -174,8 +185,8 @@ public class HibernateUtil implements Serializable {
 	 * @return
 	 */
 	public boolean update(Object obj) {
+		Session session = getSession();
 		try {
-			Session session = getSession();
 			session.update(obj);
 			session.flush();
 			session.close();
@@ -184,6 +195,8 @@ public class HibernateUtil implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			session.close();
 		}
 	}
 
@@ -194,8 +207,8 @@ public class HibernateUtil implements Serializable {
 	 * @return
 	 */
 	public boolean bulkSave(Object[] objects) {
+		Session session = getSession();
 		try {
-			Session session = getSession();
 			for (Object o : objects)
 				session.save(o);
 			session.flush();
@@ -204,12 +217,14 @@ public class HibernateUtil implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			session.close();
 		}
 	}
 
 	public boolean save(Object obj) {
+		Session session = getSession();
 		try {
-			Session session = getSession();
 			session.save(obj);
 			session.flush();
 			session.close();
@@ -218,6 +233,8 @@ public class HibernateUtil implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			session.close();
 		}
 	}
 
@@ -228,8 +245,8 @@ public class HibernateUtil implements Serializable {
 	 * @return
 	 */
 	public boolean delete(Object obj) {
+		Session session = getSession();
 		try {
-			Session session = getSession();
 			session.delete(obj);
 			session.flush();
 			session.close();
@@ -238,6 +255,8 @@ public class HibernateUtil implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			session.close();
 		}
 	}
 
@@ -259,14 +278,21 @@ public class HibernateUtil implements Serializable {
 	 * @param command
 	 *            SQL statement as command
 	 * @return number of records affected
+	 * @throws Exception 
 	 */
-	public int runCommand(String command) {
+	public int runCommand(String command) throws Exception {
 		Session session = getSession();
-		Transaction transaction = session.beginTransaction();
-		SQLQuery q = session.createSQLQuery(command);
-		int results = q.executeUpdate();
-		transaction.commit();
-		return results;
+		try {
+			Transaction transaction = session.beginTransaction();
+			SQLQuery q = session.createSQLQuery(command);
+			int results = q.executeUpdate();
+			transaction.commit();
+			return results;
+		} catch (HibernateException e) {
+			throw new Exception(e.getMessage());
+		} finally {
+			session.close();
+		}
 	}
 
 	/**
@@ -279,8 +305,8 @@ public class HibernateUtil implements Serializable {
 	@SuppressWarnings("deprecation")
 	public boolean runProcedure(String procedure) {
 		Session session = getSession();
-		session.beginTransaction();
 		try {
+			session.beginTransaction();
 			CallableStatement callableStatement = session.connection()
 					.prepareCall(procedure);
 			System.out.println("Executing stored procedure: " + procedure);
@@ -290,6 +316,8 @@ public class HibernateUtil implements Serializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			session.close();
 		}
 	}
 
