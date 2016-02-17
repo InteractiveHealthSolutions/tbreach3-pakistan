@@ -76,8 +76,13 @@ public final class DatabaseUtil {
 	 * JDBC Connection getter
 	 * 
 	 * @return Connection
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	public Connection getConnection() {
+	public Connection getConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		this.openConnection();
 		return con;
 	}
 
@@ -172,9 +177,9 @@ public final class DatabaseUtil {
 	void openConnection() throws InstantiationException,
 			IllegalAccessException, ClassNotFoundException, SQLException {
 		Class.forName(driverName).newInstance();
-		con = DriverManager.getConnection(this.url
-				+ (this.url.endsWith("/") ? "" : "/") + this.dbName,
-				this.userName, this.password);
+		con = DriverManager.getConnection(this.url, this.userName,
+				this.password);
+		con.setCatalog(dbName);
 	}
 
 	/**

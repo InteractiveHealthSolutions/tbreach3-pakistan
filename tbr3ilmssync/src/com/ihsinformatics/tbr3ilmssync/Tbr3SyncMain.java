@@ -17,12 +17,18 @@ package com.ihsinformatics.tbr3ilmssync;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 import com.ihsinformatics.tbr3ilmssync.util.DatabaseUtil;
+import com.ihsinformatics.tbr3ilmssync.util.DateTimeUtil;
 
 /**
  * This application synchronizes ILMS database with Central repository
@@ -50,8 +56,7 @@ public class Tbr3SyncMain {
 			System.out
 					.println("Arguments are invalid. Arguments must be provided as:\n"
 							+ "-p path to properties file\n"
-							+ "-u to update data for given number of days\n"
-							+ "-d number of past days to synchronize data\n");
+							+ "-u to update data for given number of days\n");
 			return;
 		}
 		Tbr3SyncMain tbr3 = new Tbr3SyncMain();
@@ -68,8 +73,9 @@ public class Tbr3SyncMain {
 					Date dateFrom = new Date();
 					Date dateTo = new Date();
 					Calendar instance = Calendar.getInstance();
-					instance.add(Calendar.DATE, days);
+					instance.add(Calendar.DATE, -days);
 					dateFrom = instance.getTime();
+					tbr3.flushTables();
 					tbr3.updateData(dateFrom, dateTo);
 				} catch (Exception e) {
 					System.out
@@ -103,15 +109,23 @@ public class Tbr3SyncMain {
 					dwPassword);
 			ilmsDb = new DatabaseUtil(ilmsUrl, ilmsDbName, ilmsDriverName,
 					ilmsUserName, ilmsPassword);
-
-			System.out.println(dwDb.tryConnection());
-			System.out.println(ilmsDb.tryConnection());
-
 		} catch (IOException e) {
 			log.severe(e.getMessage());
 			return false;
 		}
 		return true;
+	}
+	
+	private void flushTables() {
+		try {
+			dwDb.truncateTable("lms_account_registration");
+			dwDb.truncateTable("lms_branch_registration");
+			dwDb.truncateTable("lms_patient_dues");
+			// TODO: Fill more tables
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -120,5 +134,72 @@ public class Tbr3SyncMain {
 	 * @param dateTo
 	 */
 	private void updateData(Date dateFrom, Date dateTo) {
+		ArrayList<String> selectQueries = new ArrayList<String>();
+		ArrayList<String> insertQueries = new ArrayList<String>();
+		String createClause = "CREATE_DTP between '"
+				+ DateTimeUtil.getSqlDate(dateFrom) + "' and '"
+				+ DateTimeUtil.getSqlDate(dateTo) + "'";
+		String updateClause = "UPDATE_DTP between '"
+				+ DateTimeUtil.getSqlDate(dateFrom) + "' and '"
+				+ DateTimeUtil.getSqlDate(dateTo) + "'";
+
+		selectQueries.add("select * from dbo.ACC_REG");
+		insertQueries.add("insert into lms_account_registration values (?, ?)");
+		selectQueries.add("select * from dbo.BRN_REG");
+		insertQueries.add("insert ignore into lms_branch_registration values (?, ?, ?, ?, ?, ?)");
+		selectQueries.add("select * from dbo.BS_DEUS_REC where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_patient_dues values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+		selectQueries.add("select * from dbo.BS_MASTER where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_patient_master values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.BS_TRANS where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_transaction values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+		selectQueries.add("select * from dbo.DEP_REG where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_department_registration values (?, ?, ?, ?, ?, ?, ?, ?)");
+
+		selectQueries.add("select * from dbo.DESIG_REG");
+		insertQueries.add("insert into lms_designation_registration values (?, ?)");
+
+		selectQueries.add("select * from dbo.DOC_BS where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_doctor values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+		selectQueries.add("select * from dbo.DOCT_REG where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_doctor_registration values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+		selectQueries.add("select * from dbo.EMP_REG where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_employee_registration values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+		selectQueries.add("select * from dbo.EXP_HEAD");
+		insertQueries.add("insert into lms_expenditure_types values (?, ?)");
+		
+		selectQueries.add("select * from dbo.EXP_VCHR where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_expenditure_voucher values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+		selectQueries.add("select * from dbo.LAB_REG");
+		insertQueries.add("insert into lms_lab_registration values (?, ?, ?, ?, ?)");
+
+		// THIS IS WHERE I LEFT LAST. TO CONTINUE FROM TABLE LOC_BF_AMT NEXT...
+		
+		for (int i = 0; i < selectQueries.size(); i++) {
+			try {
+				PreparedStatement source = ilmsDb.getConnection()
+						.prepareStatement(selectQueries.get(i));
+				PreparedStatement target = dwDb.getConnection()
+						.prepareStatement(insertQueries.get(i));
+				ResultSet data = source.executeQuery();
+				ResultSetMetaData metaData = data.getMetaData();
+				while (data.next()) {
+					for (int j = 1; j <= metaData.getColumnCount(); j++) {
+						target.setString(j, data.getString(j));
+					}
+					target.executeUpdate();
+				}
+			} catch (SQLException | InstantiationException
+					| IllegalAccessException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
