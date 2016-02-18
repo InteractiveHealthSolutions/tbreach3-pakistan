@@ -332,7 +332,7 @@ public final class DatabaseUtil {
 
 	public Object deleteTable(String tableName) throws InstantiationException,
 			IllegalAccessException, ClassNotFoundException {
-		String command = "DROP TABLE " + tableName;
+		String command = "DROP TABLE IF EXISTS " + tableName;
 		String s = this.runCommand(CommandType.DROP, command).toString();
 		return Boolean.parseBoolean(s);
 	}

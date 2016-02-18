@@ -27,8 +27,10 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import com.ihsinformatics.tbr3ilmssync.util.CommandType;
 import com.ihsinformatics.tbr3ilmssync.util.DatabaseUtil;
 import com.ihsinformatics.tbr3ilmssync.util.DateTimeUtil;
+import com.ihsinformatics.tbr3ilmssync.util.FileUtil;
 
 /**
  * This application synchronizes ILMS database with Central repository
@@ -75,8 +77,9 @@ public class Tbr3SyncMain {
 					Calendar instance = Calendar.getInstance();
 					instance.add(Calendar.DATE, -days);
 					dateFrom = instance.getTime();
-					tbr3.flushTables();
+					tbr3.createTemporaryTables();
 					tbr3.updateData(dateFrom, dateTo);
+					tbr3.synchronize();
 				} catch (Exception e) {
 					System.out
 							.println("Please enter the number of days in the argument \n"
@@ -87,6 +90,13 @@ public class Tbr3SyncMain {
 		System.exit(0);
 	}
 
+	/**
+	 * Initiate source and target connections by reading parameters from
+	 * properties file
+	 * 
+	 * @param propertiesFilePath
+	 * @return
+	 */
 	private boolean initializeConnections(String propertiesFilePath) {
 		try {
 			// Read properties
@@ -115,20 +125,17 @@ public class Tbr3SyncMain {
 		}
 		return true;
 	}
-	
-	private void flushTables() {
-		try {
-			dwDb.truncateTable("lms_account_registration");
-			dwDb.truncateTable("lms_branch_registration");
-			dwDb.truncateTable("lms_patient_dues");
-			// TODO: Fill more tables
-		} catch (InstantiationException | IllegalAccessException
-				| ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+
+	private void createTemporaryTables() {
+		// Read temporary table schema file
+		FileUtil fileUtil = new FileUtil();
+		fileUtil.getLines("res/temp_tables.sql");
+		System.out.println("Create temporary tables...");
+		// TODO: This is where I left last
 	}
 
 	/**
+	 * Update data by importing from source to target tables
 	 * 
 	 * @param dateFrom
 	 * @param dateTo
@@ -136,52 +143,67 @@ public class Tbr3SyncMain {
 	private void updateData(Date dateFrom, Date dateTo) {
 		ArrayList<String> selectQueries = new ArrayList<String>();
 		ArrayList<String> insertQueries = new ArrayList<String>();
-		String createClause = "CREATE_DTP between '"
+		String createClause = "(CREATE_DTP is null or CREATE_DTP between '"
 				+ DateTimeUtil.getSqlDate(dateFrom) + "' and '"
-				+ DateTimeUtil.getSqlDate(dateTo) + "'";
-		String updateClause = "UPDATE_DTP between '"
+				+ DateTimeUtil.getSqlDate(dateTo) + "')";
+		String updateClause = "(UPDATE_DTP is null or UPDATE_DTP between '"
 				+ DateTimeUtil.getSqlDate(dateFrom) + "' and '"
-				+ DateTimeUtil.getSqlDate(dateTo) + "'";
+				+ DateTimeUtil.getSqlDate(dateTo) + "')";
 
 		selectQueries.add("select * from dbo.ACC_REG");
-		insertQueries.add("insert into lms_account_registration values (?, ?)");
+		insertQueries.add("insert into lms_tmp_account values (?, ?)");
 		selectQueries.add("select * from dbo.BRN_REG");
-		insertQueries.add("insert ignore into lms_branch_registration values (?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.BS_DEUS_REC where " + createClause + " or " + updateClause);
-		insertQueries.add("insert into lms_patient_dues values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-		selectQueries.add("select * from dbo.BS_MASTER where " + createClause + " or " + updateClause);
-		insertQueries.add("insert into lms_patient_master values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		
-		selectQueries.add("select * from dbo.BS_TRANS where " + createClause + " or " + updateClause);
-		insertQueries.add("insert into lms_transaction values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-		selectQueries.add("select * from dbo.DEP_REG where " + createClause + " or " + updateClause);
-		insertQueries.add("insert into lms_department_registration values (?, ?, ?, ?, ?, ?, ?, ?)");
-
+		insertQueries
+				.add("insert into lms_tmp_branch values (?, ?, ?, ?, ?, ?)");
+		selectQueries.add("select * from dbo.BS_DEUS_REC where " + createClause
+				+ " or " + updateClause);
+		insertQueries
+				.add("insert into lms_tmp_patient_dues values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		selectQueries.add("select * from dbo.BS_MASTER where " + createClause
+				+ " or " + updateClause);
+		insertQueries
+				.add("insert into lms_tmp_patient values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		selectQueries.add("select * from dbo.BS_TRANS where " + createClause
+				+ " or " + updateClause);
+		insertQueries
+				.add("insert into lms_tmp_transaction values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		selectQueries.add("select * from dbo.DEP_REG where " + createClause
+				+ " or " + updateClause);
+		insertQueries
+				.add("insert into lms_tmp_department values (?, ?, ?, ?, ?, ?, ?, ?)");
 		selectQueries.add("select * from dbo.DESIG_REG");
-		insertQueries.add("insert into lms_designation_registration values (?, ?)");
-
-		selectQueries.add("select * from dbo.DOC_BS where " + createClause + " or " + updateClause);
-		insertQueries.add("insert into lms_doctor values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-		selectQueries.add("select * from dbo.DOCT_REG where " + createClause + " or " + updateClause);
-		insertQueries.add("insert into lms_doctor_registration values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-		selectQueries.add("select * from dbo.EMP_REG where " + createClause + " or " + updateClause);
-		insertQueries.add("insert into lms_employee_registration values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
+		insertQueries.add("insert into lms_tmp_designation values (?, ?)");
+		selectQueries.add("select * from dbo.DOC_BS where " + createClause
+				+ " or " + updateClause);
+		insertQueries
+				.add("insert into lms_tmp_doctor_beneficiary values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		selectQueries.add("select * from dbo.DOCT_REG where " + createClause
+				+ " or " + updateClause);
+		insertQueries
+				.add("insert into lms_tmp_doctor values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		selectQueries.add("select * from dbo.EMP_REG where " + createClause
+				+ " or " + updateClause);
+		insertQueries
+				.add("insert into lms_tmp_employee values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		selectQueries.add("select * from dbo.EXP_HEAD");
-		insertQueries.add("insert into lms_expenditure_types values (?, ?)");
-		
-		selectQueries.add("select * from dbo.EXP_VCHR where " + createClause + " or " + updateClause);
-		insertQueries.add("insert into lms_expenditure_voucher values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
+		insertQueries.add("insert into lms_tmp_expense_type values (?, ?)");
+		selectQueries.add("select * from dbo.EXP_VCHR");
+		insertQueries
+				.add("insert into lms_tmp_expense_voucher values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		selectQueries.add("select * from dbo.LAB_REG");
-		insertQueries.add("insert into lms_lab_registration values (?, ?, ?, ?, ?)");
+		insertQueries.add("insert into lms_tmp_lab values (?, ?, ?, ?, ?)");
+		selectQueries.add("select * from dbo.LOC_BF_AMT where " + createClause);
+		insertQueries
+				.add("insert into lms_tmp_location_beneficiary_amount values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		selectQueries.add("select * from dbo.OTHER_LAB_REG");
+		insertQueries
+				.add("insert into lms_tmp_other_lab values (?, ?, ?, ?, ?, ?, ?)");
+		selectQueries.add("select * from dbo.SYS_REG");
+		insertQueries.add("insert into lms_tmp_system values (?, ?, ?)");
+		selectQueries.add("select * from dbo.TEST_REG");
+		insertQueries
+				.add("insert into lms_tmp_test values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-		// THIS IS WHERE I LEFT LAST. TO CONTINUE FROM TABLE LOC_BF_AMT NEXT...
-		
 		for (int i = 0; i < selectQueries.size(); i++) {
 			try {
 				PreparedStatement source = ilmsDb.getConnection()
@@ -196,10 +218,30 @@ public class Tbr3SyncMain {
 					}
 					target.executeUpdate();
 				}
+				System.out.println(selectQueries.get(i) + "; "
+						+ insertQueries.get(i));
 			} catch (SQLException | InstantiationException
 					| IllegalAccessException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	/**
+	 * Performs synchronization. Data in ILMS tables is processed and saved into
+	 * dimension and fact tables
+	 */
+	private void synchronize() {
+		try {
+			String query = "insert into lms_account select * from lms_tmp_account where account_id not in (select account_id from lms_account)";
+			dwDb.runCommand(CommandType.INSERT, query);
+
+			query = "insert into lms_branch select * from lms_tmp_branch where location not in (select location from lms_branch)";
+			dwDb.runCommand(CommandType.INSERT, query);
+
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 }
