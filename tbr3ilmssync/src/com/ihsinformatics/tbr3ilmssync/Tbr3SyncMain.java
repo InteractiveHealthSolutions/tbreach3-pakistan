@@ -127,11 +127,23 @@ public class Tbr3SyncMain {
 	}
 
 	private void createTemporaryTables() {
+		System.out.println("Create temporary tables...");
 		// Read temporary table schema file
 		FileUtil fileUtil = new FileUtil();
-		fileUtil.getLines("res/temp_tables.sql");
-		System.out.println("Create temporary tables...");
-		// TODO: This is where I left last
+		String[] queries = fileUtil.getLines("res/temp_tables.sql");
+		try {
+			for (String query : queries) {
+				if (query.toUpperCase().startsWith("DROP")) {
+					dwDb.runCommand(CommandType.DROP, query);
+				} else if (query.toUpperCase().startsWith("CREATE")) {
+					dwDb.runCommand(CommandType.CREATE, query);
+				}
+			}
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Temporary tables created.");
 	}
 
 	/**
@@ -141,6 +153,7 @@ public class Tbr3SyncMain {
 	 * @param dateTo
 	 */
 	private void updateData(Date dateFrom, Date dateTo) {
+		System.out.println("Copying data to temporary tables...");
 		ArrayList<String> selectQueries = new ArrayList<String>();
 		ArrayList<String> insertQueries = new ArrayList<String>();
 		String createClause = "(CREATE_DTP is null or CREATE_DTP between '"
@@ -225,6 +238,7 @@ public class Tbr3SyncMain {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Data copied to temporary tables.");
 	}
 
 	/**
@@ -232,6 +246,7 @@ public class Tbr3SyncMain {
 	 * dimension and fact tables
 	 */
 	private void synchronize() {
+		System.out.println("Synchronizing...");
 		try {
 			String query = "insert into lms_account select * from lms_tmp_account where account_id not in (select account_id from lms_account)";
 			dwDb.runCommand(CommandType.INSERT, query);
@@ -243,5 +258,6 @@ public class Tbr3SyncMain {
 				| ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Synchronization complete.");
 	}
 }
