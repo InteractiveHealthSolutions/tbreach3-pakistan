@@ -1,7 +1,7 @@
 /* Copyright(C) 2016 Interactive Health Solutions, Pvt. Ltd.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as
-published by the Free Software Foundation; either version 3 of the License (GPLv3), or any later version.
+published by the Free Software Foundation; either VERSION 3 of the License (GPLv3), or any later VERSION.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Interactive Health Solutions, info@ihsinformatics.com
@@ -40,7 +40,8 @@ import com.ihsinformatics.tbr3ilmssync.util.FileUtil;
  */
 public class Tbr3SyncMain {
 
-	public static final String version = "0.0.1";
+	public static final String VERSION = "0.0.1";
+	public static String location;
 
 	private static final Logger log = Logger.getLogger(Class.class.getName());
 	public static final String dataPath = System.getProperty("user.home")
@@ -114,6 +115,7 @@ public class Tbr3SyncMain {
 					.getProperty("ilms.connection.driver_class");
 			String ilmsUserName = props.getProperty("ilms.connection.username");
 			String ilmsPassword = props.getProperty("ilms.connection.password");
+			location = props.getProperty("ilms.location.name", "CHS");
 
 			dwDb = new DatabaseUtil(dwUrl, dwDbName, dwDriverName, dwUserName,
 					dwPassword);
@@ -248,11 +250,27 @@ public class Tbr3SyncMain {
 	private void synchronize() {
 		System.out.println("Synchronizing...");
 		try {
-			String query = "insert into lms_account select * from lms_tmp_account where account_id not in (select account_id from lms_account)";
+			// First update existing records
+			System.out.println("Updating existing records...");
+			// TODO: Update statements
+
+			// Secondly, insert records not present
+			System.out.println("Inserting new records...");
+			
+			String query = "insert into lms_account select 0, '" + location + "', a.* from lms_tmp_account as a where a.uuid not in (select uuid from lms_account)";
 			dwDb.runCommand(CommandType.INSERT, query);
 
-			query = "insert into lms_branch select * from lms_tmp_branch where location not in (select location from lms_branch)";
+			query = "insert into lms_branch select 0, '" + location + "', b.* from lms_tmp_branch as b where b.uuid not in (select uuid from lms_branch)";
 			dwDb.runCommand(CommandType.INSERT, query);
+			
+			query = "insert into lms_branch select 0, '" + location + "', b.* from lms_tmp_department as d where d.uuid not in (select uuid from lms_department)";
+			dwDb.runCommand(CommandType.INSERT, query);
+			
+			
+			
+			
+			
+			System.out.println("New records inserted.");
 
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException e) {
