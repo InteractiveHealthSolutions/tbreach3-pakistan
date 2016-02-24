@@ -166,64 +166,62 @@ public class Tbr3SyncMain {
 				+ DateTimeUtil.getSqlDate(dateTo) + "')";
 
 		selectQueries.add("select * from dbo.ACC_REG");
-		insertQueries.add("insert into lms_tmp_account values (?, ?)");
-		selectQueries.add("select * from dbo.BRN_REG");
-		insertQueries
-				.add("insert into lms_tmp_branch values (?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.BS_DEUS_REC where " + createClause
-				+ " or " + updateClause);
-		insertQueries
-				.add("insert into lms_tmp_patient_dues values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.BS_MASTER where " + createClause
-				+ " or " + updateClause);
-		insertQueries
-				.add("insert into lms_tmp_patient values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.BS_TRANS where " + createClause
-				+ " or " + updateClause);
-		insertQueries
-				.add("insert into lms_tmp_transaction values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.DEP_REG where " + createClause
-				+ " or " + updateClause);
-		insertQueries
-				.add("insert into lms_tmp_department values (?, ?, ?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.DESIG_REG");
-		insertQueries.add("insert into lms_tmp_designation values (?, ?)");
-		selectQueries.add("select * from dbo.DOC_BS where " + createClause
-				+ " or " + updateClause);
-		insertQueries
-				.add("insert into lms_tmp_doctor_beneficiary values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.DOCT_REG where " + createClause
-				+ " or " + updateClause);
-		insertQueries
-				.add("insert into lms_tmp_doctor values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.EMP_REG where " + createClause
-				+ " or " + updateClause);
-		insertQueries
-				.add("insert into lms_tmp_employee values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.EXP_HEAD");
-		insertQueries.add("insert into lms_tmp_expense_type values (?, ?)");
-		selectQueries.add("select * from dbo.EXP_VCHR");
-		insertQueries
-				.add("insert into lms_tmp_expense_voucher values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.LAB_REG");
-		insertQueries.add("insert into lms_tmp_lab values (?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.LOC_BF_AMT where " + createClause);
-		insertQueries
-				.add("insert into lms_tmp_location_beneficiary_amount values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.OTHER_LAB_REG");
-		insertQueries
-				.add("insert into lms_tmp_other_lab values (?, ?, ?, ?, ?, ?, ?)");
-		selectQueries.add("select * from dbo.SYS_REG");
-		insertQueries.add("insert into lms_tmp_system values (?, ?, ?)");
-		selectQueries.add("select * from dbo.TEST_REG");
-		insertQueries
-				.add("insert into lms_tmp_test values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		insertQueries.add("insert into lms_tmp_account (account_id, account_name) values (?, ?)");
 
+		selectQueries.add("select * from dbo.BRN_REG");
+		insertQueries.add("insert into lms_tmp_branch (location, address, phone, code, is_registered, branch_type) values (?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.DEP_REG where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_tmp_department (department_id, department_name, account_id, date_created, created_by, date_updated, updated_by, uuid) values (?, ?, ?, ?, ?, ?, ?, ?)");
+
+		selectQueries.add("select * from dbo.DESIG_REG");
+		insertQueries.add("insert into lms_tmp_designation (record_id, designation) values (?, ?)");
+		
+		selectQueries.add("select * from dbo.DOCT_REG where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_tmp_doctor ( record_no, doctor_id, doctor_name, clinic, address, contact, email, book_number, is_active, branch_code, medical_representative, routine_test, special_test, ultrasound, xray, ecg, no_discount_test, date_created, created_by, date_updated, updated_by, uuid) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.DOC_BS where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_tmp_doctor_beneficiary (record_id, doctor_record_no, routine_test, special_test, ultrasound, xray, ecg, no_discount_test, date_created, created_by, date_updated, updated_by, uuid) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.EMP_REG where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_tmp_employee (employee_id, employee_name, designation, age, age_unit, gender, address, contact, education, is_on_job, date_joined, date_left, branch_code, EMP_PWD, date_created, created_by, date_updated, updated_by, uuid) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.EXP_HEAD");
+		insertQueries.add("insert into lms_tmp_expense_type (expense_type_id, expense_type) values (?, ?)");
+		
+		selectQueries.add("select * from dbo.EXP_VCHR");
+		insertQueries.add("insert into lms_tmp_expense_voucher (voucher_id, voucher_date, expense_type, expense_reference, payment_mode, cheque_date, cheque_number, bank, narration, amount, amount_in_words, username, working_shift, exact_time, computer_id, is_cancelled, reason_cancelled, branch_code) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.LAB_REG");
+		insertQueries.add("insert into lms_tmp_lab (lab_name, services, ntn, lab_code, is_registered) values (?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.LOC_BF_AMT where " + createClause);
+		insertQueries.add("insert into lms_tmp_location_beneficiary_amount (record_id, location_id, location_name, patient_lab_no, beneficiary_date, routine_test, special_test, ultrasound, xray, ecg, no_discount_test, date_created, created_by) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.OTHER_LAB_REG");
+		insertQueries.add("insert into lms_tmp_other_lab (lab_id, lab_name, contact, address, lab_code, date_created, is_active) values (?, ?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.BS_MASTER where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_tmp_patient (patient_lab_no, branch_code, record_date, patient_name, age, age_unit, gender, contact_no, doctor_location, doctor_id, doctor_name, sample_collector_id, sample_collector_name, total_amount, discount, net_amount, cash_received, dues_remaining, is_referred, referred_by, patient_history, is_cancelled, reason_cancelled, username, working_shift, computer_id, exact_time, routine_test_discount, routine_test_discount_amount, routine_test_rate, special_test_discount, special_test_discount_amount, special_test_rate, ultrasound_disc, ultrasound_discount_amount, ultrasound_rate, xray_discount, xray_discount_amount, xray_rate, ecg_discount, ecg_discount_amount, ecg_rate, no_discount_test_discount, no_discount_test_discount_amount, no_discount_test_rate, reference_no, reference_relationship, reference_name, BS_PIDN, zakat_applicable, date_created, created_by, date_updated, updated_by, uuid) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.BS_DEUS_REC where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_tmp_patient_dues (voucher_id, date_recorded, amount_received, patient_lab_number, username, working_shift, exact_time, computer_id, branch, date_created, created_by, date_updated, updated_by, uuid) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.SYS_REG");
+		insertQueries.add("insert into lms_tmp_system (system_name, system_code, branch_code) values (?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.TEST_REG");
+		insertQueries.add("insert into lms_tmp_test (test_id, test_name, test_fee, department_id, department_name, test_type, test_day, sputum_collection, sputum_quality, WLF_TEST, INC_TEST, INC_AMT, date_created, created_by, date_updated, updated_by, uuid) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		
+		selectQueries.add("select * from dbo.BS_TRANS where " + createClause + " or " + updateClause);
+		insertQueries.add("insert into lms_tmp_transaction (transaction_id, patient_lab_no, branch_code, test_id, test_name, test_fee, test_department, test_priority, reporting_date, sample_received, sample_date, sample_time, sample_receiver_computer, discount, discount_amount, discount_rate, date_created, created_by, date_updated, updated_by, uuid) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		
+		PreparedStatement source, target;
 		for (int i = 0; i < selectQueries.size(); i++) {
 			try {
-				PreparedStatement source = ilmsDb.getConnection()
+				source = ilmsDb.getConnection()
 						.prepareStatement(selectQueries.get(i));
-				PreparedStatement target = dwDb.getConnection()
+				target = dwDb.getConnection()
 						.prepareStatement(insertQueries.get(i));
 				ResultSet data = source.executeQuery();
 				ResultSetMetaData metaData = data.getMetaData();
@@ -263,10 +261,14 @@ public class Tbr3SyncMain {
 			query = "insert into lms_branch select 0, '" + location + "', b.* from lms_tmp_branch as b where b.uuid not in (select uuid from lms_branch)";
 			dwDb.runCommand(CommandType.INSERT, query);
 			
-			query = "insert into lms_branch select 0, '" + location + "', b.* from lms_tmp_department as d where d.uuid not in (select uuid from lms_department)";
+			query = "insert into lms_department select 0, '" + location + "', d.* from lms_tmp_department as d where d.uuid not in (select uuid from lms_department)";
 			dwDb.runCommand(CommandType.INSERT, query);
 			
+			query = "insert into lms_designation select 0, '" + location + "', d.* from lms_tmp_designation as d where d.uuid not in (select uuid from lms_designation)";
+			dwDb.runCommand(CommandType.INSERT, query);
 			
+			query = "insert into lms_doctor select 0, '" + location + "', d.* from lms_tmp_doctor as d where d.uuid not in (select uuid from lms_doctor)";
+			dwDb.runCommand(CommandType.INSERT, query);
 			
 			
 			
