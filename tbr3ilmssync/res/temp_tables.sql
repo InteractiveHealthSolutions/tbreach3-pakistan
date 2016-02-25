@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS lms_tmp_patient;
 DROP TABLE IF EXISTS lms_tmp_patient_dues;
 DROP TABLE IF EXISTS lms_tmp_system;
 DROP TABLE IF EXISTS lms_tmp_test;
-DROP TABLE IF EXISTS lms_tmp_transaction
+DROP TABLE IF EXISTS lms_tmp_transaction;
 CREATE TABLE lms_tmp_account (  account_id int(11) NOT NULL,  account_name varchar(256) DEFAULT NULL,  uuid char(38) DEFAULT NULL,  PRIMARY KEY (account_id));
 CREATE TABLE lms_tmp_branch (  location varchar(200) NOT NULL,  address varchar(256) DEFAULT NULL,  phone varchar(45) DEFAULT NULL,  code varchar(5) DEFAULT NULL,  is_registered char(1) DEFAULT NULL,  branch_type varchar(45) DEFAULT NULL,  uuid char(38) DEFAULT NULL,  PRIMARY KEY (location));
 CREATE TABLE lms_tmp_department (  department_id int(11) NOT NULL,  department_name varchar(45) DEFAULT NULL,  account_id int(11) DEFAULT NULL,  date_created datetime DEFAULT NULL,  created_by varchar(45) DEFAULT NULL,  date_updated datetime DEFAULT NULL,  updated_by varchar(45) DEFAULT NULL,  uuid char(38) DEFAULT NULL,  PRIMARY KEY (department_id));
