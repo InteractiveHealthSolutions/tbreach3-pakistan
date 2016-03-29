@@ -48,13 +48,53 @@ public class Synchronize {
 	}
 
 	/**
+	 * Synchronizes data from temporary tables to original tables. This method
+	 * uses unsafe SQL updates.
+	 */
+	public void synchronize() {
+		try {
+			connectMain = connectionProvider.getOpenMrsMainConnection();
+			Statement statement = connectMain.createStatement();
+			statement.execute("SET SQL_SAFE_UPDATES = 0");
+			for (String query : QueryStringSync.SYNC_QUERIES) {
+				Statement stmt = connectMain.createStatement();
+				System.out.println(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+						.format(new Date()) + " " + query);
+				stmt.executeUpdate(query);
+			}
+			statement = connectMain.createStatement();
+			statement.execute("SET SQL_SAFE_UPDATES = 1");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Deletes temporary tables created during synchronization process. This
+	 * method must be called after synchronization.
+	 */
+	public void dropTempTables() {
+		for (String[] tables : OpenMrsMeta.TABLE_NAME_LIST) {
+			for (String table : tables) {
+				try {
+					Statement statement = connectMain.createStatement();
+					statement.executeUpdate("DROP TABLE IF EXISTS " + "temp_"
+							+ table);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
 	 * list of table having auto-increment primary key
 	 */
 	public void setAutoIncrementKeyList() {
 		try {
 			Statement statement = connectLocal.createStatement();
 			ResultSet result = statement
-					.executeQuery("SELECT table_name FROM information_schema.columns "
+					.executeQuery("SELECT TABLE_NAME FROM information_schema.COLUMNS "
 							+ "WHERE TABLE_SCHEMA = 'openmrs' AND EXTRA like '%auto_increment%' AND TABLE_NAME not like '%temp_%' AND COLUMN_KEY = 'PRI'");
 			while (result.next()) {
 				for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {

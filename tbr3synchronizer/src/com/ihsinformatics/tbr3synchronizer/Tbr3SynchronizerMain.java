@@ -10,16 +10,10 @@
 
 package com.ihsinformatics.tbr3synchronizer;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.ihsinformatics.tbr3synchronizer.util.ConnectionProvider;
 import com.ihsinformatics.tbr3synchronizer.util.Synchronize;
-import com.ihsinformatics.tbr3synchronizer.util.OpenMrsMeta;
-import com.ihsinformatics.tbr3synchronizer.util.QueryStringSync;
 
 /**
  * 
@@ -30,60 +24,11 @@ import com.ihsinformatics.tbr3synchronizer.util.QueryStringSync;
 
 public class Tbr3SynchronizerMain {
 
-	private Synchronize synchronize;
-	private ConnectionProvider connectionProvider;
-	private Connection connectMain;
-
-	public Tbr3SynchronizerMain() {
-		synchronize = new Synchronize();
-		synchronize.insertDataIntoTempTable();
-		connectionProvider = new ConnectionProvider();
-		connectMain = connectionProvider.getOpenMrsMainConnection();
-	}
-
-	/**
-	 * Synchronizes data from temporary tables to original tables. This method
-	 * uses unsafe SQL updates.
-	 */
-	public void synchronize() {
-		try {
-			Statement statement = connectMain.createStatement();
-			statement.execute("SET SQL_SAFE_UPDATES = 0");
-			for (String query : QueryStringSync.SYNC_QUERIES) {
-				Statement stmt = connectMain.createStatement();
-				System.out.println(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-						.format(new Date()) + " " + query);
-				stmt.executeUpdate(query);
-			}
-			statement = connectMain.createStatement();
-			statement.execute("SET SQL_SAFE_UPDATES = 1");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Deletes temporary tables created during synchronization process. This
-	 * method must be called after synchronization.
-	 */
-	public void dropTempTables() {
-		for (String[] tables : OpenMrsMeta.TABLE_NAME_LIST) {
-			for (String table : tables) {
-				try {
-					Statement statement = connectMain.createStatement();
-					statement.executeUpdate("DROP TABLE IF EXISTS " + "temp_"
-							+ table);
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
 	public static void main(String[] args) {
-		Tbr3SynchronizerMain sync = new Tbr3SynchronizerMain();
-		sync.synchronize();
-		sync.dropTempTables();
+		Synchronize synchronize = new Synchronize();
+		synchronize.insertDataIntoTempTable();
+		synchronize.synchronize();
+		synchronize.dropTempTables();
 		System.out.println(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
 				.format(new Date()) + " Synchronization process completed");
 	}
