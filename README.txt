@@ -12,6 +12,19 @@ The software modules were designed using Java frameworks and MySQL. Core functio
 - Reporting module
 - Event alerts
 
+== Sub-projects ==
+- tbr3barcode: Java Swing application, used to generate QR codes for Patient IDs in bulk
+- tbr3datawarehouse: Java Console application used to build/update data warehouse from all databases (openmrs, fieldmonitoring, ilms, tbr3_treatment)
+- tbr3fieldmonitoring: GWT based web application to handle field monitoring data from Android client
+- tbr3ilmssync: Java Console application used to synchronize ILMS (3rd party system) data in MS SQL Server database with ilms database in central server
+- tbr3mobile: Android application used in the field to collect screening and field monitoring data
+- tbr3reporterweb: GWT based web application to dynamically add reports designed in iReports for Data warehouse reports
+- tbr3sync: SQL script based deprecated project for synchronization. Will be discarded once latest project is live
+- tbr3synchronizer: Java Console application to synchronize data between local instances of OpenMRS and central OpenMRS
+- tbreach3web: Web application to handle Screening data from Android client
+- tbrmobileweb_omrs_tbr3: no longer in use
+- XpertResultGetter-tbr3-khi: XpertSMS application to pull data from GeneXpert and send to OpenMRS
+
 == Installation ==
 1. Install Oracle Java v6.0.x or higher 
 2. Install tomcat v6.0.x
