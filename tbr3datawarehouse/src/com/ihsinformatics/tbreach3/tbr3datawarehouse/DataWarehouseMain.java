@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -35,14 +36,11 @@ import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
  */
 public final class DataWarehouseMain {
 
-	public static final String version = "1.0.0";
+	public static final String version = "1.2.0";
 
 	private static final Logger log = Logger.getLogger(Class.class.getName());
-	public static final String dataPath = System.getProperty("user.home")
-			+ FileUtil.SEPARATOR + "sz_dw" + FileUtil.SEPARATOR;
-	public static final String dataPathForUpdate = dataPath.replace(
-			FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR);
 	public static final String dwSchema = "sz_dw";
+	public static String dataPath = System.getProperty("user.home").replace("\\", FileUtil.SEPARATOR);
 	public static String propertiesFilePath = "tbr3datawarehouse.properties";
 	public OpenMrsProcessor openMrs;
 	public FieldMonitoringProcessor fm;
@@ -51,7 +49,7 @@ public final class DataWarehouseMain {
 	public static Properties props;
 
 	/**
-	 * Main executable. Arguments need to be provided as: -R to hard reset
+	 * Main executable. Arguments need to be provided as: -r to hard reset
 	 * warehouse (Extract > Load > Transform > Dimensional modeling > Nightly
 	 * process) -l to extract/load data from various sources (stage1) -t to
 	 * transform schema from (stage2) -d to create dimension tables (data
@@ -61,12 +59,19 @@ public final class DataWarehouseMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// check arguments first
-		if (args.length == 0 || //args.length < 3 || 
+		// Create data directory if needed
+		File file = new File(dataPath + FileUtil.SEPARATOR + dwSchema);
+		if (!(file.exists() && file.isDirectory())) {
+			file.mkdir();
+			file.setWritable(true, false);
+		}
+		dataPath += FileUtil.SEPARATOR + dwSchema + FileUtil.SEPARATOR;
+		// Check arguments first
+		if (args.length == 0 || // args.length < 3 ||
 				args[0] == null) {
 			System.out
 					.println("Arguments are invalid. Arguments must be provided as:\n"
-							+ "-R to hard reset warehouse (Extract/Load > Transform > Dimensional modeling > Fact tables)\n"
+							+ "-r to hard reset warehouse (Extract/Load > Transform > Dimensional modeling > Fact tables)\n"
 							+ "-l to extract/load data from various sources (stage1)\n"
 							+ "-t to transform schema from (stage2)\n"
 							+ "-d to create dimension tables (data warehouse)\n"
@@ -76,48 +81,44 @@ public final class DataWarehouseMain {
 			return;
 		}
 		DataWarehouseMain dw = new DataWarehouseMain();
+		props = new Properties();
+		// First, try to read properties file in class path
+		try {
+			InputStream propFile = DataWarehouseMain.class
+					.getResourceAsStream("/tbr3datawarehouse.properties");
+			if (propFile != null) {
+				props.load(propFile);
+				dw.setDataConnections();
+			}
+		} catch (IOException e) {
+			log.warning("Properties file not found in class path.");
+		}
 		int days = 0;
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-p")) {
 				propertiesFilePath = args[i + 1];
 				// Read properties
-				props = new Properties();
 				try {
 					props.load(new FileInputStream(propertiesFilePath));
+					dw.setDataConnections();
 				} catch (IOException e) {
-					try {
-						props.load(new FileInputStream(
-								"tbr3datawarehouse.properties"));
-					} catch (IOException e2) {
-						log.severe("Properties file not found.");
-						return;
-					}
+					log.severe("Properties file not found.");
 				}
-				dw.setDataConnections();
-			} else if (args[i].equalsIgnoreCase("-r")) {
-				dw.loadProperties();
-				dw.setDataConnections();
+			}
+		}
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equalsIgnoreCase("-r")) {
 				dw.resetDataWarehouse();
 				return;
 			} else if (args[i].equalsIgnoreCase("-l")) {
-				dw.loadProperties();
-				dw.setDataConnections();
 				dw.extractLoad(false);
 			} else if (args[i].equalsIgnoreCase("-t")) {
-				dw.loadProperties();
-				dw.setDataConnections();
 				dw.transform();
 			} else if (args[i].equalsIgnoreCase("-d")) {
-				dw.loadProperties();
-				dw.setDataConnections();
 				dw.createDimensions();
 			} else if (args[i].equalsIgnoreCase("-f")) {
-				dw.loadProperties();
-				dw.setDataConnections();
 				dw.createFacts();
 			} else if (args[i].equalsIgnoreCase("-u")) {
-				dw.loadProperties();
-				dw.setDataConnections();
 				try {
 					days = Integer.parseInt(args[i + 1]);
 					Date dateFrom = new Date();
@@ -125,7 +126,7 @@ public final class DataWarehouseMain {
 					Calendar instance = Calendar.getInstance();
 					instance.add(Calendar.DATE, days);
 					dateFrom = instance.getTime();
-					dw.updateWarehosue(dataPathForUpdate, dateFrom, dateTo);
+					dw.updateWarehosue(dataPath, dateFrom, dateTo);
 				} catch (Exception e) {
 					System.out
 							.println("Please enter the number of days in the argument \n"
@@ -136,11 +137,10 @@ public final class DataWarehouseMain {
 		System.exit(0);
 	}
 
-	
 	/**
-	* Load Properties
-	*/
-	
+	 * Load Properties
+	 */
+
 	public void loadProperties() {
 		// Read properties
 		props = new Properties();
@@ -148,15 +148,14 @@ public final class DataWarehouseMain {
 			props.load(new FileInputStream(propertiesFilePath));
 		} catch (IOException e) {
 			try {
-				props.load(new FileInputStream(
-						"tbr3datawarehouse.properties"));
+				props.load(new FileInputStream("tbr3datawarehouse.properties"));
 			} catch (IOException e2) {
 				log.severe("Properties file not found.");
 				return;
 			}
 		}
 	}
-	
+
 	/**
 	 * Set connection for all Data repositories and data warehouse. Data
 	 * warehouse user must have full privileges
@@ -245,14 +244,13 @@ public final class DataWarehouseMain {
 	 */
 	public void resetDataWarehouse() {
 		log.info("Starting DW hard reset");
-		Object[] tables = dwDb.getColumnData("information_schema.tables",
-				"table_name", "table_schema='" + dwSchema + "'");
+		Object[] tables = dwDb.getColumnData("information_schema.TABLES",
+				"TABLE_NAME", "TABLE_SCHEMA='" + dwSchema + "'");
 		for (Object t : tables) {
 			dwDb.deleteTable(t.toString());
 		}
 		extractLoad(true);
 		createDimensions();
-		
 		transform();
 		createFacts();
 		log.info("Finished DW hard reset");
@@ -337,7 +335,7 @@ public final class DataWarehouseMain {
 		if (!result) {
 			log.warning("OpenMRS DB transformation completed with warnings.");
 		}
-		result = fm.update(DataWarehouseMain.dataPath, dateFrom, dateTo);
+		result = fm.update(dataPath, dateFrom, dateTo);
 
 		if (!result) {
 			log.warning("Field Monitoring DB transformation completed with warnings.");

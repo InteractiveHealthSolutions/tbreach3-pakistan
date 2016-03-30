@@ -27,17 +27,16 @@ import com.ihsinformatics.tbreach3.tbr3datawarehouse.util.FileUtil;
 public class FieldMonitoringProcessor extends AbstractProcessor {
 
 	private static final Logger log = Logger.getLogger(Class.class.getName());
-	private static final String schemaName = "tbr3_monitoring";
 	private String scriptFilePath;
 	private DatabaseUtil dwDb;
 	private DatabaseUtil fmDb;
-	String[] sourceTables = {"defaults", "definition", "definition_type",
+	String[] sourceTables = { "defaults", "definition", "definition_type",
 			"dictionary", "encounter", "encounter_element",
 			"encounter_prerequisite", "encounter_results", "encounter_type",
 			"encounter_value", "feedback", "lab_test", "location", "log_data",
 			"log_login", "patient", "person", "person_role", "referral",
 			"response", "screening", "sms", "sms_log", "sms_rule", "sms_text",
-			"sputum_test", "user", "user_mapping", "user_rights", "visit"};
+			"sputum_test", "user", "user_mapping", "user_rights", "visit" };
 
 	/**
 	 * Constructor to initialize the object
@@ -90,39 +89,30 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 		calendar.set(Calendar.YEAR, 1970);
 		return extract(dataPath, calendar.getTime(), new Date());
 	}
-	
+
 	/**
-	 * Extracts data from OpenMRS connection, 
-	 * Picks new/changed data and updates Data warehouse and stores as CSV files
+	 * Extracts data from OpenMRS connection, Picks new/changed data and updates
+	 * Data warehouse and stores as CSV files
 	 * 
 	 * @param dataPath
 	 *            where CSV files will be stored
 	 * @param dateFrom
 	 * 
-	 * @param dateTo           
+	 * @param dateTo
 	 * @return
 	 */
 	public boolean extract(String dataPath, Date dateFrom, Date dateTo) {
-		//log.info("Importing data from source into raw files");
+		// log.info("Importing data from source into raw files");
 		log.info("Updating Field Monitoring data");
 		// Fetch file from source and generate CSVs
 		for (String table : sourceTables) {
-		//	String fileName = dataPath.replace("\\", "\\\\") 
-		//	String fileName =  dataPath.replace("/", "//") +
-			String fileName =  dataPath.replace(FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR) +
-					schemaName + "_"
-					+ table + ".csv";
+			String fileName = dataPath + table + ".csv";
 			File file = new File(fileName);
 			if (file.exists()) {
 				file.delete();
 			}
 			String query = "SELECT * FROM "
 					+ table
-					/*+ " WHERE (date_created BETWEEN '"
-					+ DateTimeUtil.getSQLDate(dateFrom)
-					+ "' AND '"
-					+ DateTimeUtil.getSQLDate(dateTo)
-					+ "') "*/
 					+ " INTO OUTFILE '"
 					+ fileName
 					+ "' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
@@ -139,18 +129,14 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 	 * 
 	 * @param dataPath
 	 *            where CSV files will be loaded from
-	 *            
+	 * 
 	 * @return
 	 */
 	public boolean load(String dataPath) {
 		boolean noImport = true;
 		log.info("Importing data from raw files into data warehouse");
 		for (String table : sourceTables) {
-		//	String filePath = dataPath.replace("\\", "\\\\") 
-		//	String filePath = dataPath.replace("/", "//")
-			String filePath =  dataPath.replace(FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR) 
-					+ schemaName + "_"
-					+ table + ".csv";
+			String filePath = dataPath + table + ".csv";
 			File file = new File(filePath);
 			if (!file.exists()) {
 				log.warning("No CSV file exists for table " + table);
@@ -197,8 +183,10 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 			StringBuilder groupConcat = new StringBuilder();
 			for (Object element : elements) {
 				String str = element.toString().replace("'", "''");
-				groupConcat.append("group_concat(if(er.element = '" + str
-						+ "', er.value, NULL)) AS '" + str.toLowerCase() + "',");
+				groupConcat
+						.append("group_concat(if(er.element = '" + str
+								+ "', er.value, NULL)) AS '"
+								+ str.replace(" ", "_").toLowerCase() + "',");
 			}
 			String baseQuery = "select e.e_id, e.pid1, e.pid2, e.date_start, e.date_end, e.date_entered, "
 					+ groupConcat.toString()
@@ -207,11 +195,9 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 					+ "where e.encounter_type = '"
 					+ encounterType
 					+ "' "
-					+ " and er.encounter_type = '"
-					+ encounterType
-					+ "' "
-					
-				//	and er.encounter_type  = 'DAILY_VIS'
+					+ " and er.encounter_type = '" + encounterType + "' "
+
+					// and er.encounter_type = 'DAILY_VIS'
 					+ "group by e.e_id, e.pid1, e.pid2, e.date_entered";
 			// Drop previous table
 			dwDb.runCommand(CommandType.DROP, "drop table if exists fm_enc_"
@@ -219,16 +205,17 @@ public class FieldMonitoringProcessor extends AbstractProcessor {
 			log.info("Generating table for " + encounterType);
 			// Insert new data
 			Object result = dwDb.runCommand(CommandType.CREATE,
-					"create table fm_enc_" + encounterType.toString().toLowerCase() + " " + baseQuery);
+					"create table fm_enc_"
+							+ encounterType.toString().toLowerCase() + " "
+							+ baseQuery);
 			if (result == null) {
 				log.warning("No data imported for Encounter " + encounterType);
 			}
 			// Creating Primary key
 			dwDb.runCommand(CommandType.ALTER, "alter table fm_enc_"
-					+ encounterType
-					+ " add primary key (e_id, pid1, pid2)");
+					+ encounterType + " add primary key (e_id, pid1, pid2)");
 		}
-		return false;
+		return true;
 	}
 
 	/**

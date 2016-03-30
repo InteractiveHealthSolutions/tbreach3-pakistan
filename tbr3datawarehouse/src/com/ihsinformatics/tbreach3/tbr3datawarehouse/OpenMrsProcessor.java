@@ -11,6 +11,7 @@ package com.ihsinformatics.tbreach3.tbr3datawarehouse;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -35,7 +36,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 	private ArrayList<String> tablesWithDateCreated;
 	private ArrayList<String> tablesWithDateCreatedAndChanged;
 	private ArrayList<String> tablesNotWithDateCreated;
-	String[] sourceTables = {"active_list_type", "cohort", "cohort_member",
+	String[] sourceTables = { "active_list_type", "cohort", "cohort_member",
 			"concept", "concept_answer", "concept_class", "concept_complex",
 			"concept_datatype", "concept_description", "concept_map_type",
 			"concept_name", "concept_name_bkp", "concept_name_tag",
@@ -61,7 +62,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 			"role", "role_privilege", "role_role", "scheduler_task_config",
 			"scheduler_task_config_property", "serialized_object",
 			"test_order", "user_property", "user_role", "users", "visit",
-			"visit_attribute", "visit_attribute_type", "visit_type"};
+			"visit_attribute", "visit_attribute_type", "visit_type" };
 
 	/**
 	 * Constructor to initialize the object
@@ -118,32 +119,9 @@ public class OpenMrsProcessor extends AbstractProcessor {
 	 * @return
 	 */
 	public boolean extract(String dataPath) {
-		log.info("Importing data from source into raw files");
-		// Fetch file from source and generate CSVs
-		for (String table : sourceTables) {
-		//	String fileName = dataPath.replace(FileUtil.SEPARATOR,
-		//			FileUtil.SEPARATOR + FileUtil.SEPARATOR)
-		//	String fileName = dataPath.replace("/", "//") 
-			String fileName =  dataPath.replace(FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR) 
-					+ schemaName
-					+ "_"
-					+ table + ".csv";	
-			
-			File file = new File(fileName);
-			if (file.exists()) {
-				file.delete();
-			}
-			String query = "SELECT * FROM "
-					+ table
-					+ " INTO OUTFILE '"
-					+ fileName
-					+ "' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
-			Object obj = openMrsDb.runCommand(CommandType.EXECUTE, query);
-			if (obj == null) {
-				log.warning("No data was exported to CSV for table: " + table);
-			}
-		}
-		return true;
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 1970);
+		return extract(dataPath, calendar.getTime(), new Date());
 	}
 
 	/**
@@ -157,32 +135,15 @@ public class OpenMrsProcessor extends AbstractProcessor {
 	public boolean extract(String dataPath, Date dateFrom, Date dateTo) {
 		log.info("Importing data from source into raw files");
 		// Fetch file from source and generate CSVs
-
-		/*
-		 * for (String table : sourceTables) { String fileName =
-		 * dataPath.replace("\\", "\\\\") + schemaName + "_" + table + ".csv";
-		 * File file = new File(fileName); if (file.exists()) { file.delete(); }
-		 * String query = "SELECT * FROM " + table +
-		 * " WHERE date_created BETWEEN '" + DateTimeUtil.getSQLDate(dateFrom) +
-		 * "' AND '" + DateTimeUtil.getSQLDate(dateTo) + "' " +
-		 * " INTO OUTFILE '" + fileName +
-		 * "' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'"
-		 * ;
-		 */
-
-		// syntax error in stored procedure
 		createStoredProcedure();
-		String query = "CALL sz_dw.extract_openmrs1 ('"
-				+ DateTimeUtil.getSqlDateTime(dateFrom) + "', '"
-				+ DateTimeUtil.getSqlDateTime(dateTo)
-				+ "', '"+ dataPath +"')";
-			//	+ "', 'e:\\\\\\\\Owais\\\\\\\\data\\\\\\\\')";
+		String query = "CALL extract_openmrs ('"
+				+ DateTimeUtil.getSqlDate(dateFrom) + "', '"
+				+ DateTimeUtil.getSqlDate(dateTo) + "', '" + dataPath
+				+ "')";
 		Object obj = openMrsDb.runCommand(CommandType.EXECUTE, query);
 		if (obj == null) {
-			// log.warning("No data was exported to CSV for table: " + table);
-			log.warning("error");
+			log.warning("Could not execute stored procedure extract_openmrs");
 		}
-		// }
 		return true;
 	}
 
@@ -197,13 +158,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 		boolean noImport = true;
 		log.info("Importing data from raw files into data warehouse");
 		for (String table : sourceTables) {
-		//	String filePath = dataPath.replace(FileUtil.SEPARATOR,
-		//			FileUtil.SEPARATOR + FileUtil.SEPARATOR)
-		//	String filePath = dataPath.replace("/", "//")
-		String filePath =  dataPath.replace(FileUtil.SEPARATOR, FileUtil.SEPARATOR + FileUtil.SEPARATOR)
-					+ schemaName
-					+ "_"
-					+ table + ".csv";
+			String filePath = dataPath + table + ".csv";
 			File file = new File(filePath);
 			if (!file.exists()) {
 				log.warning("No CSV file exists for table " + table);
@@ -258,7 +213,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 				String str = element.toString().replace("'", "''");
 				groupConcat.append("group_concat(if(o.question = '" + str
 						+ "', o.answer, NULL)) AS '"
-						+ str.replace("(\\W|^_)*", "_").toLowerCase() + "', ");
+						+ str.replace(" ", "_").replace("(\\W|^_)*", "_").toLowerCase() + "', ");
 			}
 			String baseQuery = "select e.surrogate_id, e.system_id, e.encounter_id, e.provider, e.location_id, l.location_name, e.patient_id, e.date_entered, "
 					+ groupConcat.toString()
@@ -286,7 +241,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 					+ encounterName
 					+ " add primary key surrogate_id (surrogate_id)");
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -392,17 +347,20 @@ public class OpenMrsProcessor extends AbstractProcessor {
 
 	}
 
+	/**
+	 * Drops and recreates stored procedure in OpenMRS Database
+	 * @return
+	 */
 	public boolean createStoredProcedure() {
-
 		FileUtil fileUtil = new FileUtil();
-		String dropProcedureQuery = "DROP PROCEDURE IF EXISTS `extract_openmrs1`";
-		String query = fileUtil.getText("stored_procedures.sql");
-		dwDb.runCommand(CommandType.CREATE, dropProcedureQuery);
-		Object obj = dwDb.runCommand(CommandType.CREATE, query);
+		String dropQuery = "DROP PROCEDURE IF EXISTS `extract_openmrs`";
+		String createQuery = fileUtil.getText("stored_procedures.sql");
+		openMrsDb.runCommand(CommandType.CREATE, dropQuery);
+		Object obj = openMrsDb.runCommand(CommandType.CREATE, createQuery);
 		if (obj == null) {
-			System.out.println("Stored procedure has error");
+			log.severe("Stored procedure could not be created.");
 		} else {
-			System.out.println("Stored procedure created!");
+			log.info("Stored procedure created.");
 		}
 		return true;
 
