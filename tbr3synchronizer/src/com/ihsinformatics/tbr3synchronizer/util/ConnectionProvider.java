@@ -11,7 +11,6 @@
 
 package com.ihsinformatics.tbr3synchronizer.util;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,7 +32,8 @@ public class ConnectionProvider {
 			 * read data from .properties file
 			 */
 			properties = new Properties();
-			InputStream propFile = ConnectionProvider.class.getResourceAsStream("/tbr3synchronizer.properties");
+			InputStream propFile = ConnectionProvider.class
+					.getResourceAsStream("/tbr3synchronizer.properties");
 			properties.load(propFile);
 		} catch (Exception e) {
 			e.printStackTrace();

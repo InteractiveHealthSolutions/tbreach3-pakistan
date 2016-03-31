@@ -53,8 +53,8 @@ public class OpenMrsMeta {
 	/**
 	 * list of table to select data
 	 */
-	public static final String[] SELECT_DATA = { /*"cohort_member",*/
-			"concept_complex", "concept_name_tag_map", "concept_numeric",
+	public static final String[] SELECT_DATA = { /* "cohort_member", */
+	"concept_complex", "concept_name_tag_map", "concept_numeric",
 			"concept_proposal_tag_map", "concept_set_derived",
 			"concept_state_conversion", "concept_stop_word", "concept_word",
 			"drug_ingredient", "drug_order", "form_resource",
