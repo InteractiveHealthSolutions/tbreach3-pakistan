@@ -51,7 +51,7 @@ public class Synchronize {
 	 * Synchronizes data from temporary tables to original tables. This method
 	 * uses unsafe SQL updates.
 	 */
-	public void synchronize() {
+	public Boolean synchronize() {
 		try {
 			connectMain = connectionProvider.getOpenMrsMainConnection();
 			Statement statement = connectMain.createStatement();
@@ -64,8 +64,10 @@ public class Synchronize {
 			}
 			statement = connectMain.createStatement();
 			statement.execute("SET SQL_SAFE_UPDATES = 1");
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
@@ -73,7 +75,7 @@ public class Synchronize {
 	 * Deletes temporary tables created during synchronization process. This
 	 * method must be called after synchronization.
 	 */
-	public void dropTempTables() {
+	public Boolean dropTempTables() {
 		for (String[] tables : OpenMrsMeta.TABLE_NAME_LIST) {
 			for (String table : tables) {
 				try {
@@ -82,9 +84,11 @@ public class Synchronize {
 							+ table);
 				} catch (SQLException e) {
 					e.printStackTrace();
+					return false;
 				}
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -113,7 +117,7 @@ public class Synchronize {
 	 * 'A' 'table' and insert it into 'temp_table' in database 'B'
 	 * 
 	 */
-	public void insertDataIntoTempTable() {
+	public Boolean insertDataIntoTempTable() {
 		this.setAutoIncrementKeyList();
 		for (int t = 0; t < OpenMrsMeta.TABLE_NAME_LIST.size(); t++) {
 			for (String table : OpenMrsMeta.TABLE_NAME_LIST.get(t)) {
@@ -222,6 +226,7 @@ public class Synchronize {
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
+					return false;
 				}
 			}
 		}
@@ -230,6 +235,8 @@ public class Synchronize {
 			connectMain.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 }

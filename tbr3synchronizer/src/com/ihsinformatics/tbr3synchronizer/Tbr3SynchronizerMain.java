@@ -26,10 +26,23 @@ public class Tbr3SynchronizerMain {
 
 	public static void main(String[] args) {
 		Synchronize synchronize = new Synchronize();
-		synchronize.insertDataIntoTempTable();
-		synchronize.synchronize();
-		synchronize.dropTempTables();
+		if (!synchronize.insertDataIntoTempTable()) {
+			System.out.println(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+					.format(new Date()) + " Error occured");
+			return;
+		}
+		if (!synchronize.synchronize()) {
+			System.out.println(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+					.format(new Date()) + " Error occured");
+			return;
+		}
+		if (!synchronize.dropTempTables()) {
+			System.out.println(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+					.format(new Date()) + " Error occured");
+			return;
+		}
 		System.out.println(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
 				.format(new Date()) + " Synchronization process completed");
+
 	}
 }
