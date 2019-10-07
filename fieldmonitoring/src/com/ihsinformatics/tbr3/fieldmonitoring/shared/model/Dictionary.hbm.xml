@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 12, 2012 4:08:49 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Dictionary" table="dictionary" catalog="tbr3_monitoring">
+        <id name="termId" type="java.lang.Integer">
+            <column name="term_id" />
+            <generator class="identity" />
+        </id>
+        <property name="term" type="string">
+            <column name="term" unique="true" />
+        </property>
+        <property name="definition" type="string">
+            <column name="definition" not-null="true" />
+        </property>
+        <property name="definedBy" type="int">
+            <column name="defined_by" not-null="true" />
+        </property>
+        <property name="enteredOn" type="timestamp">
+            <column name="entered_on" length="19" not-null="true" />
+        </property>
+        <property name="lastRevised" type="timestamp">
+            <column name="last_revised" length="19" />
+        </property>
+        <property name="revisedBy" type="string">
+            <column name="revised_by" />
+        </property>
+        <property name="previousDefinition" type="string">
+            <column name="previous_definition" />
+        </property>
+        <property name="originalDefinition" type="string">
+            <column name="original_definition" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="test_id">Test ID</string>
+    <string name="test_id_hint">Enter Test ID</string>
+    <string name="test_type">Test Type</string>
+    <string name="diabetes">Diabetes</string>
+    <string name="spirometry">Spirometry</string>
+    
+    <string name="patient_result">Patient Result/Score</string>
+    <string name="patient_result_hint">Enter result/score</string>
+    
+    <string name="fvc_result">FVC Result</string>
+    <string name="result_format_hint">XX.XX</string>
+    <string name="fvc_result_hint">Enter FVC result</string>
+    <string name="fvc_predicted">FVC Predicted</string>
+    <string name="fvc_predicted_hint">Enter FVC predicted result</string>
+    <string name="fvc_percentage">FVC Percentage</string>
+    <string name="percentage_default_value">0</string>
+    <string name="fvc_diagnosis">FVC Diagnosis</string>
+    <string name="fvc_diagnosis_value">none</string>
+    
+    <string name="fev_result">FEV1 Result</string>
+    <string name="fev_result_hint">Enter FEV1 result</string>
+    <string name="fev_predicted">FEV1 Predicted</string>
+    <string name="fev_predicted_hint">Enter predicted result</string>
+    <string name="fev_percentage">FEV1 Percentage</string>
+    <string name="fev_diagnosis">FEV1 Diagnosis</string>
+    <string name="fev_diagnosis_value">none</string>
+    
+    <string name="fvcfev_ratio">FVC/FEV1 Ratio</string>
+    <string name="fvcfev_ratio_hint">Enter FVC/FEV1 ratio</string>
+    <string name="fvcfev_ratio_predicted">FVC/FEV1 Ratio Predicted</string>
+    <string name="fvcfev_ratio_predicted_hint">Enter FVC/FEV1 ratio predicted</string>
+    <string name="fvcfev_percentage">FVC/FEV1 Percentage</string>
+    
+    <string name="pef_result">PEF Result</string>
+    <string name="pef_result_hint">Enter PEF result</string>
+    <string name="pef_predicted">PEF Predicted</string>
+    <string name="pef_predicted_hint">Enter PEF predicted result</string>
+    <string name="pef_percentage">PEF Percentage</string>
+    
+    
+    <string-array name="test_types">
+        <item >Diabetes</item>
+        <item >Spirometry</item>
+    </string-array>
+    
+    
+</resources>

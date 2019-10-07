@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 12, 2012 4:08:49 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Sms" table="sms" catalog="tbr3_monitoring">
+        <id name="smsId" type="string">
+            <column name="sms_id" />
+            <generator class="identity" />
+        </id>
+        <property name="targetNumber" type="string">
+            <column name="target_number" length="20" not-null="true" />
+        </property>
+        <property name="messageText" type="string">
+            <column name="message_text" />
+        </property>
+        <property name="dateDue" type="timestamp">
+            <column name="date_due" length="19" not-null="true" />
+        </property>
+        <property name="dateSent" type="timestamp">
+            <column name="date_sent" length="19" />
+        </property>
+        <property name="status" type="string">
+            <column name="status" length="10" />
+        </property>
+        <property name="errorMessage" type="string">
+            <column name="error_message" />
+        </property>
+        <property name="failureCause" type="string">
+            <column name="failure_cause" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,372 @@
+DEBUG qtp444352685-34 org.hibernate.impl.SessionFactoryImpl - instantiated session factory
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.SchemaUpdate - Running hbm2ddl schema update
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.SchemaUpdate - fetching database metadata
+ DEBUG qtp444352685-34 org.hibernate.connection.DriverManagerConnectionProvider - opening new JDBC connection
+ DEBUG qtp444352685-34 org.hibernate.connection.DriverManagerConnectionProvider - created connection to: jdbc:mysql://localhost:3306/tbr3_monitoring?zeroDateTimeBehavior=convertToNull, Isolation Level: 4
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.SchemaUpdate - updating schema
+ DEBUG qtp444352685-34 org.hibernate.cfg.Configuration - Processing hbm.xml files
+ DEBUG qtp444352685-34 org.hibernate.cfg.Configuration - Process annotated classes
+ DEBUG qtp444352685-34 org.hibernate.cfg.Configuration - processing fk mappings (*ToOne and JoinedSubclass)
+ DEBUG qtp444352685-34 org.hibernate.cfg.Configuration - processing extends queue
+ DEBUG qtp444352685-34 org.hibernate.cfg.Configuration - processing extends queue
+ DEBUG qtp444352685-34 org.hibernate.cfg.Configuration - processing collection mappings
+ DEBUG qtp444352685-34 org.hibernate.cfg.Configuration - processing native query and ResultSetMapping mappings
+ DEBUG qtp444352685-34 org.hibernate.cfg.Configuration - processing association property references
+ DEBUG qtp444352685-34 org.hibernate.cfg.Configuration - processing foreign key constraints
+ DEBUG qtp444352685-34 org.hibernate.validator.engine.resolver.DefaultTraversableResolver - Found javax.persistence.Persistence on classpath containing 'getPersistenceUtil'. Assuming JPA 2 environment. Trying to instantiate JPA aware TraversableResolver
+ DEBUG qtp444352685-34 org.hibernate.validator.engine.resolver.DefaultTraversableResolver - Instantiated JPA aware TraversableResolver of type org.hibernate.validator.engine.resolver.JPATraversableResolver.
+ DEBUG qtp444352685-34 org.hibernate.validator.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+ DEBUG qtp444352685-34 org.hibernate.validator.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.defaults
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [default_definition_key, definition_type]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.definition
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [definition_key, definition_type, definition_value]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.definition_type
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [definition_type]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.dictionary
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [last_revised, defined_by, definition, term, entered_on, original_definition, term_id, previous_definition, revised_by]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.encounter
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [date_entered, date_end, description, date_start, e_id, pid2, location_id, encounter_type, pid1]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.encounter_element
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [element, description, validator, encounter_type]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.encounter_prerequisite
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [possible_value_regex, prerequisite_encounter, prerequisite_no, condition_element, encounter_type]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.encounter_results
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [element, value, e_id, pid2, encounter_type, pid1]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.encounter_type
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [description, encounter_type]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.encounter_value
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [consequence_procedure, element, value, encounter_type]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.feedback
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [feedback, date_reported, feedback_status, sender_id, feedback_type, attachment, feedback_id]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.lab_test
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [tested_on, error, test_result, other_detail, test_type, tested_by, ordered_on, test_no, laboratory_id, ordered_by, description, conclusion, patient_id]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.location
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [region, phone, fax, location_name, location_type, otheremail, state, address1, address2, address3, otherfax, location_id, city, country, address4, otherphone, email, longitude, latitude, othermobile, mobile]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.log_data
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [current_value, user_name, entity, date_logged, log_type, log_id]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.log_login
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [user_name, date_logout, description, date_login, login_no]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.patient
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [external_mr_no, weight, disease_site, disease_category, date_confirmed, treatment_site, suspected_by, hiv_status, z_dose, height, disease_suspected, date_screened, r_dose, h_dose, date_closed, confirmation_source, disease_type, s_dose, regimen_type, streptomycin, e_dose, disease_confirmed, date_suspected, treatment_supporter, confirmation_remarks, pid, team, regimen, patient_status, patient_type, blood_group, treatment_phase, date_baseline, patient_id, treatment_centre, mr_no, gp, treatment_outcome]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.person
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [phone, alternate_longitude, alternate_address3, address1, surname, alternate_address4, address2, address3, alive, father_name, alternate_fax, alternate_address1, city, alternate_address2, religion, alternate_city, tertiary_mobile, first_name, gender, longitude, marital_status, alternate_country, alternate_phone, fax, middle_name, alternate_latitude, alternate_mobile, guardian_name, country, picture, alternate_email, email, last_name, language, latitude, mobile, region, approximate_age, alternate_state, state, caste, tertiary_address, title, alternate_region, tertiary_phone, national_id, tertiary_email, id_owner, pid, address4, dob, mother_name]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.person_role
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [role, pid]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.sms
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [failure_cause, date_due, message_text, status, error_message, sms_id, date_sent, target_number]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.user
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [user_name, logged_in, location, role, pid, secret_question, password, current_status, secret_answer]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [user_name, primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.user_mapping
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [week_days, time_from, user_id, time_to, current_status, location_id]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - table found: tbr3_monitoring.user_rights
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - columns: [delete_access, update_access, user_role, print_access, insert_access, search_access, menu_name]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - foreign keys: []
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.TableMetadata - indexes: [primary]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ DEBUG qtp444352685-34 org.hibernate.id.factory.DefaultIdentifierGeneratorFactory - Setting dialect [org.hibernate.dialect.MySQLDialect]
+ INFO qtp444352685-34 org.hibernate.tool.hbm2ddl.SchemaUpdate - schema update complete
+ DEBUG qtp444352685-34 org.hibernate.connection.DriverManagerConnectionProvider - closing JDBC connection
+ DEBUG qtp444352685-34 org.hibernate.impl.SessionFactoryImpl - Checking 0 named HQL queries
+ DEBUG qtp444352685-34 org.hibernate.impl.SessionFactoryImpl - Checking 0 named SQL queries
+ DEBUG qtp444352685-34 org.hibernate.impl.SessionImpl - opened session at timestamp: 14364136180
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.QueryTranslatorImpl - parse() - HQL: from com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.AST - --- HQL AST ---
+ \-[QUERY] Node: 'query'
+    \-[SELECT_FROM] Node: 'SELECT_FROM'
+       \-[FROM] Node: 'from'
+          \-[RANGE] Node: 'RANGE'
+             \-[DOT] Node: '.'
+                +-[DOT] Node: '.'
+                |  +-[DOT] Node: '.'
+                |  |  +-[DOT] Node: '.'
+                |  |  |  +-[DOT] Node: '.'
+                |  |  |  |  +-[DOT] Node: '.'
+                |  |  |  |  |  +-[IDENT] Node: 'com'
+                |  |  |  |  |  \-[IDENT] Node: 'ihsinformatics'
+                |  |  |  |  \-[IDENT] Node: 'tbr3'
+                |  |  |  \-[IDENT] Node: 'fieldmonitoring'
+                |  |  \-[IDENT] Node: 'shared'
+                |  \-[IDENT] Node: 'model'
+                \-[IDENT] Node: 'Defaults'
+
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.ErrorCounter - throwQueryException() : no errors
+ DEBUG qtp444352685-34 org.hibernate.hql.antlr.HqlSqlBaseWalker - select << begin [level=1, statement=select]
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.tree.FromElement - FromClause{level=1} :  com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults (no alias) -> defaults0_
+ DEBUG qtp444352685-34 org.hibernate.hql.antlr.HqlSqlBaseWalker - select : finishing up [level=1, statement=select]
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.HqlSqlWalker - processQuery() :  ( SELECT ( FromClause{level=1} tbr3_monitoring.defaults defaults0_ ) )
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.HqlSqlWalker - Derived SELECT clause created.
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.util.JoinProcessor - Using FROM fragment [tbr3_monitoring.defaults defaults0_]
+ DEBUG qtp444352685-34 org.hibernate.hql.antlr.HqlSqlBaseWalker - select >> end [level=1, statement=select]
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.AST - --- SQL AST ---
+ \-[SELECT] QueryNode: 'SELECT'  querySpaces (tbr3_monitoring.defaults)
+    +-[SELECT_CLAUSE] SelectClause: '{derived select clause}'
+    |  \-[SELECT_EXPR] SelectExpressionImpl: 'defaults0_.definition_type as definition1_0_, defaults0_.default_definition_key as default2_0_' {FromElement{explicit,not a collection join,not a fetch join,fetch non-lazy properties,classAlias=null,role=null,tableName=tbr3_monitoring.defaults,tableAlias=defaults0_,origin=null,columns={,className=com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults}}}
+    \-[FROM] FromClause: 'from' FromClause{level=1, fromElementCounter=1, fromElements=1, fromElementByClassAlias=[], fromElementByTableAlias=[defaults0_], fromElementsByPath=[], collectionJoinFromElementsByPath=[], impliedElements=[]}
+       \-[FROM_FRAGMENT] FromElement: 'tbr3_monitoring.defaults defaults0_' FromElement{explicit,not a collection join,not a fetch join,fetch non-lazy properties,classAlias=null,role=null,tableName=tbr3_monitoring.defaults,tableAlias=defaults0_,origin=null,columns={,className=com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults}}
+
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.ErrorCounter - throwQueryException() : no errors
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.QueryTranslatorImpl - HQL: from com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.QueryTranslatorImpl - SQL: select defaults0_.definition_type as definition1_0_, defaults0_.default_definition_key as default2_0_ from tbr3_monitoring.defaults defaults0_
+ DEBUG qtp444352685-34 org.hibernate.hql.ast.ErrorCounter - throwQueryException() : no errors
+ DEBUG qtp444352685-34 org.hibernate.jdbc.AbstractBatcher - about to open PreparedStatement (open PreparedStatements: 0, globally: 0)
+ DEBUG qtp444352685-34 org.hibernate.jdbc.ConnectionManager - opening JDBC connection
+ DEBUG qtp444352685-34 org.hibernate.connection.DriverManagerConnectionProvider - opening new JDBC connection
+ DEBUG qtp444352685-34 org.hibernate.connection.DriverManagerConnectionProvider - created connection to: jdbc:mysql://localhost:3306/tbr3_monitoring?zeroDateTimeBehavior=convertToNull, Isolation Level: 4
+ DEBUG qtp444352685-34 org.hibernate.SQL - select defaults0_.definition_type as definition1_0_, defaults0_.default_definition_key as default2_0_ from tbr3_monitoring.defaults defaults0_
+ DEBUG qtp444352685-34 org.hibernate.jdbc.AbstractBatcher - about to open ResultSet (open ResultSets: 0, globally: 0)
+ DEBUG qtp444352685-34 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=Male, definitionType=GENDER}]
+ DEBUG qtp444352685-34 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=A, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-34 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=HOSPITAL, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-34 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=POSTERS, definitionType=MARKETING ITEMS}]
+ DEBUG qtp444352685-34 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=DIABETES, definitionType=TEST_TYPE}]
+ DEBUG qtp444352685-34 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=BALDIA, definitionType=TOWN}]
+ DEBUG qtp444352685-34 org.hibernate.jdbc.AbstractBatcher - about to close ResultSet (open ResultSets: 1, globally: 1)
+ DEBUG qtp444352685-34 org.hibernate.jdbc.AbstractBatcher - about to close PreparedStatement (open PreparedStatements: 1, globally: 1)
+ DEBUG qtp444352685-34 org.hibernate.jdbc.ConnectionManager - aggressively releasing JDBC connection
+ DEBUG qtp444352685-34 org.hibernate.jdbc.ConnectionManager - releasing JDBC connection [ (open PreparedStatements: 0, globally: 0) (open ResultSets: 0, globally: 0)]
+ DEBUG qtp444352685-34 org.hibernate.connection.DriverManagerConnectionProvider - closing JDBC connection
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=Male, definitionType=GENDER}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=Male, definitionType=GENDER}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=A, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=A, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=HOSPITAL, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=HOSPITAL, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=POSTERS, definitionType=MARKETING ITEMS}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=POSTERS, definitionType=MARKETING ITEMS}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=DIABETES, definitionType=TEST_TYPE}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=DIABETES, definitionType=TEST_TYPE}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=BALDIA, definitionType=TOWN}]
+ DEBUG qtp444352685-34 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Defaults#component[definitionType,defaultDefinitionKey]{defaultDefinitionKey=BALDIA, definitionType=TOWN}]
+ DEBUG qtp444352685-34 org.hibernate.engine.StatefulPersistenceContext - initializing non-lazy collections
+ DEBUG qtp444352685-34 org.hibernate.jdbc.ConnectionManager - aggressively releasing JDBC connection
+ DEBUG qtp444352685-39 org.hibernate.impl.SessionImpl - opened session at timestamp: 14364136183
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.QueryTranslatorImpl - parse() - HQL: from com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.AST - --- HQL AST ---
+ \-[QUERY] Node: 'query'
+    \-[SELECT_FROM] Node: 'SELECT_FROM'
+       \-[FROM] Node: 'from'
+          \-[RANGE] Node: 'RANGE'
+             \-[DOT] Node: '.'
+                +-[DOT] Node: '.'
+                |  +-[DOT] Node: '.'
+                |  |  +-[DOT] Node: '.'
+                |  |  |  +-[DOT] Node: '.'
+                |  |  |  |  +-[DOT] Node: '.'
+                |  |  |  |  |  +-[IDENT] Node: 'com'
+                |  |  |  |  |  \-[IDENT] Node: 'ihsinformatics'
+                |  |  |  |  \-[IDENT] Node: 'tbr3'
+                |  |  |  \-[IDENT] Node: 'fieldmonitoring'
+                |  |  \-[IDENT] Node: 'shared'
+                |  \-[IDENT] Node: 'model'
+                \-[IDENT] Node: 'Definition'
+
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.ErrorCounter - throwQueryException() : no errors
+ DEBUG qtp444352685-39 org.hibernate.hql.antlr.HqlSqlBaseWalker - select << begin [level=1, statement=select]
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.tree.FromElement - FromClause{level=1} :  com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition (no alias) -> definition0_
+ DEBUG qtp444352685-39 org.hibernate.hql.antlr.HqlSqlBaseWalker - select : finishing up [level=1, statement=select]
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.HqlSqlWalker - processQuery() :  ( SELECT ( FromClause{level=1} tbr3_monitoring.definition definition0_ ) )
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.HqlSqlWalker - Derived SELECT clause created.
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.util.JoinProcessor - Using FROM fragment [tbr3_monitoring.definition definition0_]
+ DEBUG qtp444352685-39 org.hibernate.hql.antlr.HqlSqlBaseWalker - select >> end [level=1, statement=select]
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.AST - --- SQL AST ---
+ \-[SELECT] QueryNode: 'SELECT'  querySpaces (tbr3_monitoring.definition)
+    +-[SELECT_CLAUSE] SelectClause: '{derived select clause}'
+    |  +-[SELECT_EXPR] SelectExpressionImpl: 'definition0_.definition_type as definition1_1_, definition0_.definition_key as definition2_1_' {FromElement{explicit,not a collection join,not a fetch join,fetch non-lazy properties,classAlias=null,role=null,tableName=tbr3_monitoring.definition,tableAlias=definition0_,origin=null,columns={,className=com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition}}}
+    |  \-[SQL_TOKEN] SqlFragment: 'definition0_.definition_value as definition3_1_'
+    \-[FROM] FromClause: 'from' FromClause{level=1, fromElementCounter=1, fromElements=1, fromElementByClassAlias=[], fromElementByTableAlias=[definition0_], fromElementsByPath=[], collectionJoinFromElementsByPath=[], impliedElements=[]}
+       \-[FROM_FRAGMENT] FromElement: 'tbr3_monitoring.definition definition0_' FromElement{explicit,not a collection join,not a fetch join,fetch non-lazy properties,classAlias=null,role=null,tableName=tbr3_monitoring.definition,tableAlias=definition0_,origin=null,columns={,className=com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition}}
+
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.ErrorCounter - throwQueryException() : no errors
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.QueryTranslatorImpl - HQL: from com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.QueryTranslatorImpl - SQL: select definition0_.definition_type as definition1_1_, definition0_.definition_key as definition2_1_, definition0_.definition_value as definition3_1_ from tbr3_monitoring.definition definition0_
+ DEBUG qtp444352685-39 org.hibernate.hql.ast.ErrorCounter - throwQueryException() : no errors
+ DEBUG qtp444352685-39 org.hibernate.jdbc.AbstractBatcher - about to open PreparedStatement (open PreparedStatements: 0, globally: 0)
+ DEBUG qtp444352685-39 org.hibernate.jdbc.ConnectionManager - opening JDBC connection
+ DEBUG qtp444352685-39 org.hibernate.connection.DriverManagerConnectionProvider - opening new JDBC connection
+ DEBUG qtp444352685-39 org.hibernate.connection.DriverManagerConnectionProvider - created connection to: jdbc:mysql://localhost:3306/tbr3_monitoring?zeroDateTimeBehavior=convertToNull, Isolation Level: 4
+ DEBUG qtp444352685-39 org.hibernate.SQL - select definition0_.definition_type as definition1_1_, definition0_.definition_key as definition2_1_, definition0_.definition_value as definition3_1_ from tbr3_monitoring.definition definition0_
+ DEBUG qtp444352685-39 org.hibernate.jdbc.AbstractBatcher - about to open ResultSet (open ResultSets: 0, globally: 0)
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=A, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=B, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=C, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=DIABETES, definitionType=TEST_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SPIROMETRY, definitionType=TEST_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=M, definitionType=GENDER}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=F, definitionType=GENDER}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=HOSPITAL, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=CLINIC, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=CAMP, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=OTHER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=POSTERS, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=BROCHURES, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=RX PADS, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=OTHERS, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=BALDIA, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=BIN, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=GADAP, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=GULBERG, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=GULSHAN, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=JAMSHED, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=KAEMARI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=KORANGI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=LANDHI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=LIAQATABAD, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=LYARI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=MALIR, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=NEW, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=NORTH, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=ORANGI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SADDAR, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SHAH, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SITE, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=PHARMACY, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=NGO, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=MADRESSA, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=PROVIDER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=WORKER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=FACTORY, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=FACILITY, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.loader.Loader - result row: EntityKey[com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=PARTNER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.jdbc.AbstractBatcher - about to close ResultSet (open ResultSets: 1, globally: 1)
+ DEBUG qtp444352685-39 org.hibernate.jdbc.AbstractBatcher - about to close PreparedStatement (open PreparedStatements: 1, globally: 1)
+ DEBUG qtp444352685-39 org.hibernate.jdbc.ConnectionManager - aggressively releasing JDBC connection
+ DEBUG qtp444352685-39 org.hibernate.jdbc.ConnectionManager - releasing JDBC connection [ (open PreparedStatements: 0, globally: 0) (open ResultSets: 0, globally: 0)]
+ DEBUG qtp444352685-39 org.hibernate.connection.DriverManagerConnectionProvider - closing JDBC connection
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=A, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=A, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=B, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=B, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=C, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=C, definitionType=GP_POTENTIAL_RATING}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=DIABETES, definitionType=TEST_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=DIABETES, definitionType=TEST_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SPIROMETRY, definitionType=TEST_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SPIROMETRY, definitionType=TEST_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=M, definitionType=GENDER}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=M, definitionType=GENDER}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=F, definitionType=GENDER}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=F, definitionType=GENDER}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=HOSPITAL, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=HOSPITAL, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=CLINIC, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=CLINIC, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=CAMP, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=CAMP, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=OTHER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=OTHER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=POSTERS, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=POSTERS, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=BROCHURES, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=BROCHURES, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=RX PADS, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=RX PADS, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=OTHERS, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=OTHERS, definitionType=MARKETING_ITEMS}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=BALDIA, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=BALDIA, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=BIN, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=BIN, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=GADAP, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=GADAP, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=GULBERG, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=GULBERG, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=GULSHAN, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=GULSHAN, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=JAMSHED, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=JAMSHED, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=KAEMARI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=KAEMARI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=KORANGI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=KORANGI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=LANDHI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=LANDHI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=LIAQATABAD, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=LIAQATABAD, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=LYARI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=LYARI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=MALIR, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=MALIR, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=NEW, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=NEW, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=NORTH, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=NORTH, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=ORANGI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=ORANGI, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SADDAR, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SADDAR, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SHAH, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SHAH, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SITE, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=SITE, definitionType=TOWN}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=PHARMACY, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=PHARMACY, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=NGO, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=NGO, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=MADRESSA, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=MADRESSA, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=PROVIDER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=PROVIDER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=WORKER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=WORKER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=FACTORY, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=FACTORY, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=FACILITY, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=FACILITY, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - resolving associations for [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=PARTNER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.TwoPhaseLoad - done materializing entity [com.ihsinformatics.tbr3.fieldmonitoring.shared.model.Definition#component[definitionType,definitionKey]{definitionKey=PARTNER, definitionType=LOCATION_TYPE}]
+ DEBUG qtp444352685-39 org.hibernate.engine.StatefulPersistenceContext - initializing non-lazy collections
+ DEBUG qtp444352685-39 org.hibernate.jdbc.ConnectionManager - aggressively releasing JDBC connection
+ 

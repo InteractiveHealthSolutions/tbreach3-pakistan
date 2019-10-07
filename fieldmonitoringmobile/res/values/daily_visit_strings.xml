@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="visit_date">Visit Date</string>
+    <string name="arrival_time">Arrival Time</string>
+    <string name="departure_time">Departure Time</string>
+    <string name="met_dr">Met Dr</string>
+    <string name="given_coupons">Given Coupons/Rx Pads</string>
+    <string name="marketing_activity">Marketing Activity</string>
+    <string name="marketing_activity_description">Marketing Activity Description</string>
+    <string name="marketing_activity_description_hint">Enter description</string>
+    <string name="mr_marketing_budget_items">MR Marketing Budget Items</string>
+    <string name="mr_marketing_budget_items_hint">Enter items</string>
+    <string name="amount">Amount</string>
+    <string name="amount_hint">Enter Amount</string>
+    <string name="institutional_marketing_items">Institutional Marketing Items</string>
+    <string name="posters">Posters</string>
+    <string name="brochures">Brochures</string>
+    <string name="rx_pads">Rx Pads</string>
+    <string name="others">Others</string>
+    <string name="count_hint">Enter count</string>
+    <string name="dr_potential">Dr Potential</string>
+    <string name="comment">Comments</string>
+    <string name="comment_hint">Enter Comments</string>
+    <string name="check_location">Validate Location</string>
+    
+    <string-array name="dr_potentials">
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+    </string-array>
+    
+    
+</resources>

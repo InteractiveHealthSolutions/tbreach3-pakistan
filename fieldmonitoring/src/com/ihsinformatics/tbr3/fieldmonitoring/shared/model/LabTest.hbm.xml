@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 28, 2012 5:36:51 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.ihsinformatics.tbr3.fieldmonitoring.shared.model.LabTest" table="lab_test" catalog="tbr3_monitoring">
+        <id name="testNo" type="java.lang.Integer">
+            <column name="test_no" />
+            <generator class="identity" />
+        </id>
+        <property name="patientId" type="string">
+            <column name="patient_id" length="12" not-null="true" />
+        </property>
+        <property name="laboratoryId" type="string">
+            <column name="laboratory_id" length="12" not-null="true" />
+        </property>
+        <property name="testType" type="string">
+            <column name="test_type" length="10" not-null="true" />
+        </property>
+        <property name="orderedOn" type="timestamp">
+            <column name="ordered_on" length="19" />
+        </property>
+        <property name="orderedBy" type="string">
+            <column name="ordered_by" length="12" />
+        </property>
+        <property name="testedOn" type="timestamp">
+            <column name="tested_on" length="19" />
+        </property>
+        <property name="testedBy" type="string">
+            <column name="tested_by" length="12" />
+        </property>
+        <property name="testResult" type="string">
+            <column name="test_result" length="50" />
+        </property>
+        <property name="otherDetail" type="string">
+            <column name="other_detail" length="50" />
+        </property>
+        <property name="conclusion" type="string">
+            <column name="conclusion" length="10" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+        <property name="error" type="string">
+            <column name="error" length="50" />
+        </property>
+    </class>
+</hibernate-mapping>

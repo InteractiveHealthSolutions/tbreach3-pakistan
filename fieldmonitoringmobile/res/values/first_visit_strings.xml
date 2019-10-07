@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="location_type">Location Type</string>
+    <string name="address1">Address Line 1</string>
+    <string name="address1_hint">Enter Address</string>
+    <string name="address2">Address Line 2</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="mobile_number_hint">Enter mobile number</string>
+    <string name="capacity">Capacity</string>
+    <string name="capacity_hint">Enter capacity</string>
+    <string name="speciality">Speciality</string>
+    <string name="speciality_hint">Enter speciality</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    
+    <string name="refresh_locations">Update Locations</string>
+
+    <string-array name="location_types">
+        <item >Hospital</item>
+        <item >Clinic</item>
+        <item >Camp</item>
+        <item >Pharmacy</item>
+        <item >NGO</item>
+        <item >Madressa/School</item>
+        <item >Other Health Provider Clinic</item>
+        <item >Community Health Worker</item>
+        <item >Factory/Office</item>
+        <item >Public Sector Health Facility</item>
+        <item >Other Public Sector Partner</item>
+        <item >Other</item>
+        
+    </string-array>
+</resources>

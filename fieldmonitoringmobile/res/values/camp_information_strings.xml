@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="location_capacity">Location Capacity</string>
+    <string name="staff_member_names">Staff Members\' Names</string>
+    <string name="staff_member_names_hint">Enter member names</string>
+    <string name="camp_start_time">Camp Start Time</string>
+    <string name="camp_end_time">Camp End Time</string>
+    <string name="per_camp_expense_staff">Per Camp Expense for Staff</string>
+    <string name="per_camp_expense_staff_hint">Enter staff expense</string>
+    <string name="per_camp_expense_others">Per Camp Expense for Others</string>
+    <string name="per_camp_expense_others_hint">Enter other expense</string>
+    <string name="number_xray_recommended">No. of Xray Recommended</string>
+    <string name="number_xray_recommended_hint">Enter no. of Xray</string>
+    
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 12, 2012 4:08:49 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.ihsinformatics.tbr3.fieldmonitoring.shared.model.EncounterPrerequisite" table="encounter_prerequisite" catalog="tbr3_monitoring">
+        <composite-id name="id" class="com.ihsinformatics.tbr3.fieldmonitoring.shared.model.EncounterPrerequisiteId">
+            <key-property name="encounterType" type="string">
+                <column name="encounter_type" length="10" />
+            </key-property>
+            <key-property name="prerequisiteNo" type="int">
+                <column name="prerequisite_no" />
+            </key-property>
+        </composite-id>
+        <property name="prerequisiteEncounter" type="string">
+            <column name="prerequisite_encounter" length="10" not-null="true" />
+        </property>
+        <property name="conditionElement" type="string">
+            <column name="condition_element" length="20" />
+        </property>
+        <property name="possibleValueRegex" type="string">
+            <column name="possible_value_regex" />
+        </property>
+    </class>
+</hibernate-mapping>

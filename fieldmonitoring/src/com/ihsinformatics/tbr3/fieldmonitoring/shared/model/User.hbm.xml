@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 12, 2012 4:08:49 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class catalog="tbr3_monitoring" name="com.ihsinformatics.tbr3.fieldmonitoring.shared.model.User"
+		table="user">
+		<id name="pid" type="string">
+			<column name="pid" length="12" />
+			<generator class="assigned" />
+		</id>
+		<property generated="never" lazy="false" name="userName"
+			type="string">
+			<column length="12" name="user_name" not-null="true" unique="true" />
+		</property>
+		<property generated="never" lazy="false" name="currentStatus"
+			type="char">
+			<column length="1" name="current_status" not-null="true" />
+		</property>
+		<property generated="never" lazy="false" name="password"
+			type="string">
+			<column name="password" not-null="true" />
+		</property>
+		<property generated="never" lazy="false" name="secretQuestion"
+			type="string">
+			<column name="secret_question" not-null="true" />
+		</property>
+		<property generated="never" lazy="false" name="secretAnswer"
+			type="string">
+			<column name="secret_answer" not-null="true" />
+		</property>
+		<property generated="never" lazy="false" name="loggedIn"
+			type="java.lang.Boolean">
+			<column name="logged_in" />
+		</property>
+	</class>
+</hibernate-mapping>

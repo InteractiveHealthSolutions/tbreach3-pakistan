@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ihsinformatics.fieldmonitoring_mobile"
+    android:versionCode="18"
+    android:versionName="1.4.2" >
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="10" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ihs_logo"
+        android:label="@string/app_name"
+        android:theme="@style/AppBaseTheme" >
+        <activity
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.MainMenuActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        <activity
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.LoginActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        <activity
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.Preferences"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        
+        <activity
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.PediatricScreeningActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        
+        <activity 
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.AdultScreeningActivity"
+            android:configChanges="keyboardHidden|orientation">
+        </activity>
+        
+        <activity 
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.PatientRegistrationActivity"
+            android:configChanges="keyboardHidden|orientation">
+        </activity>
+        
+        <activity 
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.ContactTracingActivity"
+            android:configChanges="keyboardHidden|orientation">
+        </activity>
+        
+        <activity 
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.PaediatricContactTracingActivity"
+            android:configChanges="keyboardHidden|orientation">
+        </activity>
+        
+        <activity
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.AdultReverseContactTracingActivity"
+            android:configChanges="keyboardHidden|orientation">
+            
+        </activity>
+        
+        <activity
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.FeedbackActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+
+        <activity
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.PatientSearchActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+
+       
+        <activity
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.SavedFormsActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        
+        <activity
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.Barcode"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+       
+        <activity 
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.FirstVisitActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        
+        <activity 
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.FirstVisit"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        
+        <activity 
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.CampInformationActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        
+        <activity 
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.DailyVisitActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        
+        <activity 
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.SupervisorVisitActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        
+        <activity 
+            android:name="com.ihsinformatics.fieldmonitoring_mobile.DiabetesSpirometryActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        
+    </application>
+
+</manifest>

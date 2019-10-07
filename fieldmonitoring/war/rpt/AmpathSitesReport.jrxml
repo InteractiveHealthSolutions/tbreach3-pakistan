@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AmpathSitesReport" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d9085115-ee11-4599-baab-ef9f866c8694">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="SansSerif" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="SansSerif" fontSize="18"/>
+	<style name="Detail" mode="Transparent" forecolor="#010101" backcolor="#FFFFFF" fill="Solid" isBlankWhenNull="true" fontName="SansSerif" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Border" fill="Solid" fontName="SansSerif" fontSize="9">
+		<box topPadding="2" leftPadding="2">
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Column header" mode="Transparent" forecolor="#010101" fontName="SansSerif" fontSize="8" isBold="true">
+		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+			<pen lineWidth="1.0" lineColor="#333333"/>
+			<topPen lineWidth="1.0" lineColor="#333333"/>
+			<leftPen lineWidth="1.0" lineColor="#333333"/>
+			<bottomPen lineWidth="1.0" lineColor="#333333"/>
+			<rightPen lineWidth="1.0" lineColor="#333333"/>
+		</box>
+	</style>
+	<parameter name="UserName" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select e.pid1 as PID1, e.location_id as Facility, e.date_entered as DateEntered, upper(monthname(concat(year(curdate()), e.MONTH, '-01'))) as MONTH, e.YEAR, e.SITE, e.LR_MALE_SCREEN, e.LR_FEMALE_SCREEN, e.TR_SM_POSITIVE, e.TR_CXR, e.TR_EP_CASES, e.TR_PAED_CASES, e.TR_OTHER, e.SM_POSITIVE_TREATED, e.MALE_SCREENED_HIV, e.MALE_HIV_POSITIVE, e.FEMALE_SCREENED_HIV, e.FEMALE_HIV_POSITIVE from tbreachkenya_rpt.Enc_SITES_DATA as e;]]>
+	</queryString>
+	<field name="PID1" class="java.lang.String"/>
+	<field name="Facility" class="java.lang.String"/>
+	<field name="DateEntered" class="java.sql.Date"/>
+	<field name="MONTH" class="java.lang.String"/>
+	<field name="YEAR" class="java.lang.String"/>
+	<field name="SITE" class="java.lang.String"/>
+	<field name="LR_MALE_SCREEN" class="java.lang.String"/>
+	<field name="LR_FEMALE_SCREEN" class="java.lang.String"/>
+	<field name="TR_SM_POSITIVE" class="java.lang.String"/>
+	<field name="TR_CXR" class="java.lang.String"/>
+	<field name="TR_EP_CASES" class="java.lang.String"/>
+	<field name="TR_PAED_CASES" class="java.lang.String"/>
+	<field name="TR_OTHER" class="java.lang.String"/>
+	<field name="SM_POSITIVE_TREATED" class="java.lang.String"/>
+	<field name="MALE_SCREENED_HIV" class="java.lang.String"/>
+	<field name="MALE_HIV_POSITIVE" class="java.lang.String"/>
+	<field name="FEMALE_SCREENED_HIV" class="java.lang.String"/>
+	<field name="FEMALE_HIV_POSITIVE" class="java.lang.String"/>
+	<sortField name="YEAR"/>
+	<sortField name="MONTH"/>
+	<variable name="CURRENT_DATE" class="java.lang.String" calculation="System"/>
+	<group name="Month" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{MONTH} + " " + $F{YEAR}]]></groupExpression>
+		<groupHeader>
+			<band height="65">
+				<staticText>
+					<reportElement style="Column header" x="0" y="0" width="75" height="20" uuid="84f0b7a6-34f5-43d1-bade-34b1e3064232"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Month]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="0" y="20" width="75" height="45" uuid="78b109ed-845c-496e-b4e6-67f8353fc254"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Field Coordinator]]></text>
+				</staticText>
+				<textField pattern="">
+					<reportElement style="Column header" x="75" y="0" width="87" height="20" uuid="2aa2ff12-dec0-40f1-93ba-114feb79b613"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{MONTH} + " " + $F{YEAR}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Column header" x="75" y="20" width="87" height="45" uuid="5191a9cb-39ba-490c-b4ad-f5d75d0f47c7"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[AMPATH Site]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="162" y="20" width="100" height="27" uuid="73d3448e-7282-49b5-a45b-75e27ea32331"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[People Screened (Lab Register)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="162" y="47" width="50" height="18" uuid="43dc1dfe-5f55-44ef-b572-3035b53fb47d"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Male]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="212" y="47" width="50" height="18" uuid="59d41ed0-6435-4ba8-9bfd-822b70edc7a2"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Female]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="262" y="38" width="50" height="27" uuid="adc40443-c1e2-42b9-a85d-df682ff99f2d"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Smear Positive]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="312" y="38" width="50" height="27" uuid="e2250ea2-49d7-45ea-8d26-c1229656b40a"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Chest X-Ray]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="362" y="38" width="50" height="27" uuid="e86d20a5-5e00-436b-a634-21e6f89f2ef1"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Extra Pulmonary]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="412" y="38" width="50" height="27" uuid="05c18578-a037-42b6-b80a-7c3fcab8060f"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Child]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="462" y="38" width="50" height="27" uuid="b3ff1ea6-b3f2-48e4-aa66-bc4ecd3f0b9f"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Others]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="512" y="20" width="50" height="45" uuid="74252a7b-50d1-4f9d-8e0a-0a431946a87f"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Smear Positive Treated]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="562" y="20" width="120" height="27" uuid="eb4c254b-6807-49b2-a969-81288be815b7"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Pateints Attending Clinic Screened for HIV]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="682" y="20" width="120" height="27" uuid="8d8e69af-8656-48ee-86d3-eab12c6d4656"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[HIV Positive out of those Screened]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="622" y="47" width="60" height="18" uuid="e8057027-4165-4349-8cfb-a622227a7ea7"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Female]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="562" y="47" width="60" height="18" uuid="ca19e9a8-fa8c-448b-b5ba-9c033eb3436c"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Male]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="682" y="47" width="60" height="18" uuid="9bb7358c-d3c9-4560-8e5c-4c3a78eafac7"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Male]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="742" y="47" width="60" height="18" uuid="0ec1301f-7852-4507-9388-c078c7d400a1"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Female]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="262" y="20" width="250" height="18" uuid="346ea25e-05b8-4c54-bbf7-407a7a2900d6"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Treatment Register]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25">
+				<staticText>
+					<reportElement style="Column header" x="0" y="0" width="802" height="25" uuid="90ad5c21-5fce-42d7-b5b0-7c5bc3de8d62"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Reviewed By:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="39" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="39" uuid="0c02ab49-d17f-4c1f-92d7-ebbba5da4c21"/>
+				<textElement textAlignment="Center">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[AMPATH SITES REPORT]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement style="Detail" x="75" y="0" width="87" height="20" uuid="ac839e90-1824-44e3-8ed4-625a72e4f1ac"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{SITE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="162" y="0" width="50" height="20" uuid="1778856d-3a16-4ead-ab62-4768a9013754"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{LR_MALE_SCREEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="212" y="0" width="50" height="20" uuid="934feb6b-ee28-410d-b10a-e5d7d57afa12"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{LR_FEMALE_SCREEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="262" y="0" width="50" height="20" uuid="5e3247b2-ff0d-45dc-a7e2-ea12246bcdf5"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{TR_SM_POSITIVE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="312" y="0" width="50" height="20" uuid="e6b86bfa-f401-4023-a98e-ded4c2697c95"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{TR_CXR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="362" y="0" width="50" height="20" uuid="49b8a29e-7188-4ca3-9978-fa9165b13a91"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{TR_EP_CASES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="412" y="0" width="50" height="20" uuid="c67b5008-1564-4876-b735-e3fbbec4648b"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{TR_PAED_CASES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="462" y="0" width="50" height="20" uuid="f5a9a2e7-5b9b-4f9f-9a5d-fb4ea203dc59"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{TR_OTHER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="512" y="0" width="50" height="20" uuid="c3de0028-cac4-40da-8d41-56159f95f42c"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{SM_POSITIVE_TREATED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="562" y="0" width="60" height="20" uuid="1cce1521-0c80-4e91-b038-6c53703330d8"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{MALE_SCREENED_HIV}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="622" y="0" width="60" height="20" uuid="ecd3e561-5fe3-41f7-a76a-b9a4c5e9a001"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{FEMALE_SCREENED_HIV}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="682" y="0" width="60" height="20" uuid="1a9de3dc-94ce-4da3-ae99-ad15e943cb67"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{MALE_HIV_POSITIVE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="742" y="0" width="60" height="20" uuid="4429fd32-efa0-4535-ba53-a1b30f5faaec"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{FEMALE_HIV_POSITIVE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="0" y="0" width="75" height="20" uuid="52f08c08-8499-4342-aee3-15d7855f6a47"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{PID1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="13">
+			<textField>
+				<reportElement x="0" y="0" width="142" height="13" forecolor="#010101" uuid="3b7da516-91f6-495e-b4e9-239274bc586e"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total Records: "+$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="321" y="0" width="150" height="13" forecolor="#010101" uuid="98172fbe-3d4f-4b90-bb80-9fe2146d527a"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Printed By: "+$P{UserName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

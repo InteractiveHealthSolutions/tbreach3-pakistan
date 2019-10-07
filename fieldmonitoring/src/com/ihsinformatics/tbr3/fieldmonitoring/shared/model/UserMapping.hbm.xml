@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 12, 2012 4:08:49 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.ihsinformatics.tbr3.fieldmonitoring.shared.model.UserMapping" table="user_mapping" catalog="tbr3_monitoring">
+        <composite-id name="id" class="com.ihsinformatics.tbr3.fieldmonitoring.shared.model.UserMappingId">
+            <key-property name="userId" type="string">
+                <column name="user_id" />
+            </key-property>
+            <key-property name="locationId" type="string">
+                <column name="location_id" length="12" />
+            </key-property>
+        </composite-id>
+        <property name="currentStatus" type="string">
+            <column name="current_status" length="5" />
+        </property>
+        <property name="timeFrom" type="time">
+            <column name="time_from" length="8" />
+        </property>
+        <property name="timeTo" type="time">
+            <column name="time_to" length="8" />
+        </property>
+        <property name="weekDays" type="string">
+            <column name="week_days" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

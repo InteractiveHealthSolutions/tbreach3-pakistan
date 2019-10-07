@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="mr_last_visit_date">MR Last Visit</string>
+    <string name="relationship_mr_dr">Relationship of MR/Dr</string>
+    <string name="relationship_mr_dr_hint">Enter relationship details.\nPlease be short and \nprecise</string>
+    
+    <string-array name="relation_mr_dr">
+        <item >Highly Productive</item>
+        <item >Productive</item>
+        <item >Neutral</item>
+        <item >Unproductive</item>
+        <item >Highly Unproductive</item>
+    </string-array>
+    
+</resources>
